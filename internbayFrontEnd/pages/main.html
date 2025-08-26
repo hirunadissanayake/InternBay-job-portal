@@ -1209,6 +1209,28 @@
             showJobDetails();
         });
     });
+
+    //remove the addResume button if select employee
+    document.addEventListener("DOMContentLoaded", function () {
+        const studentRadio = document.getElementById("studentAccount");
+        const employerRadio = document.getElementById("employerAccount");
+        const resumeBtn = document.getElementById("resumeUpload");
+
+        function toggleResumeButton() {
+            if (employerRadio.checked) {
+                resumeBtn.style.display = "none";
+            } else {
+                resumeBtn.style.display = "block";
+            }
+        }
+
+        // Run on page load
+        toggleResumeButton();
+
+        // Add listeners
+        studentRadio.addEventListener("change", toggleResumeButton);
+        employerRadio.addEventListener("change", toggleResumeButton);
+    });
 </script>
 </body>
 </html>
