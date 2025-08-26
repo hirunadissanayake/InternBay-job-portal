@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - InternBay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary-color: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-brand i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="white" stop-opacity="0.1"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient></defs><circle cx="300" cy="200" r="80" fill="url(%23a)"/><circle cx="700" cy="400" r="120" fill="url(%23a)"/><circle cx="200" cy="600" r="100" fill="url(%23a)"/></svg>');
+            opacity: 0.1;
+        }
+
+        .page-header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-padding {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-dark);
+        }
+
+        .vision-card {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vision-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .vision-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 80px 0;
+        }
+
+        .stats-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: 100%;
+        }
+
+        .stats-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .team-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .team-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .value-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .value-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .value-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: calc(50% + 2rem);
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: calc(50% + 2rem);
+            text-align: left;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 1rem;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 4px var(--primary-color);
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-year {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section {
+            background-color: #1e293b;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links a {
+            color: #94a3b8;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .company-culture {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 80px 0;
+        }
+
+        .culture-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .culture-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 2rem;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 4rem;
+                margin-right: 0;
+                text-align: left;
+            }
+
+            .timeline-marker {
+                left: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="main.html">
+            <i class="fas fa-graduation-cap"></i>InternBay
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#jobs">Find Internships</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#companies">My Applications</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="aboutUs.html">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contactUs.html">Contact Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#resume-checker">Resume Checker</a>
+                </li>
+            </ul>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary" onclick="showLoginModal()">
+                    <i class="fas fa-sign-in-alt me-1"></i>Sign In
+                </button>
+                <button class="btn btn-primary" onclick="showRegisterModal()">
+                    <i class="fas fa-user-plus me-1"></i>Sign Up
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container page-header-content">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4 fade-in">About InternBay</h1>
+                <p class="lead mb-0 fade-in">Empowering the next generation of professionals by connecting students with meaningful internship opportunities worldwide.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Vision -->
+<section class="section-padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="vision-card fade-in">
+                    <div class="vision-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h2 class="mb-4">Our Vision</h2>
+                    <p class="lead mb-4">At InternBay, we believe in simplifying the hiring journey and creating a platform where careers take shape. Our mission is to provide a global job platform, making a positive impact on society by connecting professionals with opportunities that align with their aspirations.</p>
+                    <p class="text-muted">We envision a world where talent knows no boundaries, where students can seamlessly transition from academia to industry, and where companies can discover the brightest minds regardless of geographical constraints.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col">
+                <h2 class="text-white mb-4 fade-in">InternBay in Numbers</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="stats-card fade-in">
+                    <div class="stats-number">2,500+</div>
+                    <div class="stats-label">Active Internships</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="stats-card fade-in">
+                    <div class="stats-number">850+</div>
+                    <div class="stats-label">Partner Companies</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="stats-card fade-in">
+                    <div class="stats-number">15K+</div>
+                    <div class="stats-label">Student Placements</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="stats-card fade-in">
+                    <div class="stats-number">95%</div>
+                    <div class="stats-label">Success Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Values -->
+<section class="section-padding bg-light">
+    <div class="container">
+        <h2 class="section-title fade-in">Our Core Values</h2>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="value-card fade-in">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5 class="mb-3">Student-Centric</h5>
+                    <p class="text-muted">We put students at the heart of everything we do, ensuring their career development and success is our top priority.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="value-card fade-in">
+                    <div class="value-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h5 class="mb-3">Innovation</h5>
+                    <p class="text-muted">We continuously innovate our platform with cutting-edge technology to provide the best user experience.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="value-card fade-in">
+                    <div class="value-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h5 class="mb-3">Trust & Transparency</h5>
+                    <p class="text-muted">We build trust through transparency in our processes and maintain the highest standards of integrity.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="value-card fade-in">
+                    <div class="value-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h5 class="mb-3">Global Reach</h5>
+                    <p class="text-muted">We connect talent worldwide, breaking down geographical barriers to create a truly global marketplace.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="value-card fade-in">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h5 class="mb-3">Diversity & Inclusion</h5>
+                    <p class="text-muted">We celebrate diversity and create an inclusive environment where everyone has equal opportunities.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="value-card fade-in">
+                    <div class="value-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h5 class="mb-3">Excellence</h5>
+                    <p class="text-muted">We strive for excellence in everything we do, from our platform features to customer service.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Company Culture -->
+<section class="company-culture">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2 class="section-title text-start fade-in">Why InternBay?</h2>
+                <p class="lead mb-4 fade-in">InternBay, a visionary job portal, derives its name from the concept of a global sphere, symbolizing a comprehensive platform connecting individuals with opportunities worldwide.</p>
+
+                <div class="culture-item fade-in">
+                    <div class="culture-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-2">Smart Matching Algorithm</h6>
+                        <p class="text-muted mb-0">Our AI-powered system matches students with internships that align perfectly with their skills and career goals.</p>
+                    </div>
+                </div>
+
+                <div class="culture-item fade-in">
+                    <div class="culture-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-2">Secure & Safe Platform</h6>
+                        <p class="text-muted mb-0">We ensure data security and create a safe environment for all interactions between students and employers.</p>
+                    </div>
+                </div>
+
+                <div class="culture-item fade-in">
+                    <div class="culture-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-2">Real-time Updates</h6>
+                        <p class="text-muted mb-0">Stay updated with instant notifications about new opportunities and application status changes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="row g-4 mt-4">
+                    <div class="col-6">
+                        <div class="text-center p-4 bg-white rounded-3 shadow-sm">
+                            <h3 class="text-primary mb-2">50+</h3>
+                            <p class="mb-0 small text-muted">Countries Covered</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center p-4 bg-white rounded-3 shadow-sm">
+                            <h3 class="text-primary mb-2">24/7</h3>
+                            <p class="mb-0 small text-muted">Customer Support</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center p-4 bg-white rounded-3 shadow-sm">
+                            <h3 class="text-primary mb-2">99%</h3>
+                            <p class="mb-0 small text-muted">Uptime Guarantee</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center p-4 bg-white rounded-3 shadow-sm">
+                            <h3 class="text-primary mb-2">5★</h3>
+                            <p class="mb-0 small text-muted">User Rating</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Journey Timeline -->
+<section class="section-padding">
+    <div class="container">
+        <h2 class="section-title fade-in">Our Journey</h2>
+        <div class="timeline">
+            <div class="timeline-item fade-in">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2020</div>
+                    <h5>The Beginning</h5>
+                    <p class="text-muted">InternBay was founded with a vision to bridge the gap between students and industry, starting with 50 partner companies.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2021</div>
+                    <h5>Rapid Growth</h5>
+                    <p class="text-muted">Reached 5,000 student registrations and 200 company partnerships. Launched our mobile app for better accessibility.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2022</div>
+                    <h5>Global Expansion</h5>
+                    <p class="text-muted">Expanded operations to 25 countries and introduced AI-powered matching algorithms for better job-student compatibility.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2023</div>
+                    <h5>Innovation & Features</h5>
+                    <p class="text-muted">Launched resume checker, video interviews, and career guidance features. Achieved 50,000+ successful placements.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2024</div>
+                    <h5>Industry Leadership</h5>
+                    <p class="text-muted">Today, we're proud to serve 850+ companies and 15,000+ students globally, with a 95% success rate in placements.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Leadership Team -->
+<section class="section-padding bg-light">
+    <div class="container">
+        <h2 class="section-title fade-in">Meet Our Leadership Team</h2>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="team-card fade-in">
+                    <div class="team-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h5>Sarah Johnson</h5>
+                    <p class="text-primary mb-2">CEO & Founder</p>
+                    <p class="text-muted small">Former VP at LinkedIn with 15+ years in talent acquisition and career development.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="text-muted me-2"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-muted me-2"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="team-card fade-in">
+                    <div class="team-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h5>Michael Chen</h5>
+                    <p class="text-primary mb-2">CTO</p>
+                    <p class="text-muted small">Tech visionary with expertise in AI/ML and scalable platform architecture from Google.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="text-muted me-2"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-muted me-2"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="team-card fade-in">
+                    <div class="team-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h5>Emily Rodriguez</h5>
+                    <p class="text-primary mb-2">Head of Operations</p>
+                    <p class="text-muted small">Operations expert specializing in global expansion and strategic partnerships.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="text-muted me-2"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-muted me-2"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="section-padding">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="mb-4 fade-in">Ready to Start Your Career Journey?</h2>
+                <p class="lead text-muted mb-5 fade-in">Join thousands of students who have already found their dream internships through InternBay. Your future starts here.</p>
+                <div class="d-flex gap-3 justify-content-center fade-in">
+                    <button class="btn btn-primary btn-lg">
+                        <i class="fas fa-search me-2"></i>Find Internships
+                    </button>
+                    <button class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-building me-2"></i>Partner With Us
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="mb-4">
+                    <h4 class="text-white mb-3">
+                        <i class="fas fa-graduation-cap me-2"></i>InternBay
+                    </h4>
+                    <p class="text-muted mb-4">
+                        Connecting students with their dream internships and career opportunities.
+                        Building the future workforce, one internship at a time.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-white mb-3">For Students</h6>
+                <div class="footer-links">
+                    <a href="#" class="d-block mb-2">Find Internships</a>
+                    <a href="#" class="d-block mb-2">Career Advice</a>
+                    <a href="#" class="d-block mb-2">Resume Builder</a>
+                    <a href="#" class="d-block mb-2">Interview Prep</a>
+                    <a href="#" class="d-block mb-2">Student Resources</a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-white mb-3">For Companies</h6>
+                <div class="footer-links">
+                    <a href="#" class="d-block mb-2">Post Internships</a>
+                    <a href="#" class="d-block mb-2">Hire Students</a>
+                    <a href="#" class="d-block mb-2">Company Profiles</a>
+                    <a href="#" class="d-block mb-2">Recruitment Tools</a>
+                    <a href="#" class="d-block mb-2">Pricing</a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-white mb-3">Resources</h6>
+                <div class="footer-links">
+                    <a href="#" class="d-block mb-2">Help Center</a>
+                    <a href="#" class="d-block mb-2">Career Blog</a>
+                    <a href="#" class="d-block mb-2">Success Stories</a>
+                    <a href="#" class="d-block mb-2">Webinars</a>
+                    <a href="#" class="d-block mb-2">Guidelines</a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-white mb-3">Company</h6>
+                <div class="footer-links">
+                    <a href="#" class="d-block mb-2">About Us</a>
+                    <a href="#" class="d-block mb-2">Contact</a>
+                    <a href="#" class="d-block mb-2">Privacy Policy</a>
+                    <a href="#" class="d-block mb-2">Terms of Service</a>
+                    <a href="#" class="d-block mb-2">Careers</a>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4" style="border-color: #334155;">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="text-muted mb-0">© 2024 InternBay. All Rights Reserved.</p>
+            </div>
+            <div class="col-md-6 text-end">
+                <p class="text-muted mb-0">Made with <i class="fas fa-heart text-danger"></i> for Students</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Fade-in effect on scroll
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting){
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    fadeEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

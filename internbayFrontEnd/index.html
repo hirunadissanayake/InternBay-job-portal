@@ -2,9 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternBay</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #landing {
+            text-align: center;
+        }
+
+        input {
+            padding: 10px 15px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+        }
+
+        #videoContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
+
+<!-- Landing Page -->
+<div id="landing">
+    <h1>Welcome to InternBay</h1>
+    <!--    <input type="text" id="nameInput" placeholder="Enter your name">-->
+    <button onclick="playTransition()">Enter</button>
+</div>
+
+<!-- Video Transition -->
+<div id="videoContainer">
+    <video id="transitionVideo" autoplay muted>
+        <source src="lib/Generated File August 18, 2025 - 3_42AM.mp4" type="video/mp4">
+        Your browser does not support video.
+    </video>
+</div>
+
+<script>
+    function playTransition() {
+        document.getElementById("landing").style.display = "none";
+        const videoContainer = document.getElementById("videoContainer");
+        const video = document.getElementById("transitionVideo");
+
+        videoContainer.style.display = "flex";
+        video.play();
+
+        // After video ends, go to main site
+        video.onended = function() {
+            window.location.href = "pages/main.html"; // Change to your actual homepage
+        };
+    }
+</script>
 
 </body>
 </html>
