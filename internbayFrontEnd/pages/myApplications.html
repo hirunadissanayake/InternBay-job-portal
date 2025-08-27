@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications - InternBay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary-color: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #f8fafc;
+            padding-top: 76px; /* Add padding to account for fixed navbar */
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-brand i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 0; /* Remove any top margin */
+        }
+
+        .main-content {
+            padding: 3rem 0;
+            min-height: 60vh;
+        }
+
+        .application-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .application-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            background: var(--secondary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .job-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .job-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-submitted {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-reviewing {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-accepted {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-rejected {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .empty-text {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .btn-outline-primary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-info {
+            border-color: var(--info-color);
+            color: var(--info-color);
+        }
+
+        .btn-outline-info:hover {
+            background-color: var(--info-color);
+            border-color: var(--info-color);
+        }
+
+        .footer-section {
+            background-color: #1e293b;
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: auto;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links a {
+            color: #94a3b8;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 86px; /* Slightly more padding for mobile */
+            }
+
+            .job-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+            }
+
+            .page-header {
+                padding: 1.5rem 0; /* Reduce padding on mobile */
+            }
+
+            .page-header .col-lg-4 {
+                text-align: center !important;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="main.html">
+            <i class="fas fa-graduation-cap"></i>InternBay
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="findJob.html">Find Internships</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="myApplications.html">My Applications</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="aboutUs.html">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contactUs.html">Contact Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="resumeChecker.html">Resume Checker</a>
+                </li>
+            </ul>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary">
+                    <i class="fas fa-bell me-1"></i>Notifications
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-1"></i>Profile
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-2">My Applications</h1>
+                <p class="lead mb-0">Track your internship applications and their status</p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <a href="findJob.html" class="btn btn-light btn-lg">
+                    <i class="fas fa-search me-2"></i>Find More Jobs
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="main-content">
+    <div class="container">
+        <!-- Empty State (Default) -->
+        <div id="emptyState" class="empty-state fade-in visible">
+            <div class="empty-icon">
+                <i class="fas fa-folder-open"></i>
+            </div>
+            <h2 class="empty-title">No Applications Found</h2>
+            <p class="empty-text">
+                You haven't applied to any internships yet. Start exploring opportunities and take the first step towards your dream career!
+            </p>
+            <a href="findJob.html" class="btn btn-primary btn-lg">
+                <i class="fas fa-search me-2"></i>Browse Internships
+            </a>
+        </div>
+
+        <!-- Applications List (Hidden by default, shows when user has applications) -->
+        <div id="applicationsList" style="display: none;">
+            <!-- Application Card 1 -->
+            <div class="application-card fade-in visible">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex">
+                            <div class="company-logo">
+                                <i class="fas fa-building text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3 class="job-title">MERN Stack Developer</h3>
+                                <div class="job-meta">
+                                    <span><i class="fas fa-building me-1"></i>JobSphere1</span>
+                                    <span><i class="fas fa-map-marker-alt me-1"></i>Kitchener</span>
+                                    <span><i class="fas fa-clock me-1"></i>Full Time</span>
+                                    <span><i class="fas fa-dollar-sign me-1"></i>$35/hr</span>
+                                    <span><i class="fas fa-calendar me-1"></i>Applied 2 hours ago</span>
+                                </div>
+                                <span class="status-badge status-submitted">Submitted</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="action-buttons">
+                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('mern-developer')">
+                                <i class="fas fa-eye me-1"></i>View Job
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('mern-developer')">
+                                <i class="fas fa-file-pdf me-1"></i>View CV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Card 2 -->
+            <div class="application-card fade-in visible">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex">
+                            <div class="company-logo">
+                                <i class="fas fa-chart-line text-success"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3 class="job-title">Data Science Intern</h3>
+                                <div class="job-meta">
+                                    <span><i class="fas fa-building me-1"></i>DataFlow Inc</span>
+                                    <span><i class="fas fa-map-marker-alt me-1"></i>Toronto</span>
+                                    <span><i class="fas fa-clock me-1"></i>Part Time</span>
+                                    <span><i class="fas fa-dollar-sign me-1"></i>$28/hr</span>
+                                    <span><i class="fas fa-calendar me-1"></i>Applied 1 day ago</span>
+                                </div>
+                                <span class="status-badge status-reviewing">Under Review</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="action-buttons">
+                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('data-science')">
+                                <i class="fas fa-eye me-1"></i>View Job
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('data-science')">
+                                <i class="fas fa-file-pdf me-1"></i>View CV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Card 3 -->
+            <div class="application-card fade-in visible">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex">
+                            <div class="company-logo">
+                                <i class="fas fa-palette text-warning"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3 class="job-title">UI/UX Design Intern</h3>
+                                <div class="job-meta">
+                                    <span><i class="fas fa-building me-1"></i>DesignStudio</span>
+                                    <span><i class="fas fa-map-marker-alt me-1"></i>Vancouver</span>
+                                    <span><i class="fas fa-clock me-1"></i>Full Time</span>
+                                    <span><i class="fas fa-dollar-sign me-1"></i>$25/hr</span>
+                                    <span><i class="fas fa-calendar me-1"></i>Applied 3 days ago</span>
+                                </div>
+                                <span class="status-badge status-accepted">Accepted</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="action-buttons">
+                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('ui-ux-design')">
+                                <i class="fas fa-eye me-1"></i>View Job
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('ui-ux-design')">
+                                <i class="fas fa-file-pdf me-1"></i>View CV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Card 4 -->
+            <div class="application-card fade-in visible">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex">
+                            <div class="company-logo">
+                                <i class="fas fa-dollar-sign text-info"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3 class="job-title">Finance Analyst Intern</h3>
+                                <div class="job-meta">
+                                    <span><i class="fas fa-building me-1"></i>FinanceHub</span>
+                                    <span><i class="fas fa-map-marker-alt me-1"></i>Montreal</span>
+                                    <span><i class="fas fa-clock me-1"></i>Internship</span>
+                                    <span><i class="fas fa-dollar-sign me-1"></i>$22/hr</span>
+                                    <span><i class="fas fa-calendar me-1"></i>Applied 1 week ago</span>
+                                </div>
+                                <span class="status-badge status-rejected">Not Selected</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="action-buttons">
+                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('finance-analyst')">
+                                <i class="fas fa-eye me-1"></i>View Job
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('finance-analyst')">
+                                <i class="fas fa-file-pdf me-1"></i>View CV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Applications pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<!-- Job Details Modal -->
+<div class="modal fade" id="jobDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <div>
+                    <h5 class="modal-title mb-0" id="jobModalTitle">MERN Stack Developer</h5>
+                    <small class="opacity-75" id="jobModalCompany">JobSphere1</small>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-dollar-sign text-primary me-2"></i>
+                            <span id="jobSalary">$35 per hour</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                            <span id="jobLocation">Kitchener</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-clock text-primary me-2"></i>
+                            <span id="jobType">Full Time</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-user text-primary me-2"></i>
+                            <span class="status-badge status-submitted">Submitted</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Education:</h6>
+                    <p id="jobEducation">Bachelor's degree in Computer Science or related field</p>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Experience:</h6>
+                    <p id="jobExperience">2+ years of experience in MERN stack development</p>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Skills:</h6>
+                    <p id="jobSkills">MongoDB, Express.js, React.js, Node.js, JavaScript, HTML, CSS</p>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Availabilities:</h6>
+                    <p id="jobAvailabilities">Monday - Friday, 9:00 AM - 5:00 PM</p>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-4">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CV Viewer Modal -->
+<div class="modal fade" id="cvViewerModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">CV for <span id="cvJobTitle">MERN Stack Developer</span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0" style="height: 70vh;">
+                <div id="cvViewer" class="w-100 h-100 d-flex align-items-center justify-content-center">
+                    <div class="text-center">
+                        <i class="fas fa-file-pdf fa-5x text-primary mb-3"></i>
+                        <h4>CV Document</h4>
+                        <p class="text-muted">Your uploaded CV would be displayed here</p>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download me-2"></i>Download CV
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="mb-4">
+                    <h4 class="text-white mb-3">
+                        <i class="fas fa-graduation-cap me-2"></i>InternBay
+                    </h4>
+                    <p class="text-white mb-3">
+                        Connecting students with their dream internships and career opportunities.
+                        Building the future workforce, one internship at a time.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-white mb-3">For Students</h6>
+                <div class="footer-links">
+                    <a href="#" class="d-block mb-2">Find Internships</a>
+                    <a href="#" class="d-block mb-2">Career Advice</a>
+                    <a href="#" class="d-block mb-2">Resume Builder</a>
+                    <a href="#" class="d-block mb-2">Interview Prep</a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-white mb-3">For Companies</h6>
+                <div class="footer-links">
+                    <a href="#" class="d-block mb-2">Post Internships</a>
+                    <a href="#" class="d-block mb-2">Hire Students</a>
+                    <a href="#" class="d-block mb-2">Company Profiles</a>
+                    <a href="#" class="d-block mb-2">Pricing</a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-white mb-3">Resources</h6>
+                <div class="footer-links">
+                    <a href="#" class="d-block mb-2">Help Center</a>
+                    <a href="#" class="d-block mb-2">Career Blog</a>
+                    <a href="#" class="d-block mb-2">Success Stories</a>
+                    <a href="#" class="d-block mb-2">Guidelines</a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-white mb-3">Company</h6>
+                <div class="footer-links">
+                    <a href="#" class="d-block mb-2">About Us</a>
+                    <a href="#" class="d-block mb-2">Contact</a>
+                    <a href="#" class="d-block mb-2">Privacy Policy</a>
+                    <a href="#" class="d-block mb-2">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4" style="border-color: #334155;">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="text-white mb-0">© 2025 InternBay. All Rights Reserved.</p>
+            </div>
+            <div class="col-md-6 text-end">
+                <p class="text-white mb-0">Made with <i class="fas fa-heart text-danger"></i> for Students</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Sample applications data - in a real application, this would come from your backend
+    let userApplications = [
+        // Uncomment the applications below to simulate a user with applications
+        /*
+        {
+            id: 'mern-developer',
+            title: 'MERN Stack Developer',
+            company: 'JobSphere1',
+            location: 'Kitchener',
+            type: 'Full Time',
+            salary: '$35/hr',
+            appliedDate: '2 hours ago',
+            status: 'submitted',
+            statusText: 'Submitted',
+            icon: 'fas fa-building',
+            iconColor: 'text-primary'
+        },
+        {
+            id: 'data-science',
+            title: 'Data Science Intern',
+            company: 'DataFlow Inc',
+            location: 'Toronto',
+            type: 'Part Time',
+            salary: '$28/hr',
+            appliedDate: '1 day ago',
+            status: 'reviewing',
+            statusText: 'Under Review',
+            icon: 'fas fa-chart-line',
+            iconColor: 'text-success'
+        },
+        {
+            id: 'ui-ux-design',
+            title: 'UI/UX Design Intern',
+            company: 'DesignStudio',
+            location: 'Vancouver',
+            type: 'Full Time',
+            salary: '$25/hr',
+            appliedDate: '3 days ago',
+            status: 'accepted',
+            statusText: 'Accepted',
+            icon: 'fas fa-palette',
+            iconColor: 'text-warning'
+        }
+</script>
+</body>
+</html>
