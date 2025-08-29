@@ -49,7 +49,15 @@ public class WebSecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/api/v1/user/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "api/v1/auth",
+                                "api/v1/auth/authenticate",
+                                "api/v1/user",
+                                "api/v1/user/register",
+                                "api/v1/user/login"
+                                ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

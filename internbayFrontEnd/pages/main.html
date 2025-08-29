@@ -783,7 +783,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
-                <p class="text-muted mb-4">Already have an account? <a href="#" class="text-primary" onclick="switchToLogin()">Log In!</a></p>
+                <p class="text-muted mb-4">
+                    Already have an account? <a href="#" class="text-primary" onclick="switchToLogin()">Log In!</a>
+                </p>
 
                 <!-- Account Type Selection -->
                 <div class="row mb-4">
@@ -839,24 +841,34 @@
                         <label for="regPhone">Phone Number</label>
                     </div>
 
+                    <!-- Upload Buttons -->
                     <div class="mb-3">
-                        <button type="button" class="btn btn-outline-primary w-100 mb-2">
+                        <button type="button" id="uploadProfilePic" class="btn btn-outline-primary w-100 mb-2">
                             <i class="fas fa-camera me-2"></i>Upload Profile Picture
                         </button>
-                        <!-- ✅ Added id="resumeUpload" -->
+                        <div id="profilePicName" class="text-muted small mt-1"></div>
+
                         <button type="button" id="resumeUpload" class="btn btn-outline-secondary w-100">
                             <i class="fas fa-file-upload me-2"></i>Upload Resume
                         </button>
+                        <div id="resumeName" class="text-muted small mt-1"></div>
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100 py-2">
                         <i class="fas fa-user-plus me-2"></i>Create Account
                     </button>
                 </form>
+
+                <!-- Hidden Inputs -->
+                <input type="file" id="profilePicInput" style="display:none" accept=".png,.jpg,.jpeg,.svg">
+                <input type="file" id="resumeInput" style="display:none" accept=".pdf,.doc,.docx">
+                <input type="hidden" id="profilePicUrl" name="profilePic">
+                <input type="hidden" id="resumeUrl" name="resume">
             </div>
         </div>
     </div>
 </div>
+
 
 
 <!-- Job Details Modal -->
@@ -1110,6 +1122,77 @@
         card.style.cursor = 'pointer';
         card.addEventListener('click', function() {
             showJobDetails();
+        });
+    });
+    $(document).ready(function () {
+        // Open file picker on button click
+        $('#uploadProfilePic').click(() => $('#profilePicInput').click());
+        $('#resumeUpload').click(() => $('#resumeInput').click());
+
+        // Profile Picture Upload
+        $('#profilePicInput').change(function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            $('#profilePicName').text(file.name); // show file name
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "ml_default"); // Your unsigned preset
+
+            $.ajax({
+                url: "https://api.cloudinary.com/v1_1/ddhlsfx3z/image/upload",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#uploadProfilePic').text('Uploading...').prop('disabled', true);
+                },
+                success: function (res) {
+                    $('#profilePicUrl').val(res.secure_url);
+                },
+                error: function (err) {
+                    console.error(err);
+                    alert("Profile picture upload failed!");
+                },
+                complete: function () {
+                    $('#uploadProfilePic').text('Upload Profile Picture').prop('disabled', false);
+                }
+            });
+        });
+
+        // Resume Upload
+        $('#resumeInput').change(function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            $('#resumeName').text(file.name); // show file name
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "ml_default");
+
+            $.ajax({
+                url: "https://api.cloudinary.com/v1_1/ddhlsfx3z/raw/upload",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#resumeUpload').text('Uploading...').prop('disabled', true);
+                },
+                success: function (res) {
+                    $('#resumeUrl').val(res.secure_url);
+                },
+                error: function (err) {
+                    console.error(err);
+                    alert("Resume upload failed!");
+                },
+                complete: function () {
+                    $('#resumeUpload').text('Upload Resume').prop('disabled', false);
+                }
+            });
         });
     });
 </script>
