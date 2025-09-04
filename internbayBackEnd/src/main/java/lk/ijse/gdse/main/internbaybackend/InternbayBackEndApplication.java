@@ -12,8 +12,8 @@ public class InternbayBackEndApplication {
         SpringApplication.run(InternbayBackEndApplication.class, args);
     }
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
+//    @Bean
+//    public ModelMapper modelMapper() {
+//        return new ModelMapper();
+//    }
 }

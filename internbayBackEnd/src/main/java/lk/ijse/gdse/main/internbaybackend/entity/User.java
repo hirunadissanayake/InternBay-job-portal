@@ -35,6 +35,7 @@ public class User {
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
+    // ✅ Store Role as VARCHAR (not MySQL ENUM)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Role role;

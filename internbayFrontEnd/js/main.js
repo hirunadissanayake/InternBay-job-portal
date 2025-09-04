@@ -95,7 +95,7 @@
 }
 
     // Check if student selected but no resume uploaded
-    if (role === 'STUDENT' && !resumeUrl) {
+    if (role === 'CANDIDATE' && !resumeUrl) {
     showNotification('Please upload your resume.', 'error');
     return;
 }

@@ -86,23 +86,9 @@
                 </div>
 
                 <div class="filter-section">
-                    <h6>Location</h6>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="location" placeholder="Location">
-                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                    </div>
-                </div>
-
-                <div class="filter-section">
                     <h6>Category</h6>
                     <select class="form-select mb-3" id="category">
-                        <option value="">Software Development</option>
-                        <option value="software">Software Development</option>
-                        <option value="data">Data Analysis</option>
-                        <option value="marketing">Marketing</option>
-                        <option value="finance">Finance</option>
-                        <option value="design">Design</option>
-                        <option value="consulting">Consulting</option>
+                        <option value="">Loading categories...</option>
                     </select>
                 </div>
 
@@ -972,11 +958,27 @@ jobData['business-analyst'] = {
         }
     });
 
-    document.getElementById('location').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            searchJobs();
+    // Fetch categories from your backend
+    async function loadCategories() {
+        try {
+            const response = await fetch('http://localhost:8080/api/v1/category/getAll');
+            const data = await response.json();
+
+            const categorySelect = document.getElementById('category');
+            categorySelect.innerHTML = '<option value="">All Categories</option>';
+
+            // Changed from data.data to just data.data since your ResponsDto puts the list in the 'data' field
+            data.data.forEach(category => {
+                categorySelect.innerHTML += `<option value="${category.categoryId}">${category.name}</option>`;
+            });
+        } catch (error) {
+            console.error('Error loading categories:', error);
         }
-    });
+    }
+
+    // Call when page loads
+    document.addEventListener('DOMContentLoaded', loadCategories);
+
 </script>
 </body>
 </html>
