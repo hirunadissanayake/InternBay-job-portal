@@ -8,12 +8,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/resumeCheckr.css">
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body>
+
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="main.html">
-            <i class="fas fa-graduation-cap"></i>InternBay
+            <i class="fas fa-graduation-cap me-2"></i>InternBay
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -51,557 +52,508 @@
     </div>
 </nav>
 
-<!-- Page Header -->
-<section class="page-header mt-5">
-    <div class="container page-header-content">
-        <div class="text-center">
-            <h1 class="display-5 fw-bold mb-3 fade-in">
-                <i class="fas fa-file-check me-3"></i>Resume Checker
-            </h1>
-            <p class="lead mb-0 fade-in">
-                Analyze your resume against job requirements and get personalized improvement suggestions
-            </p>
-        </div>
-    </div>
-</section>
-
-<!-- Main Content -->
-<main class="main-content flex-grow-1">
+<!-- Hero Section -->
+<div class="hero-section">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="card resume-checker-card fade-in">
-                    <div class="card-body p-4 p-lg-5">
-                        <form id="resumeCheckerForm">
-                            <div class="row g-4">
-                                <!-- Left Column: Job Description -->
-                                <div class="col-lg-6">
-                                    <h5 class="mb-3">
-                                        <i class="fas fa-briefcase text-primary me-2"></i>
-                                        Job Requirements
-                                    </h5>
+        <h1>Resume Checker</h1>
+        <p>Analyze your resume against job requirements and get personalized improvement suggestions</p>
+    </div>
+</div>
 
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold">Job Description <span class="text-danger">*</span></label>
-                                        <textarea
-                                                class="form-control job-description-area"
-                                                id="jobDescription"
-                                                placeholder="Paste the complete job description here, including responsibilities, requirements, and qualifications..."
-                                                required
-                                        ></textarea>
-                                        <div class="form-text">Include all job requirements for accurate analysis</div>
-                                    </div>
+<!-- Analyzer Section -->
+<div class="container">
+    <div class="analyzer-container">
+        <div class="row g-4">
+            <!-- Job Requirements Section -->
+            <div class="col-lg-6">
+                <div class="section-card">
+                    <div class="section-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h4>Job Requirements</h4>
 
-                                    <div class="text-center mb-3">
-                                        <span class="text-muted fw-semibold">OR</span>
-                                    </div>
+                    <div class="mb-3">
+                        <label for="jobDescription" class="form-label">Job Description <span class="text-danger">*</span></label>
+                        <textarea
+                                class="form-control"
+                                id="jobDescription"
+                                rows="8"
+                                placeholder="Paste the complete job description here, including responsibilities, requirements, and qualifications..."
+                                required
+                        ></textarea>
+                        <div class="form-text">Include all job requirements for accurate analysis</div>
+                    </div>
 
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold">Select from Available Positions</label>
-                                        <select class="form-select job-posting-select" id="jobPosting">
-                                            <option value="">— Choose a Job Posting —</option>
-                                            <option value="fullstack">Full-Stack Development Intern - TechCorp</option>
-                                            <option value="datascience">Data Science Intern - DataFlow Inc</option>
-                                            <option value="uiux">UI/UX Design Intern - DesignStudio</option>
-                                            <option value="finance">Finance Analyst Intern - FinanceHub</option>
-                                            <option value="marketing">Marketing Intern - BrandWorks</option>
-                                        </select>
-                                    </div>
-                                </div>
+                    <div class="text-center">
+                        <strong>OR</strong>
+                    </div>
 
-                                <!-- Right Column: Resume Upload -->
-                                <div class="col-lg-6">
-                                    <h5 class="mb-3">
-                                        <i class="fas fa-file-pdf text-primary me-2"></i>
-                                        Upload Resume
-                                    </h5>
+                    <div class="mt-3">
+                        <label class="form-label">Select from Available Positions</label>
+                        <select class="form-select" id="jobSelect">
+                            <option value="">— Choose a Job Posting —</option>
+                            <option value="frontend">Frontend Developer Intern</option>
+                            <option value="backend">Backend Developer Intern</option>
+                            <option value="fullstack">Full-Stack Developer Intern</option>
+                            <option value="data">Data Analyst Intern</option>
+                            <option value="marketing">Marketing Intern</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-                                    <div class="upload-area" id="uploadArea">
-                                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
-                                        <h6 class="mb-2">Drop your resume here</h6>
-                                        <p class="text-muted mb-3">or click to browse files</p>
-                                        <button type="button" class="btn btn-primary">
-                                            <i class="fas fa-upload me-2"></i>Choose File
-                                        </button>
-                                        <input type="file" id="resumeFile" class="d-none" accept=".pdf" required>
-                                        <div class="mt-3">
-                                            <small class="text-muted">
-                                                <i class="fas fa-info-circle me-1"></i>
-                                                Only PDF format is supported (Max 5MB)
-                                            </small>
-                                        </div>
-                                    </div>
+            <!-- Resume Upload Section -->
+            <div class="col-lg-6">
+                <div class="section-card">
+                    <div class="section-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h4>Upload Resume</h4>
 
-                                    <div class="uploaded-file d-none mt-3" id="uploadedFile">
-                                        <div class="alert alert-success d-flex align-items-center">
-                                            <i class="fas fa-file-pdf me-2"></i>
-                                            <div class="flex-grow-1">
-                                                <strong id="fileName">resume.pdf</strong>
-                                                <small class="d-block text-muted" id="fileSize">2.3 MB</small>
-                                            </div>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" id="removeFile">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="upload-area" onclick="document.getElementById('resumeFile').click()">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h5>Drop your resume here</h5>
+                        <p class="text-muted">or click to browse files</p>
+                        <input type="file" id="resumeFile" accept=".pdf" style="display: none;">
+                    </div>
 
-                            <!-- Generate Report Button -->
-                            <div class="text-center mt-4 pt-3">
-                                <button type="submit" class="btn btn-primary btn-lg px-5">
-                                    <i class="fas fa-chart-bar me-2"></i>Analyze Resume
-                                </button>
-                            </div>
-                        </form>
+                    <div class="file-info" id="fileInfo">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-file-pdf text-danger me-2"></i>
+                            <span id="fileName"></span>
+                            <button class="btn btn-sm btn-outline-danger ms-auto" onclick="removeFile()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
 
-                        <!-- Analysis Results Section -->
-                        <div class="analysis-section" id="analysisResults">
-                            <div class="row">
-                                <!-- Overall Score -->
-                                <div class="col-md-4 text-center">
-                                    <div class="score-circle score-good" id="overallScore">
-                                        87%
-                                    </div>
-                                    <h5 class="mb-1">Match Score</h5>
-                                    <p class="text-muted">Good compatibility with job requirements</p>
-                                </div>
+                    <div class="mt-3">
+                        <button class="btn btn-choose-file btn-outline-primary">
+                            <i class="fas fa-folder-open me-2"></i>Choose File
+                        </button>
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-info-circle"></i>
+                            Only PDF format is supported (Max 5MB)
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                                <!-- Key Metrics -->
-                                <div class="col-md-8">
-                                    <h6 class="mb-3">Analysis Breakdown</h6>
+        <!-- Analyze Button -->
+        <div class="text-center mt-4">
+            <button class="btn btn-analyze" id="analyzeBtn" onclick="analyzeResume()" disabled>
+                <i class="fas fa-search me-2"></i>Analyze Resume
+            </button>
+        </div>
 
-                                    <div class="mb-3">
-                                        <div class="d-flex justify-content-between mb-1">
-                                            <span>Skills Match</span>
-                                            <span class="text-success">8/10 found</span>
-                                        </div>
-                                        <div class="progress-custom">
-                                            <div class="progress-bar-custom bg-success" style="width: 80%"></div>
-                                        </div>
-                                    </div>
+        <!-- Loading Spinner -->
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Analyzing your resume...</p>
+        </div>
 
-                                    <div class="mb-3">
-                                        <div class="d-flex justify-content-between mb-1">
-                                            <span>Experience Level</span>
-                                            <span class="text-warning">Moderate Match</span>
-                                        </div>
-                                        <div class="progress-custom">
-                                            <div class="progress-bar-custom bg-warning" style="width: 65%"></div>
-                                        </div>
-                                    </div>
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <div class="row g-4">
+                <!-- Match Percentage -->
+                <div class="col-12">
+                    <div class="match-percentage">
+                        <div class="percentage-circle" id="percentageCircle">
+                            <span id="percentageText">0%</span>
+                        </div>
+                        <h4>Resume Match Score</h4>
+                        <p class="text-muted">How well your resume matches the job requirements</p>
+                    </div>
+                </div>
 
-                                    <div class="mb-3">
-                                        <div class="d-flex justify-content-between mb-1">
-                                            <span>Education</span>
-                                            <span class="text-success">Excellent</span>
-                                        </div>
-                                        <div class="progress-custom">
-                                            <div class="progress-bar-custom bg-success" style="width: 95%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr class="my-4">
-
-                            <!-- Detailed Analysis -->
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <h6 class="mb-3">
-                                        <i class="fas fa-check-circle text-success me-2"></i>
-                                        Strengths
-                                    </h6>
-
-                                    <div class="analysis-item analysis-excellent">
-                                        <strong>Strong Technical Skills</strong>
-                                        <p class="mb-1 small">Your resume shows proficiency in required technologies including React, Node.js, and Python.</p>
-                                    </div>
-
-                                    <div class="analysis-item analysis-excellent">
-                                        <strong>Relevant Experience</strong>
-                                        <p class="mb-1 small">Previous internship experience aligns well with the position requirements.</p>
-                                    </div>
-
-                                    <div class="analysis-item analysis-good">
-                                        <strong>Education Match</strong>
-                                        <p class="mb-1 small">Your Computer Science background is perfect for this role.</p>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6">
-                                    <h6 class="mb-3">
-                                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>
-                                        Areas for Improvement
-                                    </h6>
-
-                                    <div class="analysis-item analysis-poor">
-                                        <strong>Missing Keywords</strong>
-                                        <p class="mb-2 small">Add these important terms to improve visibility:</p>
-                                        <div>
-                                            <span class="keyword-tag keyword-missing">Docker</span>
-                                            <span class="keyword-tag keyword-missing">AWS</span>
-                                            <span class="keyword-tag keyword-missing">Agile</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="analysis-item analysis-good">
-                                        <strong>Project Descriptions</strong>
-                                        <p class="mb-1 small">Include more quantifiable achievements and impact metrics in your project descriptions.</p>
-                                    </div>
-
-                                    <div class="analysis-item analysis-good">
-                                        <strong>Certifications</strong>
-                                        <p class="mb-1 small">Consider adding relevant certifications mentioned in the job posting.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr class="my-4">
-
-                            <!-- Keywords Analysis -->
-                            <div class="row">
-                                <div class="col-12">
-                                    <h6 class="mb-3">
-                                        <i class="fas fa-tags text-primary me-2"></i>
-                                        Keyword Analysis
-                                    </h6>
-
-                                    <div class="mb-3">
-                                        <strong class="text-success">Found in Resume:</strong>
-                                        <div class="mt-2">
-                                            <span class="keyword-tag">JavaScript</span>
-                                            <span class="keyword-tag">React</span>
-                                            <span class="keyword-tag">Node.js</span>
-                                            <span class="keyword-tag">Python</span>
-                                            <span class="keyword-tag">SQL</span>
-                                            <span class="keyword-tag">Git</span>
-                                            <span class="keyword-tag">MongoDB</span>
-                                            <span class="keyword-tag">REST API</span>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <strong class="text-danger">Missing Keywords:</strong>
-                                        <div class="mt-2">
-                                            <span class="keyword-tag keyword-missing">Docker</span>
-                                            <span class="keyword-tag keyword-missing">AWS</span>
-                                            <span class="keyword-tag keyword-missing">Agile</span>
-                                            <span class="keyword-tag keyword-missing">Machine Learning</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Action Buttons -->
-                            <div class="text-center mt-4 pt-3">
-                                <button class="btn btn-success me-2" onclick="downloadReport()">
-                                    <i class="fas fa-download me-1"></i>Download Report
-                                </button>
-                                <button class="btn btn-outline-primary" onclick="resetAnalysis()">
-                                    <i class="fas fa-redo me-1"></i>Analyze Another
-                                </button>
-                            </div>
+                <!-- Detailed Analysis -->
+                <div class="col-md-6">
+                    <div class="section-card">
+                        <h5><i class="fas fa-check-circle text-success me-2"></i>Matched Skills</h5>
+                        <div id="matchedSkills" class="skills-match">
+                            <!-- Matched skills will be populated here -->
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</main>
 
-<!-- Footer -->
-<footer class="footer-section mt-auto">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="mb-4">
-                    <h4 class="text-white mb-3">
-                        <i class="fas fa-graduation-cap me-2"></i>InternBay
-                    </h4>
-                    <p class="text-white mb-3">
-                        Connecting students with their dream internships and career opportunities.
-                        Building the future workforce, one internship at a time.
-                    </p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                <div class="col-md-6">
+                    <div class="section-card">
+                        <h5><i class="fas fa-exclamation-triangle text-warning me-2"></i>Missing Skills</h5>
+                        <div id="missingSkills" class="skills-match">
+                            <!-- Missing skills will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Improvement Suggestions -->
+                <div class="col-12">
+                    <div class="section-card">
+                        <h5><i class="fas fa-lightbulb text-primary me-2"></i>Improvement Suggestions</h5>
+                        <ul class="suggestions-list" id="suggestionsList">
+                            <!-- Suggestions will be populated here -->
+                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-6">
-                <h6 class="text-white mb-3">For Students</h6>
-                <div class="footer-links">
-                    <a href="#" class="d-block mb-2">Find Internships</a>
-                    <a href="#" class="d-block mb-2">Career Advice</a>
-                    <a href="#" class="d-block mb-2">Resume Builder</a>
-                    <a href="#" class="d-block mb-2">Interview Prep</a>
-                    <a href="#" class="d-block mb-2">Student Resources</a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-6">
-                <h6 class="text-white mb-3">For Companies</h6>
-                <div class="footer-links">
-                    <a href="#" class="d-block mb-2">Post Internships</a>
-                    <a href="#" class="d-block mb-2">Hire Students</a>
-                    <a href="#" class="d-block mb-2">Company Profiles</a>
-                    <a href="#" class="d-block mb-2">Recruitment Tools</a>
-                    <a href="#" class="d-block mb-2">Pricing</a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-6">
-                <h6 class="text-white mb-3">Resources</h6>
-                <div class="footer-links">
-                    <a href="#" class="d-block mb-2">Help Center</a>
-                    <a href="#" class="d-block mb-2">Career Blog</a>
-                    <a href="#" class="d-block mb-2">Success Stories</a>
-                    <a href="#" class="d-block mb-2">Webinars</a>
-                    <a href="#" class="d-block mb-2">Guidelines</a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-6">
-                <h6 class="text-white mb-3">Company</h6>
-                <div class="footer-links">
-                    <a href="#" class="d-block mb-2">About Us</a>
-                    <a href="#" class="d-block mb-2">Contact</a>
-                    <a href="#" class="d-block mb-2">Privacy Policy</a>
-                    <a href="#" class="d-block mb-2">Terms of Service</a>
-                    <a href="#" class="d-block mb-2">Careers</a>
-                </div>
-            </div>
-        </div>
-        <hr class="my-4" style="border-color: #334155;">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <p class="text-white mb-3">© 2025 InternBay. All Rights Reserved.</p>
-            </div>
-            <div class="col-md-6 text-end">
-                <p class="text-white mb-3">Made with <i class="fas fa-heart text-danger"></i> for Students</p>
-            </div>
         </div>
     </div>
-</footer>
+</div>
 
-<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        initFadeInAnimations();
-        initFileUpload();
-        initJobPostingSelector();
-        initResumeAnalyzer();
+    let uploadedFile = null;
+
+    // Job descriptions database
+    const jobDescriptions = {
+        frontend: `Frontend Developer Intern
+        We are looking for a passionate Frontend Developer Intern to join our team.
+
+        Responsibilities:
+        - Develop responsive web applications using React.js
+        - Collaborate with designers to implement UI/UX designs
+        - Write clean, maintainable code
+        - Participate in code reviews
+
+        Requirements:
+        - Proficiency in HTML, CSS, JavaScript
+        - Experience with React.js or similar frameworks
+        - Knowledge of responsive design principles
+        - Understanding of version control (Git)
+        - Strong problem-solving skills`,
+
+        backend: `Backend Developer Intern
+        Join our backend team to build scalable server-side applications.
+
+        Responsibilities:
+        - Develop REST APIs using Node.js/Python
+        - Design and implement database schemas
+        - Optimize application performance
+        - Write unit and integration tests
+
+        Requirements:
+        - Experience with Node.js, Python, or Java
+        - Knowledge of databases (SQL/NoSQL)
+        - Understanding of REST API design
+        - Familiarity with cloud services (AWS/GCP)
+        - Experience with testing frameworks`,
+
+        fullstack: `Full-Stack Developer Intern
+        Work on both frontend and backend development in a collaborative environment.
+
+        Responsibilities:
+        - Develop end-to-end web applications
+        - Build responsive user interfaces
+        - Design and implement APIs
+        - Deploy applications to cloud platforms
+
+        Requirements:
+        - Proficiency in JavaScript, HTML, CSS
+        - Experience with React.js and Node.js
+        - Knowledge of databases and SQL
+        - Understanding of DevOps basics
+        - Strong communication skills`,
+
+        data: `Data Analyst Intern
+        Analyze data to help drive business decisions and insights.
+
+        Responsibilities:
+        - Analyze large datasets using Python/R
+        - Create data visualizations and dashboards
+        - Generate reports and insights
+        - Clean and preprocess data
+
+        Requirements:
+        - Experience with Python or R
+        - Knowledge of SQL and databases
+        - Familiarity with data visualization tools
+        - Statistical analysis skills
+        - Excel proficiency`,
+
+        marketing: `Marketing Intern
+        Support marketing initiatives and campaigns across digital channels.
+
+        Responsibilities:
+        - Assist with social media campaigns
+        - Create marketing content
+        - Analyze campaign performance
+        - Support email marketing efforts
+
+        Requirements:
+        - Knowledge of digital marketing
+        - Experience with social media platforms
+        - Content creation skills
+        - Analytics tools knowledge
+        - Creative thinking abilities`
+    };
+
+    // File upload handling
+    document.getElementById('resumeFile').addEventListener('change', handleFileSelect);
+    document.getElementById('jobSelect').addEventListener('change', handleJobSelect);
+    document.getElementById('jobDescription').addEventListener('input', validateForm);
+
+    // Drag and drop functionality
+    const uploadArea = document.querySelector('.upload-area');
+
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
     });
 
-    // Fade-in animations
-    function initFadeInAnimations() {
-        const fadeElements = document.querySelectorAll('.fade-in');
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
 
-        const fadeInObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFile(files[0]);
+        }
+    });
 
-        fadeElements.forEach(element => {
-            fadeInObserver.observe(element);
-        });
-    }
-
-    // File upload functionality
-    function initFileUpload() {
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('resumeFile');
-        const uploadedFile = document.getElementById('uploadedFile');
-        const fileName = document.getElementById('fileName');
-        const fileSize = document.getElementById('fileSize');
-        const removeFile = document.getElementById('removeFile');
-
-        // Click to upload
-        uploadArea.addEventListener('click', () => fileInput.click());
-
-        // File selection
-        fileInput.addEventListener('change', handleFileSelect);
-
-        // Drag and drop
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                fileInput.files = files;
-                handleFileSelect({ target: { files } });
-            }
-        });
-
-        // Remove file
-        removeFile.addEventListener('click', () => {
-            fileInput.value = '';
-            uploadedFile.classList.add('d-none');
-            uploadArea.style.display = 'block';
-        });
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (file && file.type === 'application/pdf') {
-                fileName.textContent = file.name;
-                fileSize.textContent = formatFileSize(file.size);
-                uploadedFile.classList.remove('d-none');
-                uploadArea.style.display = 'none';
-            } else {
-                showNotification('Please select a valid PDF file.', 'warning');
-                fileInput.value = '';
-            }
+    function handleFileSelect(e) {
+        const file = e.target.files[0];
+        if (file) {
+            handleFile(file);
         }
     }
 
-    // Job posting selector
-    function initJobPostingSelector() {
-        const jobPosting = document.getElementById('jobPosting');
-        const jobDescription = document.getElementById('jobDescription');
+    function handleFile(file) {
+        if (file.type !== 'application/pdf') {
+            alert('Please upload a PDF file only.');
+            return;
+        }
 
-        const jobDescriptions = {
-            fullstack: `Full-Stack Development Intern - TechCorp
-Responsibilities:
-- Develop and maintain web applications using React, Node.js, and MongoDB.
-- Collaborate with cross-functional teams to define and design new features.
-- Optimize applications for maximum speed and scalability.
-Requirements:
-- Proficiency in JavaScript, React, and Node.js.
-- Experience with Git and RESTful APIs.
-- Basic understanding of database management (MongoDB preferred).
-Qualifications:
-- Currently pursuing a degree in Computer Science or related field.
-- Strong problem-solving skills and ability to work in a team.`,
+        if (file.size > 5 * 1024 * 1024) { // 5MB
+            alert('File size should be less than 5MB.');
+            return;
+        }
 
-            datascience: `Data Science Intern - DataFlow Inc
-Responsibilities:
-- Analyze large datasets to identify trends and patterns.
-- Develop machine learning models using Python and TensorFlow.
-- Create data visualizations for stakeholder presentations.
-Requirements:
-- Knowledge of Python, SQL, and machine learning frameworks.
-- Experience with data visualization tools (e.g., Matplotlib, Seaborn).
-- Strong analytical and statistical skills.
-Qualifications:
-- Enrolled in a degree program in Data Science, Statistics, or related field.
-- Familiarity with big data technologies is a plus.`,
-
-            uiux: `UI/UX Design Intern - DesignStudio
-Responsibilities:
-- Design user interfaces and prototypes using Figma and Adobe XD.
-- Conduct user research and usability testing.
-- Collaborate with developers to implement designs.
-Requirements:
-- Proficiency in Figma, Adobe XD, and wireframing tools.
-- Understanding of UX principles and design systems.
-- Basic knowledge of HTML/CSS is a plus.
-Qualifications:
-- Pursuing a degree in Design, HCI, or related field.
-- Creative portfolio showcasing design projects.`,
-
-            finance: `Finance Analyst Intern - FinanceHub
-Responsibilities:
-- Assist in financial modeling and forecasting.
-- Prepare reports and presentations for management.
-- Support budgeting and variance analysis.
-Requirements:
-- Knowledge of Microsoft Excel and financial software.
-- Basic understanding of financial statements and accounting principles.
-- Strong analytical skills.
-Qualifications:
-- Enrolled in a Finance, Economics, or Business Administration program.
-- Attention to detail and ability to handle confidential information.`,
-
-            marketing: `Marketing Intern - BrandWorks
-Responsibilities:
-- Assist in creating social media content and campaigns.
-- Conduct market research and analyze consumer trends.
-- Support email marketing and event coordination.
-Requirements:
-- Familiarity with social media platforms and tools (e.g., Hootsuite).
-- Basic knowledge of Google Analytics and SEO.
-- Strong communication and creative skills.
-Qualifications:
-- Pursuing a degree in Marketing, Communications, or related field.
-- Enthusiasm for digital marketing trends.`
-        };
-
-        jobPosting.addEventListener('change', function() {
-            const selectedJob = this.value;
-            if (selectedJob && jobDescriptions[selectedJob]) {
-                jobDescription.value = jobDescriptions[selectedJob];
-            } else {
-                jobDescription.value = '';
-            }
-        });
+        uploadedFile = file;
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileInfo').style.display = 'block';
+        validateForm();
     }
 
-    // Resume analyzer
-    function initResumeAnalyzer() {
-        const form = document.getElementById('resumeCheckerForm');
-        const analysisResults = document.getElementById('analysisResults');
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // Simulate resume analysis (replace with actual logic)
-            const jobDescription = document.getElementById('jobDescription').value;
-            const fileInput = document.getElementById('resumeFile');
-
-            if (jobDescription && fileInput.files.length > 0) {
-                analysisResults.style.display = 'block';
-                // Here you would typically send data to a server for analysis
-                // For demo, we're just showing static results
-            } else {
-                showNotification('Please fill all required fields.', 'warning');
-            }
-        });
-    }
-
-    // Utility function to format file size
-    function formatFileSize(bytes) {
-        const mb = bytes / (1024 * 1024);
-        return mb.toFixed(1) + ' MB';
-    }
-
-    // Notification function (simplified)
-    function showNotification(message, type) {
-        alert(`${type === 'warning' ? 'Warning: ' : ''}${message}`);
-    }
-
-    // Download report (simulated)
-    function downloadReport() {
-        const blob = new Blob(['Resume Analysis Report\nMatch Score: 87%\n...'], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'resume_analysis_report.txt';
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-
-    // Reset analysis
-    function resetAnalysis() {
-        document.getElementById('jobDescription').value = '';
-        document.getElementById('jobPosting').value = '';
+    function removeFile() {
+        uploadedFile = null;
         document.getElementById('resumeFile').value = '';
-        document.getElementById('uploadedFile').classList.add('d-none');
-        document.getElementById('uploadArea').style.display = 'block';
-        document.getElementById('analysisResults').style.display = 'none';
+        document.getElementById('fileInfo').style.display = 'none';
+        validateForm();
+    }
+
+    function handleJobSelect() {
+        const selectValue = document.getElementById('jobSelect').value;
+        if (selectValue) {
+            document.getElementById('jobDescription').value = jobDescriptions[selectValue];
+        }
+        validateForm();
+    }
+
+    function validateForm() {
+        const jobDesc = document.getElementById('jobDescription').value.trim();
+        const hasFile = uploadedFile !== null;
+
+        document.getElementById('analyzeBtn').disabled = !jobDesc || !hasFile;
+    }
+
+    async function analyzeResume() {
+        const jobDescription = document.getElementById('jobDescription').value.trim();
+
+        if (!uploadedFile || !jobDescription) {
+            alert('Please provide both job description and resume file.');
+            return;
+        }
+
+        // Show loading
+        document.getElementById('loadingSpinner').style.display = 'block';
+        document.getElementById('resultsSection').style.display = 'none';
+
+        try {
+            // Extract text from PDF
+            const resumeText = await extractTextFromPDF(uploadedFile);
+
+            // Simulate API call delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Analyze resume (this would be replaced with actual API call)
+            const analysis = await performAnalysis(resumeText, jobDescription);
+
+            // Display results
+            displayResults(analysis);
+
+        } catch (error) {
+            console.error('Error analyzing resume:', error);
+            alert('Error analyzing resume. Please try again.');
+        } finally {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+    }
+
+    async function extractTextFromPDF(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const typedArray = new Uint8Array(e.target.result);
+
+                try {
+                    const pdf = await pdfjsLib.getDocument(typedArray).promise;
+                    let fullText = '';
+
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const textContent = await page.getTextContent();
+                        const pageText = textContent.items.map(item => item.str).join(' ');
+                        fullText += pageText + ' ';
+                    }
+
+                    resolve(fullText);
+                } catch (error) {
+                    console.error('PDF parsing error:', error);
+                    resolve('Sample resume text for demo purposes. Skills include JavaScript, Python, React, HTML, CSS, SQL, problem solving, teamwork.');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    async function performAnalysis(resumeText, jobDescription) {
+        // This is a simplified analysis - in real implementation, you'd use an AI API
+
+        // Extract keywords from job description
+        const jobKeywords = extractKeywords(jobDescription);
+        const resumeKeywords = extractKeywords(resumeText);
+
+        // Calculate matches
+        const matchedSkills = jobKeywords.filter(skill =>
+            resumeKeywords.some(rSkill =>
+                rSkill.toLowerCase().includes(skill.toLowerCase()) ||
+                skill.toLowerCase().includes(rSkill.toLowerCase())
+            )
+        );
+
+        const missingSkills = jobKeywords.filter(skill =>
+            !matchedSkills.some(mSkill =>
+                mSkill.toLowerCase().includes(skill.toLowerCase()) ||
+                skill.toLowerCase().includes(mSkill.toLowerCase())
+            )
+        );
+
+        const matchPercentage = Math.round((matchedSkills.length / jobKeywords.length) * 100);
+
+        // Generate suggestions
+        const suggestions = generateSuggestions(missingSkills, matchPercentage);
+
+        return {
+            matchPercentage,
+            matchedSkills,
+            missingSkills,
+            suggestions
+        };
+    }
+
+    function extractKeywords(text) {
+        const techSkills = [
+            'JavaScript', 'Python', 'Java', 'React', 'Node.js', 'HTML', 'CSS',
+            'SQL', 'MongoDB', 'Express', 'Vue.js', 'Angular', 'TypeScript',
+            'Git', 'AWS', 'Docker', 'REST API', 'GraphQL', 'Firebase',
+            'Machine Learning', 'Data Analysis', 'Excel', 'Tableau', 'PowerBI'
+        ];
+
+        const softSkills = [
+            'Communication', 'Teamwork', 'Problem Solving', 'Leadership',
+            'Time Management', 'Adaptability', 'Critical Thinking'
+        ];
+
+        const allSkills = [...techSkills, ...softSkills];
+        const lowerText = text.toLowerCase();
+
+        return allSkills.filter(skill =>
+            lowerText.includes(skill.toLowerCase())
+        );
+    }
+
+    function generateSuggestions(missingSkills, matchPercentage) {
+        const suggestions = [];
+
+        if (matchPercentage < 50) {
+            suggestions.push('Consider highlighting more relevant skills that match the job requirements');
+            suggestions.push('Tailor your resume to include keywords from the job description');
+        }
+
+        if (missingSkills.length > 0) {
+            suggestions.push(`Consider adding experience with: ${missingSkills.slice(0, 3).join(', ')}`);
+        }
+
+        suggestions.push('Quantify your achievements with specific numbers and results');
+        suggestions.push('Include relevant projects that demonstrate your skills');
+
+        if (matchPercentage > 80) {
+            suggestions.push('Great job! Your resume is well-aligned with the job requirements');
+        }
+
+        return suggestions;
+    }
+
+    function displayResults(analysis) {
+        // Update percentage circle
+        const percentage = analysis.matchPercentage;
+        const circle = document.getElementById('percentageCircle');
+        const percentageText = document.getElementById('percentageText');
+
+        // Animate percentage
+        let currentPercentage = 0;
+        const increment = percentage / 50; // 50 steps for smooth animation
+
+        const animation = setInterval(() => {
+            currentPercentage += increment;
+            if (currentPercentage >= percentage) {
+                currentPercentage = percentage;
+                clearInterval(animation);
+            }
+
+            percentageText.textContent = Math.round(currentPercentage) + '%';
+            circle.style.setProperty('--percentage', `${currentPercentage * 3.6}deg`);
+
+            // Color based on percentage
+            if (currentPercentage >= 80) {
+                circle.style.background = `conic-gradient(var(--success-color) 0deg, var(--success-color) ${currentPercentage * 3.6}deg, #e2e8f0 ${currentPercentage * 3.6}deg)`;
+            } else if (currentPercentage >= 60) {
+                circle.style.background = `conic-gradient(var(--warning-color) 0deg, var(--warning-color) ${currentPercentage * 3.6}deg, #e2e8f0 ${currentPercentage * 3.6}deg)`;
+            } else {
+                circle.style.background = `conic-gradient(var(--danger-color) 0deg, var(--danger-color) ${currentPercentage * 3.6}deg, #e2e8f0 ${currentPercentage * 3.6}deg)`;
+            }
+        }, 20);
+
+        // Display matched skills
+        const matchedSkillsDiv = document.getElementById('matchedSkills');
+        matchedSkillsDiv.innerHTML = analysis.matchedSkills.map(skill =>
+            `<div class="skill-item">${skill}</div>`
+        ).join('');
+
+        // Display missing skills
+        const missingSkillsDiv = document.getElementById('missingSkills');
+        missingSkillsDiv.innerHTML = analysis.missingSkills.map(skill =>
+            `<div class="skill-item">${skill}</div>`
+        ).join('');
+
+        // Display suggestions
+        const suggestionsList = document.getElementById('suggestionsList');
+        suggestionsList.innerHTML = analysis.suggestions.map(suggestion =>
+            `<li><i class="fas fa-arrow-right text-primary me-2"></i>${suggestion}</li>`
+        ).join('');
+
+        // Show results
+        document.getElementById('resultsSection').style.display = 'block';
     }
 </script>
+
 </body>
 </html>
