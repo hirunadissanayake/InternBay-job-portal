@@ -107,6 +107,14 @@ body {
     margin: 0 auto 1rem;
 }
 
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+}
 .btn-analyze {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     border: none;
