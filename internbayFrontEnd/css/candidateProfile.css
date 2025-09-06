@@ -1,3 +1,4 @@
+
 :root {
     --primary-color: #4f46e5;
     --primary-dark: #3730a3;
@@ -135,21 +136,6 @@ body {
     box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
 }
 
-.company-avatar {
-    width: 120px;
-    height: 120px;
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 3rem;
-    margin: 0 auto 1.5rem;
-    position: relative;
-    overflow: hidden;
-}
-
 .upload-area {
     border: 2px dashed #d1d5db;
     border-radius: 12px;
@@ -168,40 +154,6 @@ body {
     font-size: 3rem;
     color: var(--text-muted);
     margin-bottom: 1rem;
-}
-
-.footer-section {
-    background-color: #1e293b;
-    color: white;
-    padding: 3rem 0 1rem;
-    margin-top: auto;
-}
-
-.footer-links a {
-    color: #94a3b8;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s ease;
-}
-
-.footer-links a:hover {
-    color: white;
-}
-
-.social-links a {
-    color: #94a3b8;
-    font-size: 1.2rem;
-    margin-right: 1rem;
-    transition: color 0.3s ease;
-}
-
-.social-links a:hover {
-    color: var(--primary-color);
-}
-
-.alert {
-    border-radius: 8px;
-    margin-top: 1rem;
 }
 
 @media (max-width: 768px) {

@@ -56,7 +56,7 @@ function updateNavbarForLoggedInUser(userRole, userEmail) {
                         <i class="fas fa-user me-1"></i>Profile
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                        <li><a class="dropdown-item" href="candidateProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
                     </ul>
@@ -102,7 +102,7 @@ function updateNavbarForLoggedInUser(userRole, userEmail) {
                         <i class="fas fa-user me-1"></i>Profile
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                        <li><a class="dropdown-item" href="employerProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
                     </ul>
