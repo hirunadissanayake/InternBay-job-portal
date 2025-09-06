@@ -51,14 +51,14 @@
 
             <div class="d-flex gap-2">
                 <button class="btn btn-outline-primary">
-                    <i class="fas fa-user me-1"></i>Dashboard
+                    <i class="fas fa-bell me-1"></i>Notifications
                 </button>
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="fas fa-user me-1"></i>Profile
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                        <li><a class="dropdown-item" href="employerProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
                     </ul>
@@ -90,8 +90,8 @@
                     <div class="profile-avatar" id="profileAvatar" title="Click to upload profile picture">
                         <i class="fas fa-user"></i>
                     </div>
-                    <h4 class="fw-bold mb-2">HR Manager</h4>
-                    <p class="text-muted mb-0">hr@techcorp.com</p>
+                    <h4 class="fw-bold mb-2">User</h4>
+                    <p class="text-muted mb-0">user@gmail.com</p>
                 </div>
             </div>
 
@@ -104,19 +104,19 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">First Name</label>
-                            <input type="text" class="form-control" value="Jane">
+                            <input type="text" class="form-control" >
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Last Name</label>
-                            <input type="text" class="form-control" value="Smith">
+                            <input type="text" class="form-control" >
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" value="hr@techcorp.com">
+                            <input type="email" class="form-control" >
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Contact</label>
-                            <input type="tel" class="form-control" value="+1 555 123 4567">
+                            <input type="tel" class="form-control" >
                         </div>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Company Name</label>
-                            <input type="text" class="form-control" value="TechCorp Solutions" placeholder="Enter company name">
+                            <input type="text" class="form-control" placeholder="Enter company name">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Industry</label>
@@ -146,11 +146,11 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Website</label>
-                            <input type="url" class="form-control" value="https://www.techcorp.com" placeholder="https://www.company.com">
+                            <input type="url" class="form-control" placeholder="https://www.company.com">
                         </div>
                         <div class="col-12">
                             <label class="form-label">Description</label>
-                            <textarea class="form-control" rows="4" placeholder="Describe your company, mission, and values">TechCorp Solutions is a leading technology company specializing in innovative software solutions. We are committed to empowering businesses through cutting-edge technology and fostering a culture of creativity and excellence.</textarea>
+                            <textarea class="form-control" rows="4" placeholder="Describe your company, mission, and values"></textarea>
                         </div>
                     </div>
                 </div>
@@ -340,5 +340,7 @@
         }
     });
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="../js/navbar.js"></script>
 </body>
 </html>
