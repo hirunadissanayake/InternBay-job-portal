@@ -3,11 +3,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Applications - InternBay</title>
+    <title>Manage Jobs - InternBay</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/myApplications.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary-color: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #f8fafc;
+            padding-top: 80px;
+        }
+
+        /* Navigation */
+        .navbar {
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-brand i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 3rem 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,100 0,80"/></svg>');
+            background-size: cover;
+        }
+
+        .page-header .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin: 2rem auto;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .empty-state.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .empty-text {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Job Cards */
+        .job-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .job-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .job-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .job-meta span {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-draft {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-expired {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .action-buttons .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Footer */
+        .footer-section {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .job-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .action-buttons {
+                margin-top: 1rem;
+                justify-content: flex-start;
+            }
+
+            .job-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
 <!-- Navigation -->
@@ -26,8 +343,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="findJob.html">Find Internships</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="myApplications.html">My Applications</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" id="jobDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Post Job
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="jobDropdown">
+                        <li><a class="dropdown-item" href="jobPosting.html">
+                            <i class="fas fa-plus me-2"></i>Post Job
+                        </a></li>
+                        <li><a class="dropdown-item" href="manageJobPosting.html">
+                            <i class="fas fa-cog me-2"></i>Manage Jobs
+                        </a></li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="aboutUs.html">About Us</a>
@@ -64,12 +391,12 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h1 class="display-5 fw-bold mb-2">My Applications</h1>
-                <p class="lead mb-0">Track your internship applications and their status</p>
+                <h1 class="display-5 fw-bold mb-2">Manage Jobs</h1>
+                <p class="lead mb-0">View, edit, and manage your job postings</p>
             </div>
             <div class="col-lg-4 text-end">
-                <a href="findJob.html" class="btn btn-light btn-lg">
-                    <i class="fas fa-search me-2"></i>Find More Jobs
+                <a href="jobPosting.html" class="btn btn-light btn-lg">
+                    <i class="fas fa-plus me-2"></i>Post New Job
                 </a>
             </div>
         </div>
@@ -82,55 +409,59 @@
         <!-- Empty State (Default) -->
         <div id="emptyState" class="empty-state fade-in visible">
             <div class="empty-icon">
-                <i class="fas fa-folder-open"></i>
+                <i class="fas fa-briefcase"></i>
             </div>
-            <h2 class="empty-title">No Applications Found</h2>
+            <h2 class="empty-title">No Job Postings Found</h2>
             <p class="empty-text">
-                You haven't applied to any internships yet. Start exploring opportunities and take the first step towards your dream career!
+                You haven't posted any jobs yet. Create your first job posting to start connecting with talented students and interns!
             </p>
-            <a href="findJob.html" class="btn btn-primary btn-lg">
-                <i class="fas fa-search me-2"></i>Browse Internships
+            <a href="jobPosting.html" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus me-2"></i>Post Your First Job
             </a>
         </div>
 
-        <!-- Applications List (Hidden by default, shows when user has applications) -->
-        <div id="applicationsList" style="display: none;">
-            <!-- Application Card 1 -->
-            <div class="application-card fade-in visible">
+        <!-- Jobs List (Hidden by default, shows when user has job postings) -->
+        <div id="jobsList" style="display: none;">
+            <!-- Job Card 1 -->
+            <div class="job-card fade-in visible">
                 <div class="row align-items-center">
                     <div class="col-lg-8">
                         <div class="d-flex">
                             <div class="company-logo">
-                                <i class="fas fa-building text-primary"></i>
+                                <i class="fas fa-code text-primary"></i>
                             </div>
                             <div class="flex-grow-1">
-                                <h3 class="job-title">MERN Stack Developer</h3>
+                                <h3 class="job-title">MERN Stack Developer Intern</h3>
                                 <div class="job-meta">
-                                    <span><i class="fas fa-building me-1"></i>JobSphere1</span>
-                                    <span><i class="fas fa-map-marker-alt me-1"></i>Kitchener</span>
+                                    <span><i class="fas fa-building me-1"></i>TechCorp Solutions</span>
+                                    <span><i class="fas fa-map-marker-alt me-1"></i>Remote</span>
                                     <span><i class="fas fa-clock me-1"></i>Full Time</span>
                                     <span><i class="fas fa-dollar-sign me-1"></i>$35/hr</span>
-                                    <span><i class="fas fa-calendar me-1"></i>Applied 2 hours ago</span>
+                                    <span><i class="fas fa-calendar me-1"></i>Posted 2 days ago</span>
+                                    <span><i class="fas fa-eye me-1"></i>12 Applications</span>
                                 </div>
-                                <span class="status-badge status-submitted">Submitted</span>
+                                <span class="status-badge status-active">Active</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="action-buttons">
-                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('mern-developer')">
-                                <i class="fas fa-eye me-1"></i>View Job
+                            <button class="btn btn-outline-info btn-sm" onclick="viewApplications('mern-developer')">
+                                <i class="fas fa-users me-1"></i>View Applications
                             </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('mern-developer')">
-                                <i class="fas fa-file-pdf me-1"></i>View CV
+                            <button class="btn btn-outline-primary btn-sm" onclick="editJob('mern-developer')">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="deleteJob('mern-developer')">
+                                <i class="fas fa-trash me-1"></i>Delete
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Application Card 2 -->
-            <div class="application-card fade-in visible">
+            <!-- Job Card 2 -->
+            <div class="job-card fade-in visible">
                 <div class="row align-items-center">
                     <div class="col-lg-8">
                         <div class="d-flex">
@@ -140,31 +471,35 @@
                             <div class="flex-grow-1">
                                 <h3 class="job-title">Data Science Intern</h3>
                                 <div class="job-meta">
-                                    <span><i class="fas fa-building me-1"></i>DataFlow Inc</span>
-                                    <span><i class="fas fa-map-marker-alt me-1"></i>Toronto</span>
+                                    <span><i class="fas fa-building me-1"></i>DataFlow Analytics</span>
+                                    <span><i class="fas fa-map-marker-alt me-1"></i>Toronto, ON</span>
                                     <span><i class="fas fa-clock me-1"></i>Part Time</span>
                                     <span><i class="fas fa-dollar-sign me-1"></i>$28/hr</span>
-                                    <span><i class="fas fa-calendar me-1"></i>Applied 1 day ago</span>
+                                    <span><i class="fas fa-calendar me-1"></i>Posted 1 week ago</span>
+                                    <span><i class="fas fa-eye me-1"></i>8 Applications</span>
                                 </div>
-                                <span class="status-badge status-reviewing">Under Review</span>
+                                <span class="status-badge status-active">Active</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="action-buttons">
-                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('data-science')">
-                                <i class="fas fa-eye me-1"></i>View Job
+                            <button class="btn btn-outline-info btn-sm" onclick="viewApplications('data-science')">
+                                <i class="fas fa-users me-1"></i>View Applications
                             </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('data-science')">
-                                <i class="fas fa-file-pdf me-1"></i>View CV
+                            <button class="btn btn-outline-primary btn-sm" onclick="editJob('data-science')">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="deleteJob('data-science')">
+                                <i class="fas fa-trash me-1"></i>Delete
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Application Card 3 -->
-            <div class="application-card fade-in visible">
+            <!-- Job Card 3 -->
+            <div class="job-card fade-in visible">
                 <div class="row align-items-center">
                     <div class="col-lg-8">
                         <div class="d-flex">
@@ -174,31 +509,38 @@
                             <div class="flex-grow-1">
                                 <h3 class="job-title">UI/UX Design Intern</h3>
                                 <div class="job-meta">
-                                    <span><i class="fas fa-building me-1"></i>DesignStudio</span>
-                                    <span><i class="fas fa-map-marker-alt me-1"></i>Vancouver</span>
-                                    <span><i class="fas fa-clock me-1"></i>Full Time</span>
+                                    <span><i class="fas fa-building me-1"></i>CreativeStudio Inc</span>
+                                    <span><i class="fas fa-map-marker-alt me-1"></i>Vancouver, BC</span>
+                                    <span><i class="fas fa-clock me-1"></i>Internship</span>
                                     <span><i class="fas fa-dollar-sign me-1"></i>$25/hr</span>
-                                    <span><i class="fas fa-calendar me-1"></i>Applied 3 days ago</span>
+                                    <span><i class="fas fa-calendar me-1"></i>Posted 3 days ago</span>
+                                    <span><i class="fas fa-eye me-1"></i>No Applications</span>
                                 </div>
-                                <span class="status-badge status-accepted">Accepted</span>
+                                <span class="status-badge status-draft">Draft</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="action-buttons">
-                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('ui-ux-design')">
-                                <i class="fas fa-eye me-1"></i>View Job
+                            <button class="btn btn-outline-secondary btn-sm" disabled>
+                                <i class="fas fa-users me-1"></i>No Applications
                             </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('ui-ux-design')">
-                                <i class="fas fa-file-pdf me-1"></i>View CV
+                            <button class="btn btn-outline-primary btn-sm" onclick="editJob('ui-ux-design')">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" onclick="publishJob('ui-ux-design')">
+                                <i class="fas fa-rocket me-1"></i>Publish
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="deleteJob('ui-ux-design')">
+                                <i class="fas fa-trash me-1"></i>Delete
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Application Card 4 -->
-            <div class="application-card fade-in visible">
+            <!-- Job Card 4 -->
+            <div class="job-card fade-in visible">
                 <div class="row align-items-center">
                     <div class="col-lg-8">
                         <div class="d-flex">
@@ -208,23 +550,27 @@
                             <div class="flex-grow-1">
                                 <h3 class="job-title">Finance Analyst Intern</h3>
                                 <div class="job-meta">
-                                    <span><i class="fas fa-building me-1"></i>FinanceHub</span>
-                                    <span><i class="fas fa-map-marker-alt me-1"></i>Montreal</span>
-                                    <span><i class="fas fa-clock me-1"></i>Internship</span>
-                                    <span><i class="fas fa-dollar-sign me-1"></i>$22/hr</span>
-                                    <span><i class="fas fa-calendar me-1"></i>Applied 1 week ago</span>
+                                    <span><i class="fas fa-building me-1"></i>FinanceHub Corp</span>
+                                    <span><i class="fas fa-map-marker-alt me-1"></i>Montreal, QC</span>
+                                    <span><i class="fas fa-clock me-1"></i>Full Time</span>
+                                    <span><i class="fas fa-dollar-sign me-1"></i>$30/hr</span>
+                                    <span><i class="fas fa-calendar me-1"></i>Posted 2 weeks ago</span>
+                                    <span><i class="fas fa-eye me-1"></i>15 Applications</span>
                                 </div>
-                                <span class="status-badge status-rejected">Not Selected</span>
+                                <span class="status-badge status-expired">Expired</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="action-buttons">
-                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('finance-analyst')">
-                                <i class="fas fa-eye me-1"></i>View Job
+                            <button class="btn btn-outline-info btn-sm" onclick="viewApplications('finance-analyst')">
+                                <i class="fas fa-users me-1"></i>View Applications
                             </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('finance-analyst')">
-                                <i class="fas fa-file-pdf me-1"></i>View CV
+                            <button class="btn btn-outline-warning btn-sm" onclick="renewJob('finance-analyst')">
+                                <i class="fas fa-redo me-1"></i>Renew
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="deleteJob('finance-analyst')">
+                                <i class="fas fa-trash me-1"></i>Delete
                             </button>
                         </div>
                     </div>
@@ -232,7 +578,7 @@
             </div>
 
             <!-- Pagination -->
-            <nav aria-label="Applications pagination" class="mt-4">
+            <nav aria-label="Jobs pagination" class="mt-4">
                 <ul class="pagination justify-content-center">
                     <li class="page-item disabled">
                         <a class="page-link" href="#" tabindex="-1">Previous</a>
@@ -255,87 +601,45 @@
     </div>
 </section>
 
-<!-- Job Details Modal -->
-<div class="modal fade" id="jobDetailsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-primary text-white">
-                <div>
-                    <h5 class="modal-title mb-0" id="jobModalTitle">MERN Stack Developer</h5>
-                    <small class="opacity-75" id="jobModalCompany">JobSphere1</small>
-                </div>
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirm Deletion
+                </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fas fa-dollar-sign text-primary me-2"></i>
-                            <span id="jobSalary">$35 per hour</span>
-                        </div>
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                            <span id="jobLocation">Kitchener</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fas fa-clock text-primary me-2"></i>
-                            <span id="jobType">Full Time</span>
-                        </div>
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fas fa-user text-primary me-2"></i>
-                            <span class="status-badge status-submitted">Submitted</span>
-                        </div>
-                    </div>
+                <p class="mb-3">Are you sure you want to delete this job posting?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle me-2"></i>
+                    This action cannot be undone. All applications for this job will also be removed.
                 </div>
-
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Education:</h6>
-                    <p id="jobEducation">Bachelor's degree in Computer Science or related field</p>
-                </div>
-
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Experience:</h6>
-                    <p id="jobExperience">2+ years of experience in MERN stack development</p>
-                </div>
-
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Skills:</h6>
-                    <p id="jobSkills">MongoDB, Express.js, React.js, Node.js, JavaScript, HTML, CSS</p>
-                </div>
-
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Availabilities:</h6>
-                    <p id="jobAvailabilities">Monday - Friday, 9:00 AM - 5:00 PM</p>
-                </div>
+                <p class="text-muted mb-0" id="jobToDelete">Job Title will appear here</p>
             </div>
             <div class="modal-footer border-0 p-4">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                    <i class="fas fa-trash me-2"></i>Delete Job
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- CV Viewer Modal -->
-<div class="modal fade" id="cvViewerModal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">CV for <span id="cvJobTitle">MERN Stack Developer</span></h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-0" style="height: 70vh;">
-                <div id="cvViewer" class="w-100 h-100 d-flex align-items-center justify-content-center">
-                    <div class="text-center">
-                        <i class="fas fa-file-pdf fa-5x text-primary mb-3"></i>
-                        <h4>CV Document</h4>
-                        <p class="text-muted">Your uploaded CV would be displayed here</p>
-                        <button class="btn btn-primary">
-                            <i class="fas fa-download me-2"></i>Download CV
-                        </button>
-                    </div>
+            <div class="modal-body text-center p-5">
+                <div class="text-success mb-3">
+                    <i class="fas fa-check-circle fa-3x"></i>
                 </div>
+                <h4 class="mb-3" id="successTitle">Action Completed Successfully!</h4>
+                <p class="text-muted mb-4" id="successMessage">Your action has been completed.</p>
+                <button class="btn btn-primary" data-bs-dismiss="modal">Continue</button>
             </div>
         </div>
     </div>
@@ -414,49 +718,106 @@
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Sample applications data - in a real application, this would come from your backend
-    //let userApplications = [
-         //Uncomment the applications below to simulate a user with applications
+    // Sample jobs data - in a real application, this would come from your backend
+    let userJobs = [
+        // Uncomment the jobs below to simulate a user with job postings
         /*
         {
             id: 'mern-developer',
-            title: 'MERN Stack Developer',
-            company: 'JobSphere1',
-            location: 'Kitchener',
+            title: 'MERN Stack Developer Intern',
+            company: 'TechCorp Solutions',
+            location: 'Remote',
             type: 'Full Time',
             salary: '$35/hr',
-            appliedDate: '2 hours ago',
-            status: 'submitted',
-            statusText: 'Submitted',
-            icon: 'fas fa-building',
+            postedDate: '2 days ago',
+            applications: 12,
+            status: 'active',
+            statusText: 'Active',
+            icon: 'fas fa-code',
             iconColor: 'text-primary'
-        },
-        {
-            id: 'data-science',
-            title: 'Data Science Intern',
-            company: 'DataFlow Inc',
-            location: 'Toronto',
-            type: 'Part Time',
-            salary: '$28/hr',
-            appliedDate: '1 day ago',
-            status: 'reviewing',
-            statusText: 'Under Review',
-            icon: 'fas fa-chart-line',
-            iconColor: 'text-success'
-        },
-        {
-            id: 'ui-ux-design',
-            title: 'UI/UX Design Intern',
-            company: 'DesignStudio',
-            location: 'Vancouver',
-            type: 'Full Time',
-            salary: '$25/hr',
-            appliedDate: '3 days ago',
-            status: 'accepted',
-            statusText: 'Accepted',
-            icon: 'fas fa-palette',
-            iconColor: 'text-warning'
-        }*/
+        }
+        */
+    ];
+
+    let jobToDeleteId = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (userJobs.length === 0) {
+            document.getElementById('emptyState').style.display = 'block';
+            document.getElementById('jobsList').style.display = 'none';
+        } else {
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('jobsList').style.display = 'block';
+        }
+    });
+
+    function viewApplications(jobId) {
+        showSuccess('Viewing Applications', 'Redirecting to applications for this job posting...');
+        // Redirect to applications page
+        setTimeout(() => {
+            window.location.href = 'jobApplications.html?job=' + jobId;
+        }, 1500);
+    }
+
+    function editJob(jobId) {
+        showSuccess('Editing Job', 'Redirecting to job editor...');
+        // Redirect to job editing page
+        setTimeout(() => {
+            window.location.href = 'jobPosting.html?edit=' + jobId;
+        }, 1500);
+    }
+
+    function deleteJob(jobId) {
+        jobToDeleteId = jobId;
+        // Set the job title in modal
+        document.getElementById('jobToDelete').textContent = 'Job ID: ' + jobId;
+        new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    }
+
+    function confirmDelete() {
+        if (jobToDeleteId) {
+            // Hide the delete modal
+            bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+
+            // Show success message
+            showSuccess('Job Deleted', 'The job posting has been successfully deleted.');
+
+            // In a real application, you would make an API call here
+            console.log('Deleting job:', jobToDeleteId);
+            jobToDeleteId = null;
+        }
+    }
+
+    function publishJob(jobId) {
+        showSuccess('Job Published', 'Your job posting is now live and visible to students!');
+        // In a real application, you would make an API call here
+        console.log('Publishing job:', jobId);
+    }
+
+    function renewJob(jobId) {
+        showSuccess('Job Renewed', 'Your job posting has been renewed for another 30 days.');
+        // In a real application, you would make an API call here
+        console.log('Renewing job:', jobId);
+    }
+
+    function showSuccess(title, message) {
+        document.getElementById('successTitle').textContent = title;
+        document.getElementById('successMessage').textContent = message;
+        new bootstrap.Modal(document.getElementById('successModal')).show();
+    }
+
+    // Animation for job cards
+    function animateCards() {
+        const cards = document.querySelectorAll('.job-card');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('visible');
+            }, index * 100);
+        });
+    }
+
+    // Call animation when page loads
+    document.addEventListener('DOMContentLoaded', animateCards);
 </script>
 <script src="..js/navbar.js"></script>
 <!-- Add this script section to EVERY HTML page before closing </body> tag -->
@@ -677,5 +1038,6 @@
         }
     }
 </script>
+
 </body>
 </html>
