@@ -80,8 +80,8 @@
                     <div class="profile-avatar" id="profileAvatar" title="Click to upload profile picture">
                         <i class="fas fa-user"></i>
                     </div>
-                    <h4 class="fw-bold mb-2">User</h4>
-                    <p class="text-muted mb-0">user@gmail.com</p>
+                    <h4 class="fw-bold mb-2" id="profileName">User</h4>
+                    <p class="text-muted mb-0" id="profileEmail">user@gmail.com</p>
                 </div>
             </div>
 
@@ -116,17 +116,47 @@
                     <div class="section-title">
                         <i class="fas fa-file-pdf"></i>My Resume
                     </div>
-                    <div class="text-center mb-3">
-                        <h5>No Resumes Found</h5>
+
+                    <!-- Current Resume Display -->
+                    <div id="currentResumeSection" style="display: none;">
+                        <div class="alert alert-info">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-pdf text-danger me-3" style="font-size: 2rem;"></i>
+                                    <div>
+                                        <h6 class="mb-1" id="resumeFileName">Current Resume</h6>
+                                        <small class="text-muted" id="resumeUploadDate">Uploaded from registration</small>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="#" target="_blank" class="btn btn-sm btn-outline-primary" id="viewResumeBtn">
+                                        <i class="fas fa-eye me-1"></i>View
+                                    </a>
+                                    <button class="btn btn-sm btn-secondary" onclick="showResumeUpload()">
+                                        <i class="fas fa-edit me-1"></i>Replace
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="upload-area" id="resumeUpload">
-                        <div class="upload-icon">
-                            <i class="fas fa-cloud-upload-alt"></i>
+
+                    <!-- No Resume Found -->
+                    <div id="noResumeSection">
+                        <div class="text-center mb-3">
+                            <h5>No Resume Found</h5>
+                            <p class="text-muted">Upload your resume to get started with job applications</p>
+                        </div>
+                    </div>
+
+                    <!-- Upload Area -->
+                    <div class="border border-2 border-dashed rounded p-4 text-center" id="resumeUpload" style="cursor: pointer;">
+                        <div class="text-muted mb-3">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 3rem;"></i>
                         </div>
                         <h6>Upload Resume</h6>
-                        <p class="text-muted mb-3">PDF files only</p>
+                        <p class="text-muted mb-3">PDF files only (Max 10MB)</p>
                         <button class="btn btn-outline-primary">
-                            Choose PDF File
+                            <i class="fas fa-file-upload me-2"></i>Choose PDF File
                         </button>
                     </div>
                 </div>
@@ -159,7 +189,7 @@
 
                 <!-- Save Button -->
                 <div class="text-end">
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" id="saveChangesBtn">
                         <i class="fas fa-save me-1"></i>Save Changes
                     </button>
                 </div>
@@ -201,11 +231,9 @@
             success: function(response) {
                 console.log('Profile response:', response);
 
-                // Fixed: Check for the actual response structure from your backend
                 if (response && response.data) {
                     populateProfileData(response.data);
                 } else if (response && (response.firstName || response.email)) {
-                    // Handle case where response.data might be the user object directly
                     populateProfileData(response);
                 } else {
                     console.error('Invalid response format:', response);
@@ -242,13 +270,16 @@
                     profileAvatar.style.backgroundImage = `url(${userData.profilePic})`;
                     profileAvatar.style.backgroundSize = 'cover';
                     profileAvatar.style.backgroundPosition = 'center';
+                    profileAvatar.style.width = '120px';
+                    profileAvatar.style.height = '120px';
+                    profileAvatar.style.borderRadius = '50%';
                     profileAvatar.innerHTML = '';
                 }
             }
 
             // Update name and email display
-            const nameElement = document.querySelector('.profile-section h4');
-            const emailElement = document.querySelector('.profile-section p');
+            const nameElement = document.getElementById('profileName');
+            const emailElement = document.getElementById('profileEmail');
 
             if (nameElement) {
                 const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
@@ -270,10 +301,8 @@
             if (emailField) emailField.value = userData.email || '';
             if (phoneField) phoneField.value = userData.phone || '';
 
-            // Update resume section
-            if (userData.resume) {
-                updateResumeDisplay(userData.resume);
-            }
+            // Update resume section - This is the key fix
+            updateResumeDisplay(userData.resume);
 
         } catch (error) {
             console.error('Error populating profile data:', error);
@@ -282,20 +311,56 @@
     }
 
     function updateResumeDisplay(resumeUrl) {
-        const resumeStatusElement = document.getElementById('resumeStatus');
-        if (resumeStatusElement) {
-            const resumeFileName = resumeUrl.split('/').pop();
-            resumeStatusElement.innerHTML = `
-                <div class="d-flex align-items-center justify-content-between">
-                    <span class="text-success">
-                        <i class="fas fa-file-pdf me-2"></i>Current Resume: ${resumeFileName}
-                    </span>
-                    <a href="${resumeUrl}" target="_blank" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-eye me-1"></i>View
-                    </a>
-                </div>
-            `;
+        const currentResumeSection = document.getElementById('currentResumeSection');
+        const noResumeSection = document.getElementById('noResumeSection');
+        const resumeUpload = document.getElementById('resumeUpload');
+
+        console.log('Resume URL:', resumeUrl); // Debug log
+
+        if (resumeUrl && resumeUrl.trim() !== '') {
+            // Show current resume
+            currentResumeSection.style.display = 'block';
+            noResumeSection.style.display = 'none';
+            resumeUpload.style.display = 'none';
+
+            // Update resume details
+            const resumeFileName = document.getElementById('resumeFileName');
+            const viewResumeBtn = document.getElementById('viewResumeBtn');
+
+            if (resumeFileName) {
+                // Extract filename from URL or use default
+                let fileName = 'Resume.pdf';
+                try {
+                    const urlParts = resumeUrl.split('/');
+                    const lastPart = urlParts[urlParts.length - 1];
+                    if (lastPart && lastPart.includes('.')) {
+                        fileName = decodeURIComponent(lastPart);
+                    }
+                } catch (e) {
+                    console.log('Could not extract filename, using default');
+                }
+                resumeFileName.textContent = fileName;
+            }
+
+            if (viewResumeBtn) {
+                viewResumeBtn.href = resumeUrl;
+            }
+
+            // showNotification('Resume loaded successfully!', 'success');
+        } else {
+            // Show no resume found
+            currentResumeSection.style.display = 'none';
+            noResumeSection.style.display = 'block';
+            resumeUpload.style.display = 'block';
         }
+    }
+
+    function showResumeUpload() {
+        const currentResumeSection = document.getElementById('currentResumeSection');
+        const resumeUpload = document.getElementById('resumeUpload');
+
+        currentResumeSection.style.display = 'none';
+        resumeUpload.style.display = 'block';
     }
 
     function initProfileUploads() {
@@ -429,6 +494,9 @@
                 profileAvatar.style.backgroundImage = `url(${profilePicUrl})`;
                 profileAvatar.style.backgroundSize = 'cover';
                 profileAvatar.style.backgroundPosition = 'center';
+                profileAvatar.style.width = '120px';
+                profileAvatar.style.height = '120px';
+                profileAvatar.style.borderRadius = '50%';
                 profileAvatar.innerHTML = '';
             },
             error: function(xhr, status, error) {
@@ -517,7 +585,7 @@
             success: function(response) {
                 showNotification('Profile updated successfully!', 'success');
 
-                const nameElement = document.querySelector('.profile-section h4');
+                const nameElement = document.getElementById('profileName');
                 if (nameElement) {
                     nameElement.textContent = `${firstName} ${lastName}`;
                 }
