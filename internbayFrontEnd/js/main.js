@@ -556,7 +556,7 @@ function updateNavbarForLoggedInUser(userRole, userEmail) {
                         <i class="fas fa-user me-1"></i>Profile
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                        <li><a class="dropdown-item" href="candidateProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
                     </ul>
@@ -594,15 +594,15 @@ function updateNavbarForLoggedInUser(userRole, userEmail) {
                 </li>
             </ul>
             <div class="d-flex gap-2">
-                <button class="btn btn-outline-primary" onclick="showEmployerDashboard()">
-                    <i class="fas fa-user me-1"></i>Dashboard
+                <button class="btn btn-outline-primary" onclick="showNotifications()">
+                    <i class="fas fa-bell me-1"></i>Notifications
                 </button>
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="fas fa-user me-1"></i>Profile
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                        <li><a class="dropdown-item" href="employerProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
                     </ul>

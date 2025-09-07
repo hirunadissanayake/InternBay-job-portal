@@ -94,8 +94,8 @@ function updateNavbarForLoggedInUser(userRole, userEmail) {
                 </li>
             </ul>
             <div class="d-flex gap-2">
-                <button class="btn btn-outline-primary" onclick="showEmployerDashboard()">
-                    <i class="fas fa-user me-1"></i>Dashboard
+                <button class="btn btn-outline-primary" onclick="showNotifications()">
+                    <i class="fas fa-bell me-1"></i>Notifications
                 </button>
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
