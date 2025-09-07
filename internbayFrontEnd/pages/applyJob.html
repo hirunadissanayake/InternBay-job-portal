@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Job - InternBay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary-color: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #f8fafc;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-brand i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem 0;
+        }
+
+        .application-container {
+            max-width: 900px;
+            margin: -40px auto 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .application-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .job-info-header {
+            background: var(--secondary-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .job-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .job-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+        }
+
+        .form-floating > .form-control,
+        .form-floating > .form-select {
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-floating > .form-control:focus,
+        .form-floating > .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+        }
+
+        .form-floating > label {
+            color: var(--text-muted);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .rich-text-editor {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            min-height: 150px;
+            padding: 1rem;
+            background: white;
+        }
+
+        .rich-text-editor:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .editor-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .editor-btn:hover {
+            background: #e2e8f0;
+            color: var(--text-dark);
+        }
+
+        .editor-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .editor-content {
+            min-height: 120px;
+            padding: 1rem;
+            outline: none;
+        }
+
+        .required-field {
+            color: #dc3545;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .submit-section {
+            background: var(--secondary-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin: 0 0.5rem;
+            position: relative;
+        }
+
+        .progress-step.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .progress-step.completed {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 40px;
+            height: 2px;
+            background: #e2e8f0;
+            transform: translateY(-50%);
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .progress-step.completed::after {
+            background: var(--success-color);
+        }
+
+        .resume-dropdown-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .resume-info-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .resume-info-card.show {
+            display: block;
+        }
+
+        .resume-preview {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .resume-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .resume-details h6 {
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .resume-meta {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .form-select option {
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .application-container {
+                margin: -20px 1rem 0;
+            }
+
+            .application-card {
+                padding: 1.5rem;
+            }
+
+            .job-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .progress-indicator {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-graduation-cap"></i>InternBay
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Find Internships</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">My Applications</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Resume Checker</a>
+                </li>
+            </ul>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary">
+                    <i class="fas fa-sign-in-alt me-1"></i>Sign In
+                </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-user-plus me-1"></i>Sign Up
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header" style="margin-top: 76px;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="h2 mb-2">Apply for Job</h1>
+                <p class="mb-0 opacity-75">Complete your application and take the next step in your career</p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="text-white">
+                    <i class="fas fa-file-alt fa-2x mb-2"></i>
+                    <small class="d-block opacity-75">Job Application</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container py-4">
+    <div class="application-container">
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-step active">1</div>
+            <div class="progress-step">2</div>
+            <div class="progress-step">3</div>
+        </div>
+
+        <div class="application-card">
+            <!-- Job Information -->
+            <div class="job-info-header">
+                <h3 class="job-title">Full-Stack Development Intern</h3>
+                <div class="job-meta">
+                    <span><i class="fas fa-building me-1"></i>TechCorp</span>
+                    <span><i class="fas fa-map-marker-alt me-1"></i>Remote</span>
+                    <span><i class="fas fa-clock me-1"></i>Full Time</span>
+                    <span><i class="fas fa-dollar-sign me-1"></i>$25/hr</span>
+                </div>
+            </div>
+
+            <!-- Application Form -->
+            <form id="jobApplicationForm">
+                <!-- Education Background Section -->
+                <div class="form-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-graduation-cap me-2"></i>Education Background <span class="required-field">*</span>
+                    </h4>
+                    <div class="rich-text-editor">
+                        <div class="editor-toolbar">
+                            <button type="button" class="editor-btn" onclick="execCommand('bold', 'educationBackground')">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('italic', 'educationBackground')">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('underline', 'educationBackground')">
+                                <i class="fas fa-underline"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('insertUnorderedList', 'educationBackground')">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('insertOrderedList', 'educationBackground')">
+                                <i class="fas fa-list-ol"></i>
+                            </button>
+                        </div>
+                        <div class="editor-content" contenteditable="true" id="educationBackground"
+                             placeholder="Describe your educational background, including your degree, institution, GPA (if relevant), and any relevant coursework...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Experience Section -->
+                <div class="form-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-briefcase me-2"></i>Work Experience <span class="required-field">*</span>
+                    </h4>
+                    <div class="rich-text-editor">
+                        <div class="editor-toolbar">
+                            <button type="button" class="editor-btn" onclick="execCommand('bold', 'workExperience')">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('italic', 'workExperience')">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('underline', 'workExperience')">
+                                <i class="fas fa-underline"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('insertUnorderedList', 'workExperience')">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('insertOrderedList', 'workExperience')">
+                                <i class="fas fa-list-ol"></i>
+                            </button>
+                        </div>
+                        <div class="editor-content" contenteditable="true" id="workExperience"
+                             placeholder="Describe your work experience, internships, projects, or any relevant professional experience...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="form-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-cogs me-2"></i>Skills <span class="required-field">*</span>
+                    </h4>
+                    <div class="form-floating">
+                        <textarea class="form-control" id="skills" placeholder="Your Skills" style="height: 120px;" required></textarea>
+                        <label for="skills">List your relevant skills, technologies, programming languages, tools, etc.</label>
+                    </div>
+                </div>
+
+                <!-- Resume Section -->
+                <div class="form-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-file-pdf me-2"></i>Resume <span class="required-field">*</span>
+                    </h4>
+                    <div class="resume-dropdown-section">
+                        <div class="form-floating">
+                            <select class="form-select" id="resumeSelect" required onchange="handleResumeSelection()">
+                                <option value="">Select a resume from your uploaded files</option>
+                                <option value="resume_1">Software Developer Resume - v2.1.pdf</option>
+                                <option value="resume_2">John_Doe_Resume_Frontend.pdf</option>
+                                <option value="resume_3">Resume_FullStack_Developer.pdf</option>
+                                <option value="resume_4">CV_WebDeveloper_2024.pdf</option>
+                            </select>
+                            <label for="resumeSelect">Choose Resume <span class="required-field">*</span></label>
+                        </div>
+
+                        <div class="resume-info-card" id="resumeInfoCard">
+                            <div class="resume-preview">
+                                <div class="resume-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="resume-details">
+                                    <h6 id="selectedResumeName">Software Developer Resume - v2.1.pdf</h6>
+                                    <div class="resume-meta">
+                                        <span id="selectedResumeSize">2.3 MB</span> •
+                                        <span id="selectedResumeDate">Uploaded on Dec 15, 2024</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    This resume will be attached to your job application
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-lightbulb me-1"></i>
+                                Don't see the resume you want? <a href="#" class="text-primary">Upload a new resume</a> to your profile first.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="submit-section">
+                    <h5 class="mb-3">Ready to Submit Your Application?</h5>
+                    <p class="text-muted mb-4">Please review all information before submitting. You can edit your profile anytime from your dashboard.</p>
+                    <button type="submit" class="btn btn-submit">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Application
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Mock data for uploaded resumes
+    const uploadedResumes = {
+        'resume_1': {
+            name: 'Software Developer Resume - v2.1.pdf',
+            size: '2.3 MB',
+            uploadDate: 'Dec 15, 2024'
+        },
+        'resume_2': {
+            name: 'John_Doe_Resume_Frontend.pdf',
+            size: '1.8 MB',
+            uploadDate: 'Dec 10, 2024'
+        },
+        'resume_3': {
+            name: 'Resume_FullStack_Developer.pdf',
+            size: '2.1 MB',
+            uploadDate: 'Nov 28, 2024'
+        },
+        'resume_4': {
+            name: 'CV_WebDeveloper_2024.pdf',
+            size: '1.9 MB',
+            uploadDate: 'Nov 15, 2024'
+        }
+    };
+
+    // Rich text editor functionality
+    function execCommand(command, editorId) {
+        const editor = document.getElementById(editorId);
+        editor.focus();
+        document.execCommand(command, false, null);
+    }
+
+    // Handle resume selection
+    function handleResumeSelection() {
+        const select = document.getElementById('resumeSelect');
+        const infoCard = document.getElementById('resumeInfoCard');
+
+        if (select.value) {
+            const selectedResume = uploadedResumes[select.value];
+
+            document.getElementById('selectedResumeName').textContent = selectedResume.name;
+            document.getElementById('selectedResumeSize').textContent = selectedResume.size;
+            document.getElementById('selectedResumeDate').textContent = `Uploaded on ${selectedResume.uploadDate}`;
+
+            infoCard.classList.add('show');
+            showNotification('Resume selected successfully!', 'success');
+        } else {
+            infoCard.classList.remove('show');
+        }
+    }
+
+    // Form submission
+    document.getElementById('jobApplicationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Validate required fields
+        const educationContent = document.getElementById('educationBackground').textContent.trim();
+        const workContent = document.getElementById('workExperience').textContent.trim();
+        const skillsValue = document.getElementById('skills').value.trim();
+        const resumeSelect = document.getElementById('resumeSelect').value;
+
+        let isValid = true;
+
+        // Check skills textarea
+        if (!skillsValue) {
+            document.getElementById('skills').classList.add('is-invalid');
+            isValid = false;
+        } else {
+            document.getElementById('skills').classList.remove('is-invalid');
+        }
+
+        // Check rich text editors
+        if (!educationContent) {
+            document.getElementById('educationBackground').style.borderColor = '#dc3545';
+            isValid = false;
+        } else {
+            document.getElementById('educationBackground').style.borderColor = '';
+        }
+
+        if (!workContent) {
+            document.getElementById('workExperience').style.borderColor = '#dc3545';
+            isValid = false;
+        } else {
+            document.getElementById('workExperience').style.borderColor = '';
+        }
+
+        // Check resume selection
+        if (!resumeSelect) {
+            document.getElementById('resumeSelect').classList.add('is-invalid');
+            isValid = false;
+        } else {
+            document.getElementById('resumeSelect').classList.remove('is-invalid');
+        }
+
+        if (!isValid) {
+            showNotification('Please fill in all required fields and select a resume.', 'error');
+            return;
+        }
+
+        // Simulate form submission
+        const submitBtn = document.querySelector('.btn-submit');
+        const originalText = submitBtn.innerHTML;
+
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+        submitBtn.disabled = true;
+
+        // Update progress
+        document.querySelectorAll('.progress-step').forEach(step => {
+            step.classList.add('completed');
+        });
+
+        setTimeout(() => {
+            showNotification('Application submitted successfully! You will receive a confirmation email shortly.', 'success');
+            submitBtn.innerHTML = '<i class="fas fa-check me-2"></i>Application Submitted';
+
+            // In a real application, redirect to a success page or dashboard
+            setTimeout(() => {
+                // window.location.href = '/applications';
+                console.log('Would redirect to applications page');
+            }, 2000);
+        }, 2000);
+    });
+
+    // Notification system
+    function showNotification(message, type = 'info') {
+        // Remove existing notifications
+        const existingToasts = document.querySelectorAll('.toast-notification');
+        existingToasts.forEach(toast => toast.remove());
+
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} position-fixed toast-notification`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        toast.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>${message}</span>
+                    <button type="button" class="btn-close" onclick="this.closest('.toast-notification').remove()"></button>
+                </div>
+            `;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 5000);
+    }
+
+    // Auto-resize textareas
+    document.querySelectorAll('textarea').forEach(textarea => {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    });
+
+    // Form auto-save (optional feature)
+    function autoSave() {
+        const form = document.getElementById('jobApplicationForm');
+        const formData = new FormData(form);
+
+        // In a real application, save to localStorage or send to server
+        console.log('Auto-saving form data...');
+    }
+
+    // Auto-save every 30 seconds
+    setInterval(autoSave, 30000);
+</script>
+</body>
+</html>

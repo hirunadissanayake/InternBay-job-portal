@@ -1,6 +1,7 @@
 package lk.ijse.gdse.main.internbaybackend.service.impl;
 
 import lk.ijse.gdse.main.internbaybackend.dto.UserDTO;
+import lk.ijse.gdse.main.internbaybackend.dto.PasswordChangeDTO;
 import lk.ijse.gdse.main.internbaybackend.entity.User;
 import lk.ijse.gdse.main.internbaybackend.repository.UserRepository;
 import lk.ijse.gdse.main.internbaybackend.service.UserService;
@@ -12,12 +13,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepo;
@@ -49,14 +52,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
-                user.getPasswordHash(),   // ✅ FIXED
+                user.getPasswordHash(),
                 getAuthority(user)
         );
     }
 
     private Set<SimpleGrantedAuthority> getAuthority(User user) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        // Prefix role with ROLE_ (Spring Security convention)
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name().toUpperCase()));
         return authorities;
     }
@@ -107,5 +109,99 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             }
         }
         return StatusList.Not_Acceptable; // email not found
+    }
+
+    // New methods for profile management
+
+    @Override
+    public int updateUserProfile(UserDTO userDTO) {
+        try {
+            User existingUser = userRepo.findByEmail(userDTO.getEmail());
+            if (existingUser == null) {
+                return StatusList.Not_Found;
+            }
+
+            // Update only the allowed fields (don't update password, email, or role here)
+            existingUser.setFirstName(userDTO.getFirstName());
+            existingUser.setLastName(userDTO.getLastName());
+            existingUser.setPhone(userDTO.getPhone());
+
+            // Update profile pic and resume if provided
+            if (userDTO.getProfilePic() != null) {
+                existingUser.setProfilePic(userDTO.getProfilePic());
+            }
+            if (userDTO.getResume() != null) {
+                existingUser.setResume(userDTO.getResume());
+            }
+
+            userRepo.save(existingUser);
+            return StatusList.OK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return StatusList.Internal_Server_Error;
+        }
+    }
+
+    @Override
+    public int updateProfilePicture(String email, String profilePicUrl) {
+        try {
+            User user = userRepo.findByEmail(email);
+            if (user == null) {
+                return StatusList.Not_Found;
+            }
+
+            user.setProfilePic(profilePicUrl);
+            userRepo.save(user);
+            return StatusList.OK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return StatusList.Internal_Server_Error;
+        }
+    }
+
+    @Override
+    public int updateResume(String email, String resumeUrl) {
+        try {
+            User user = userRepo.findByEmail(email);
+            if (user == null) {
+                return StatusList.Not_Found;
+            }
+
+            user.setResume(resumeUrl);
+            userRepo.save(user);
+            return StatusList.OK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return StatusList.Internal_Server_Error;
+        }
+    }
+
+    @Override
+    public int changePassword(String email, PasswordChangeDTO passwordChangeDTO) {
+        try {
+            // Validate that new password and confirm password match
+            if (!passwordChangeDTO.getNewPassword().equals(passwordChangeDTO.getConfirmPassword())) {
+                return StatusList.Bad_Request;
+            }
+
+            User user = userRepo.findByEmail(email);
+            if (user == null) {
+                return StatusList.Not_Found;
+            }
+
+            // Verify current password
+            if (!passwordEncoder.matches(passwordChangeDTO.getCurrentPassword(), user.getPasswordHash())) {
+                return StatusList.Unauthorized;
+            }
+
+            // Update password
+            user.setPasswordHash(passwordEncoder.encode(passwordChangeDTO.getNewPassword()));
+            userRepo.save(user);
+
+            return StatusList.OK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return StatusList.Internal_Server_Error;
+        }
     }
 }

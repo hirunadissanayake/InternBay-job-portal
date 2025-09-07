@@ -50,7 +50,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="candidateProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
                     </ul>
                 </div>
             </div>
@@ -94,19 +94,19 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">First Name</label>
-                            <input type="text" class="form-control" >
+                            <input type="text" class="form-control" id="firstName">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Last Name</label>
-                            <input type="text" class="form-control" >
+                            <input type="text" class="form-control" id="lastName">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" >
+                            <input type="email" class="form-control" id="email" readonly>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Contact</label>
-                            <input type="tel" class="form-control" >
+                            <input type="tel" class="form-control" id="phone">
                         </div>
                     </div>
                 </div>
@@ -139,23 +139,28 @@
                     <div class="row g-3">
                         <div class="col-md-4">
                             <label class="form-label">Current Password</label>
-                            <input type="password" class="form-control">
+                            <input type="password" class="form-control" id="currentPassword">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">New Password</label>
-                            <input type="password" class="form-control">
+                            <input type="password" class="form-control" id="newPassword">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Repeat New Password</label>
-                            <input type="password" class="form-control">
+                            <input type="password" class="form-control" id="confirmPassword">
                         </div>
+                    </div>
+                    <div class="text-end mt-3">
+                        <button class="btn btn-secondary" onclick="changePassword()">
+                            <i class="fas fa-key me-1"></i>Change Password
+                        </button>
                     </div>
                 </div>
 
                 <!-- Save Button -->
                 <div class="text-end">
                     <button class="btn btn-primary">
-                        Save Changes
+                        <i class="fas fa-save me-1"></i>Save Changes
                     </button>
                 </div>
             </div>
@@ -163,125 +168,473 @@
     </div>
 </section>
 
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/navbar.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // File size limit (2MB)
-        const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+        loadUserProfile();
+        initProfileUploads();
+        initFormSubmissions();
+    });
 
-        // Function to show alert messages
-        function showAlert(message, type = 'danger') {
-            // Remove existing alerts
-            const existingAlerts = document.querySelectorAll('.upload-alert');
-            existingAlerts.forEach(alert => alert.remove());
+    function loadUserProfile() {
+        const token = sessionStorage.getItem('authToken');
 
-            // Create new alert
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type} upload-alert`;
-            alertDiv.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
-                ${message}
-            `;
-
-            // Insert alert after the clicked upload area
-            const uploadAreas = document.querySelectorAll('.upload-area');
-            const lastUploadArea = uploadAreas[uploadAreas.length - 1];
-            lastUploadArea.parentNode.insertBefore(alertDiv, lastUploadArea.nextSibling);
-
-            // Auto remove after 5 seconds
+        if (!token) {
+            showNotification('Please log in to access your profile.', 'error');
             setTimeout(() => {
-                if (alertDiv.parentNode) {
-                    alertDiv.remove();
-                }
-            }, 5000);
+                window.location.href = 'main.html';
+            }, 2000);
+            return;
         }
 
-        // Function to validate file size
-        function validateFileSize(file) {
-            if (file.size > MAX_FILE_SIZE) {
-                showAlert(`File size (${(file.size / 1024 / 1024).toFixed(2)}MB) exceeds the maximum limit of 2MB.`);
-                return false;
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/user/profile',
+            type: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            success: function(response) {
+                console.log('Profile response:', response);
+
+                // Fixed: Check for the actual response structure from your backend
+                if (response && response.data) {
+                    populateProfileData(response.data);
+                } else if (response && (response.firstName || response.email)) {
+                    // Handle case where response.data might be the user object directly
+                    populateProfileData(response);
+                } else {
+                    console.error('Invalid response format:', response);
+                    showNotification('Invalid response format from server.', 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Profile loading error:', xhr.responseText);
+                let errorMessage = 'Failed to load profile data.';
+
+                if (xhr.status === 401) {
+                    errorMessage = 'Session expired. Please log in again.';
+                    setTimeout(() => {
+                        sessionStorage.clear();
+                        window.location.href = 'main.html';
+                    }, 2000);
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+
+                showNotification(errorMessage, 'error');
             }
-            return true;
-        }
+        });
+    }
 
-        // Function to create and trigger file input
-        function createFileInput(acceptTypes, callback) {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = acceptTypes;
-            fileInput.style.display = 'none';
+    function populateProfileData(userData) {
+        console.log('Populating profile with data:', userData);
 
-            fileInput.addEventListener('change', function() {
-                const file = this.files[0];
-                if (file && callback) {
-                    callback(file);
+        try {
+            // Update profile avatar
+            if (userData.profilePic) {
+                const profileAvatar = document.getElementById('profileAvatar');
+                if (profileAvatar) {
+                    profileAvatar.style.backgroundImage = `url(${userData.profilePic})`;
+                    profileAvatar.style.backgroundSize = 'cover';
+                    profileAvatar.style.backgroundPosition = 'center';
+                    profileAvatar.innerHTML = '';
                 }
-                // Clean up
-                document.body.removeChild(fileInput);
-            });
+            }
 
-            document.body.appendChild(fileInput);
-            fileInput.click();
+            // Update name and email display
+            const nameElement = document.querySelector('.profile-section h4');
+            const emailElement = document.querySelector('.profile-section p');
+
+            if (nameElement) {
+                const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+                nameElement.textContent = fullName || 'User';
+            }
+
+            if (emailElement) {
+                emailElement.textContent = userData.email || 'user@gmail.com';
+            }
+
+            // Populate form fields
+            const firstNameField = document.getElementById('firstName');
+            const lastNameField = document.getElementById('lastName');
+            const emailField = document.getElementById('email');
+            const phoneField = document.getElementById('phone');
+
+            if (firstNameField) firstNameField.value = userData.firstName || '';
+            if (lastNameField) lastNameField.value = userData.lastName || '';
+            if (emailField) emailField.value = userData.email || '';
+            if (phoneField) phoneField.value = userData.phone || '';
+
+            // Update resume section
+            if (userData.resume) {
+                updateResumeDisplay(userData.resume);
+            }
+
+        } catch (error) {
+            console.error('Error populating profile data:', error);
+            showNotification('Error displaying profile data.', 'error');
         }
+    }
 
-        // Profile avatar upload (JPG, PNG, SVG)
+    function updateResumeDisplay(resumeUrl) {
+        const resumeStatusElement = document.getElementById('resumeStatus');
+        if (resumeStatusElement) {
+            const resumeFileName = resumeUrl.split('/').pop();
+            resumeStatusElement.innerHTML = `
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="text-success">
+                        <i class="fas fa-file-pdf me-2"></i>Current Resume: ${resumeFileName}
+                    </span>
+                    <a href="${resumeUrl}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-eye me-1"></i>View
+                    </a>
+                </div>
+            `;
+        }
+    }
+
+    function initProfileUploads() {
+        // Profile picture upload
         const profileAvatar = document.getElementById('profileAvatar');
         if (profileAvatar) {
             profileAvatar.addEventListener('click', function() {
-                createFileInput('.jpg,.jpeg,.png,.svg,image/jpeg,image/png,image/svg+xml', function(file) {
-                    // Validate file type
-                    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'];
-                    if (!allowedTypes.includes(file.type)) {
-                        showAlert('Please select a valid image file (JPG, PNG, or SVG).');
-                        return;
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/jpeg,image/jpg,image/png';
+                fileInput.style.display = 'none';
+
+                fileInput.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                        if (!allowedTypes.includes(file.type)) {
+                            showNotification('Please select a valid image file (JPG or PNG).', 'error');
+                            return;
+                        }
+
+                        if (file.size > 5 * 1024 * 1024) {
+                            showNotification('Image size must be less than 5MB.', 'error');
+                            return;
+                        }
+
+                        uploadProfilePicture(file);
                     }
-
-                    // Validate file size
-                    if (!validateFileSize(file)) {
-                        return;
-                    }
-
-                    showAlert(`Profile picture "${file.name}" uploaded successfully!`, 'success');
-
-                    // Preview the image
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        profileAvatar.style.backgroundImage = `url(${e.target.result})`;
-                        profileAvatar.style.backgroundSize = 'cover';
-                        profileAvatar.style.backgroundPosition = 'center';
-                        profileAvatar.innerHTML = ''; // Remove the icon
-                    };
-                    reader.readAsDataURL(file);
+                    document.body.removeChild(fileInput);
                 });
+
+                document.body.appendChild(fileInput);
+                fileInput.click();
             });
         }
 
-        // Resume upload (PDF only)
+        // Resume upload
         const resumeUpload = document.getElementById('resumeUpload');
         if (resumeUpload) {
             resumeUpload.addEventListener('click', function() {
-                createFileInput('.pdf,application/pdf', function(file) {
-                    // Validate file type
-                    if (file.type !== 'application/pdf') {
-                        showAlert('Please select a valid PDF file.');
-                        return;
-                    }
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = '.pdf,application/pdf';
+                fileInput.style.display = 'none';
 
-                    showAlert(`Resume "${file.name}" uploaded successfully!`, 'success');
+                fileInput.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        if (file.type !== 'application/pdf') {
+                            showNotification('Please select a valid PDF file.', 'error');
+                            return;
+                        }
 
-                    // Update the UI to show uploaded resume
-                    const noResumeText = resumeUpload.parentNode.querySelector('h5');
-                    if (noResumeText && noResumeText.textContent === 'No Resumes Found') {
-                        noResumeText.textContent = `Resume: ${file.name}`;
-                        noResumeText.className = 'text-success';
+                        if (file.size > 10 * 1024 * 1024) {
+                            showNotification('Resume size must be less than 10MB.', 'error');
+                            return;
+                        }
+
+                        uploadResume(file);
                     }
+                    document.body.removeChild(fileInput);
                 });
+
+                document.body.appendChild(fileInput);
+                fileInput.click();
             });
         }
-    });
+    }
+
+    function uploadProfilePicture(file) {
+        showNotification('Uploading profile picture...', 'info');
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "hiruna");
+
+        $.ajax({
+            url: "https://api.cloudinary.com/v1_1/ddhlsfx3z/image/upload",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(cloudinaryResponse) {
+                updateProfilePictureInBackend(cloudinaryResponse.secure_url);
+            },
+            error: function(xhr, status, error) {
+                showNotification('Failed to upload profile picture. Please try again.', 'error');
+            }
+        });
+    }
+
+    function uploadResume(file) {
+        showNotification('Uploading resume...', 'info');
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "hiruna");
+
+        $.ajax({
+            url: "https://api.cloudinary.com/v1_1/ddhlsfx3z/raw/upload",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(cloudinaryResponse) {
+                updateResumeInBackend(cloudinaryResponse.secure_url, file.name);
+            },
+            error: function(xhr, status, error) {
+                showNotification('Failed to upload resume. Please try again.', 'error');
+            }
+        });
+    }
+
+    function updateProfilePictureInBackend(profilePicUrl) {
+        const token = sessionStorage.getItem('authToken');
+
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/user/profile/picture',
+            type: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                profilePicUrl: profilePicUrl
+            }),
+            success: function(response) {
+                showNotification('Profile picture updated successfully!', 'success');
+
+                const profileAvatar = document.getElementById('profileAvatar');
+                profileAvatar.style.backgroundImage = `url(${profilePicUrl})`;
+                profileAvatar.style.backgroundSize = 'cover';
+                profileAvatar.style.backgroundPosition = 'center';
+                profileAvatar.innerHTML = '';
+            },
+            error: function(xhr, status, error) {
+                let errorMessage = 'Failed to update profile picture.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                showNotification(errorMessage, 'error');
+            }
+        });
+    }
+
+    function updateResumeInBackend(resumeUrl, fileName) {
+        const token = sessionStorage.getItem('authToken');
+
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/user/profile/resume',
+            type: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                resumeUrl: resumeUrl
+            }),
+            success: function(response) {
+                showNotification('Resume uploaded successfully!', 'success');
+                updateResumeDisplay(resumeUrl);
+            },
+            error: function(xhr, status, error) {
+                let errorMessage = 'Failed to update resume.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                showNotification(errorMessage, 'error');
+            }
+        });
+    }
+
+    function initFormSubmissions() {
+        const saveButton = document.getElementById('saveChangesBtn');
+        if (saveButton) {
+            saveButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                updateProfile();
+            });
+        }
+    }
+
+    function updateProfile() {
+        const token = sessionStorage.getItem('authToken');
+
+        if (!token) {
+            showNotification('Please log in to update your profile.', 'error');
+            return;
+        }
+
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+
+        if (!firstName || !lastName) {
+            showNotification('Please fill in your first name and last name.', 'error');
+            return;
+        }
+
+        const updateData = {
+            firstName: firstName,
+            lastName: lastName,
+            phone: phone
+        };
+
+        const saveButton = document.getElementById('saveChangesBtn');
+        const originalText = saveButton.innerHTML;
+        saveButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+        saveButton.disabled = true;
+
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/user/profile',
+            type: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(updateData),
+            success: function(response) {
+                showNotification('Profile updated successfully!', 'success');
+
+                const nameElement = document.querySelector('.profile-section h4');
+                if (nameElement) {
+                    nameElement.textContent = `${firstName} ${lastName}`;
+                }
+            },
+            error: function(xhr, status, error) {
+                let errorMessage = 'Failed to update profile.';
+
+                if (xhr.status === 401) {
+                    errorMessage = 'Session expired. Please log in again.';
+                    setTimeout(() => {
+                        sessionStorage.clear();
+                        window.location.href = 'main.html';
+                    }, 2000);
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+
+                showNotification(errorMessage, 'error');
+            },
+            complete: function() {
+                saveButton.innerHTML = originalText;
+                saveButton.disabled = false;
+            }
+        });
+    }
+
+    function changePassword() {
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            showNotification('Please fill in all password fields.', 'error');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            showNotification('New password and confirm password do not match.', 'error');
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            showNotification('New password must be at least 6 characters long.', 'error');
+            return;
+        }
+
+        const token = sessionStorage.getItem('authToken');
+        const passwordData = {
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+            confirmPassword: confirmPassword
+        };
+
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/user/profile/password',
+            type: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(passwordData),
+            success: function(response) {
+                showNotification('Password changed successfully!', 'success');
+
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            },
+            error: function(xhr, status, error) {
+                let errorMessage = 'Failed to change password.';
+
+                if (xhr.status === 401) {
+                    errorMessage = 'Current password is incorrect.';
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+
+                showNotification(errorMessage, 'error');
+            }
+        });
+    }
+
+    function performLogout() {
+        sessionStorage.removeItem('authToken');
+        sessionStorage.removeItem('userEmail');
+        sessionStorage.removeItem('userRole');
+
+        showNotification('Logged out successfully!', 'success');
+
+        setTimeout(() => {
+            window.location.href = 'main.html';
+        }, 1000);
+    }
+
+    function showNotification(message, type = 'info') {
+        $('.notification-toast').remove();
+
+        const alertClass = type === 'error' ? 'danger' : type;
+        const iconClass = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
+
+        const toast = $(`
+            <div class="alert alert-${alertClass} position-fixed notification-toast" style="top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${iconClass} me-2"></i>
+                    <span>${message}</span>
+                    <button type="button" class="btn-close ms-auto" onclick="$(this).closest('.notification-toast').remove()"></button>
+                </div>
+            </div>
+        `);
+
+        $('body').append(toast);
+
+        setTimeout(() => {
+            toast.fadeOut(() => toast.remove());
+        }, 5000);
+    }
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="../js/navbar.js"></script>
+
 </body>
 </html>
