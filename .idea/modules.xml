@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/internbay-job-portal.iml" filepath="$PROJECT_DIR$/internbay-job-portal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/internbayBackEnd/internbayBackEnd.iml" filepath="$PROJECT_DIR$/internbayBackEnd/internbayBackEnd.iml" />
     </modules>
   </component>
 </project>

@@ -39,6 +39,9 @@ public class EmployerProfile {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "company_logo", length = 500)
+    private String companyLogo;
+
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 }

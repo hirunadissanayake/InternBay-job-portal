@@ -12,11 +12,5 @@ import lombok.NoArgsConstructor;
 public class ProfilePictureDTO {
     private String profilePicUrl;
 
-    public String getProfilePicUrl() {
-        return profilePicUrl;
-    }
 
-    public void setProfilePicUrl(String profilePicUrl) {
-        this.profilePicUrl = profilePicUrl;
-    }
 }

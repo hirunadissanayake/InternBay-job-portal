@@ -14,8 +14,5 @@ public class AuthaDTO {
     private String email;
     private String role;
 
-    public AuthaDTO(String token, String email) {
-        this.token = token;
-        this.email = email;
-    }
+
 }
