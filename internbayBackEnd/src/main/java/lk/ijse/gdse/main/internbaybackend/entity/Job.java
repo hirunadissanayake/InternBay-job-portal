@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "jobs", indexes = {
@@ -23,10 +24,15 @@ public class Job {
     @Column(name = "job_id")
     private Long jobId;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "employer_id", nullable = false,
+//            foreignKey = @ForeignKey(name = "fk_jobs_users"))
+//    private User employer;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employer_id", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_jobs_users"))
-    private User employer;
+    @JoinColumn(name = "employer_profile_id", nullable = false,
+            foreignKey = @ForeignKey(name = "fk_jobs_employer_profile"))
+    private EmployerProfile employerProfile;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false,
@@ -47,13 +53,18 @@ public class Job {
     private BigDecimal salaryPerHour;
 
     @Lob
+    @Column(name = "job_overview")
     private String jobOverview;
 
-    @Lob
-    private String responsibilities;
+    @ElementCollection
+    @CollectionTable(name = "job_responsibilities", joinColumns = @JoinColumn(name = "job_id"))
+    @Column(name = "responsibility")
+    private List<String> responsibilities;
 
-    @Lob
-    private String requirements;
+    @ElementCollection
+    @CollectionTable(name = "job_requirements", joinColumns = @JoinColumn(name = "job_id"))
+    @Column(name = "requirement")
+    private List<String> requirements;
 
     @Column(name = "date_posted", updatable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

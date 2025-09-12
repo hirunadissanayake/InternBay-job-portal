@@ -1216,7 +1216,7 @@ user_id</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="368" parent="340" name="employer_id">
-      <AutoIncrement>1</AutoIncrement>
+      <AutoIncrement>8</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint|0s</StoredType>
@@ -1323,7 +1323,7 @@ user_id</ColNames>
     </column>
     <column id="390" parent="342" name="job_overview">
       <Position>3</Position>
-      <StoredType>longtext|0s</StoredType>
+      <StoredType>tinytext|0s</StoredType>
     </column>
     <column id="391" parent="342" name="job_type">
       <NotNull>1</NotNull>
@@ -1362,33 +1362,32 @@ user_id</ColNames>
       <Position>11</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="399" parent="342" name="employer_id">
+    <column id="399" parent="342" name="employer_profile_id">
       <NotNull>1</NotNull>
       <Position>12</Position>
-      <StoredType>int|0s</StoredType>
+      <StoredType>bigint|0s</StoredType>
     </column>
     <foreign-key id="400" parent="342" name="fk_jobs_categories">
       <ColNames>category_id</ColNames>
       <RefColNames>category_id</RefColNames>
       <RefTableName>job_categories</RefTableName>
     </foreign-key>
-    <foreign-key id="401" parent="342" name="fk_jobs_users">
-      <ColNames>employer_id</ColNames>
-      <RefColNames>user_id</RefColNames>
-      <RefTableName>users</RefTableName>
+    <foreign-key id="401" parent="342" name="fk_jobs_employer_profile">
+      <ColNames>employer_profile_id</ColNames>
+      <RefColNames>employer_id</RefColNames>
+      <RefTableName>employer_profiles</RefTableName>
     </foreign-key>
     <index id="402" parent="342" name="PRIMARY">
       <ColNames>job_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="403" parent="342" name="fk_jobs_categories">
+    <index id="403" parent="342" name="idx_employer_category">
       <ColNames>category_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="404" parent="342" name="idx_employer_category">
-      <ColNames>employer_id
-category_id</ColNames>
+    <index id="404" parent="342" name="fk_jobs_employer_profile">
+      <ColNames>employer_profile_id</ColNames>
       <Type>btree</Type>
     </index>
     <key id="405" parent="342" name="PRIMARY">
