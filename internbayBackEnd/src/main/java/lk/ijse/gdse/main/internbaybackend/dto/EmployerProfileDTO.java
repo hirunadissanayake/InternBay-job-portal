@@ -1,3 +1,5 @@
+
+// EmployerProfileDTO.java (Your actual DTO)
 package lk.ijse.gdse.main.internbaybackend.dto;
 
 import lombok.AllArgsConstructor;
@@ -22,4 +24,10 @@ public class EmployerProfileDTO {
     private String description;
     private String companyLogo; // URL for company logo
     private LocalDateTime updatedAt;
+
+    // Additional fields for user data (not in DB but for frontend)
+    private String firstName;
+    private String lastName;
+    private String phone;
+    private String profilePic;
 }

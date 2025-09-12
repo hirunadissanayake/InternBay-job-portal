@@ -214,8 +214,11 @@
 <script src="../js/navbar.js"></script>
 
 <script>
+    // FIXED: Add global variable to store uploaded logo URL
+    let uploadedCompanyLogoUrl = null;
+
     document.addEventListener('DOMContentLoaded', function() {
-        loadCategories(); // Load categories first
+        loadCategories();
         loadUserProfile();
         initProfileUploads();
         initFormSubmissions();
@@ -249,26 +252,21 @@
             if (data && data.data && Array.isArray(data.data)) {
                 data.data.forEach(category => {
                     const option = document.createElement('option');
-                    option.value = category.name; // Using name as value for consistency
+                    option.value = category.name;
                     option.textContent = category.name;
                     industrySelect.appendChild(option);
                 });
 
                 console.log(`Loaded ${data.data.length} categories successfully`);
-                // showNotification(`Loaded ${data.data.length} industry categories`, 'success');
             } else {
                 console.error('Invalid data structure:', data);
                 showNotification('Invalid category data received', 'error');
-
-                // Fallback to hardcoded categories
                 loadFallbackCategories();
             }
 
         } catch (error) {
             console.error('Error loading categories:', error);
             showNotification('Failed to load categories. Using default options.', 'warning');
-
-            // Load fallback categories
             loadFallbackCategories();
         }
     }
@@ -313,47 +311,84 @@
             return;
         }
 
-        $.ajax({
-            url: 'http://localhost:8080/api/v1/user/profile',
-            type: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            success: function(response) {
-                console.log('Profile response:', response);
-
-                if (response && response.data) {
-                    populateProfileData(response.data);
-                } else if (response && (response.firstName || response.email)) {
-                    populateProfileData(response);
-                } else {
-                    console.error('Invalid response format:', response);
-                    showNotification('Invalid response format from server.', 'error');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Profile loading error:', xhr.responseText);
-                let errorMessage = 'Failed to load profile data.';
-
-                if (xhr.status === 401) {
-                    errorMessage = 'Session expired. Please log in again.';
-                    setTimeout(() => {
-                        sessionStorage.clear();
-                        window.location.href = 'main.html';
-                    }, 2000);
-                } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage = xhr.responseJSON.message;
-                }
-
-                showNotification(errorMessage, 'error');
-            }
+        // Load both user profile and employer profile
+        Promise.all([
+            loadUserData(token),
+            loadEmployerProfile(token)
+        ]).then(() => {
+            console.log('All profile data loaded');
+        }).catch(error => {
+            console.error('Error loading profile data:', error);
         });
     }
 
-    function populateProfileData(userData) {
-        console.log('Populating profile with data:', userData);
+    // Load basic user data
+    function loadUserData(token) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/user/profile',
+                type: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                success: function(response) {
+                    console.log('User profile response:', response);
 
+                    if (response && response.data) {
+                        populateUserData(response.data);
+                        resolve(response.data);
+                    } else {
+                        reject('Invalid user response format');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('User profile loading error:', xhr.responseText);
+                    handleAuthError(xhr);
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    // Load employer profile data
+    function loadEmployerProfile(token) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/employer/profile',
+                type: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                success: function(response) {
+                    console.log('Employer profile response:', response);
+
+                    if (response && response.data) {
+                        populateEmployerData(response.data);
+                        resolve(response.data);
+                    } else {
+                        // No employer profile exists yet, that's okay
+                        console.log('No employer profile found, user can create one');
+                        resolve(null);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 404) {
+                        // No employer profile exists, that's okay
+                        console.log('No employer profile found');
+                        resolve(null);
+                    } else {
+                        console.error('Employer profile loading error:', xhr.responseText);
+                        reject(error);
+                    }
+                }
+            });
+        });
+    }
+
+    // Populate user data (name, email, phone, profile pic)
+    function populateUserData(userData) {
         try {
             // Update profile avatar
             if (userData.profilePic) {
@@ -362,31 +397,18 @@
                     profileAvatar.style.backgroundImage = `url(${userData.profilePic})`;
                     profileAvatar.style.backgroundSize = 'cover';
                     profileAvatar.style.backgroundPosition = 'center';
-                    profileAvatar.style.width = '120px';
-                    profileAvatar.style.height = '120px';
-                    profileAvatar.style.borderRadius = '50%';
                     profileAvatar.innerHTML = '';
                 }
             }
 
-            // Update company logo if available
-            if (userData.companyLogo) {
-                const companyAvatar = document.getElementById('companyAvatar');
-                if (companyAvatar) {
-                    companyAvatar.style.backgroundImage = `url(${userData.companyLogo})`;
-                    companyAvatar.style.backgroundSize = 'cover';
-                    companyAvatar.style.backgroundPosition = 'center';
-                    companyAvatar.innerHTML = '';
-                }
-            }
-
-            // Update name and email display
+            // Update name and email display - ALWAYS use user's first and last name ONLY
             const nameElement = document.getElementById('profileName');
             const emailElement = document.getElementById('profileEmail');
 
             if (nameElement) {
                 const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
-                nameElement.textContent = fullName || userData.companyName || 'User';
+                console.log('Setting profile name to:', fullName); // Debug line
+                nameElement.textContent = fullName || 'User';
             }
 
             if (emailElement) {
@@ -404,34 +426,87 @@
             if (emailField) emailField.value = userData.email || '';
             if (phoneField) phoneField.value = userData.phone || '';
 
+        } catch (error) {
+            console.error('Error populating user data:', error);
+            showNotification('Error displaying user data.', 'error');
+        }
+    }
+
+    // FIXED: Populate employer profile data - NEVER change the profile display name
+    function populateEmployerData(employerData) {
+        if (!employerData) return;
+
+        try {
+            console.log('Populating employer data:', employerData);
+
+            // Update company logo if available
+            if (employerData.companyLogo) {
+                console.log('Setting company logo:', employerData.companyLogo);
+                const companyAvatar = document.getElementById('companyAvatar');
+                if (companyAvatar) {
+                    companyAvatar.style.backgroundImage = `url(${employerData.companyLogo})`;
+                    companyAvatar.style.backgroundSize = 'cover';
+                    companyAvatar.style.backgroundPosition = 'center';
+                    companyAvatar.innerHTML = '';
+                }
+                // Don't set uploadedCompanyLogoUrl here since this is existing data
+            }
+
             // Populate company information fields
             const companyNameField = document.getElementById('companyName');
             const industryField = document.getElementById('industry');
             const websiteField = document.getElementById('website');
             const descriptionField = document.getElementById('description');
 
-            if (companyNameField) companyNameField.value = userData.companyName || '';
-            if (industryField) {
-                // Set the selected industry if it exists
-                industryField.value = userData.industry || '';
+            if (companyNameField) companyNameField.value = employerData.companyName || '';
 
-                // If the industry value doesn't match any option, log a warning
-                if (userData.industry && industryField.value !== userData.industry) {
-                    console.warn(`Industry "${userData.industry}" not found in dropdown options`);
+            // FIXED: Wait for categories to load before setting the industry value
+            if (industryField && employerData.industryName) {
+                // If categories are already loaded, set the value immediately
+                if (industryField.children.length > 1) {
+                    industryField.value = employerData.industryName;
+                    if (industryField.value !== employerData.industryName) {
+                        console.warn(`Industry "${employerData.industryName}" not found in dropdown options`);
+                    }
+                } else {
+                    // Categories not loaded yet, wait and then set value
+                    const checkAndSetIndustry = () => {
+                        if (industryField.children.length > 1) {
+                            industryField.value = employerData.industryName;
+                            if (industryField.value !== employerData.industryName) {
+                                console.warn(`Industry "${employerData.industryName}" not found in dropdown options`);
+                            }
+                        } else {
+                            setTimeout(checkAndSetIndustry, 100);
+                        }
+                    };
+                    checkAndSetIndustry();
                 }
             }
-            if (websiteField) websiteField.value = userData.website || '';
-            if (descriptionField) descriptionField.value = userData.description || '';
+
+            if (websiteField) websiteField.value = employerData.websiteUrl || '';
+            if (descriptionField) descriptionField.value = employerData.description || '';
+
+            // REMOVED: Do NOT change the profile display name - it should ALWAYS remain the user's first and last name
 
         } catch (error) {
-            console.error('Error populating profile data:', error);
-            showNotification('Error displaying profile data.', 'error');
+            console.error('Error populating employer data:', error);
+            showNotification('Error displaying company data.', 'error');
+        }
+    }
+
+    function handleAuthError(xhr) {
+        if (xhr.status === 401) {
+            showNotification('Session expired. Please log in again.', 'error');
+            setTimeout(() => {
+                sessionStorage.clear();
+                window.location.href = 'main.html';
+            }, 2000);
         }
     }
 
     function initProfileUploads() {
-        // File size limit (2MB)
-        const MAX_FILE_SIZE = 2 * 1024 * 1024;
+        const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
         // Profile picture upload
         const profileAvatar = document.getElementById('profileAvatar');
@@ -496,14 +571,17 @@
             processData: false,
             contentType: false,
             success: function(cloudinaryResponse) {
+                console.log('Cloudinary upload success:', cloudinaryResponse);
                 updateProfilePictureInBackend(cloudinaryResponse.secure_url);
             },
             error: function(xhr, status, error) {
+                console.error('Cloudinary upload error:', error);
                 showNotification('Failed to upload profile picture. Please try again.', 'error');
             }
         });
     }
 
+    // FIXED: Modified uploadCompanyLogo function
     function uploadCompanyLogo(file) {
         showNotification('Uploading company logo...', 'info');
 
@@ -518,10 +596,56 @@
             processData: false,
             contentType: false,
             success: function(cloudinaryResponse) {
-                updateCompanyLogoInBackend(cloudinaryResponse.secure_url);
+                console.log('Company logo upload success:', cloudinaryResponse);
+
+                // Store the uploaded URL for later use
+                uploadedCompanyLogoUrl = cloudinaryResponse.secure_url;
+
+                // Immediately display the uploaded logo
+                const companyAvatar = document.getElementById('companyAvatar');
+                if (companyAvatar) {
+                    companyAvatar.style.backgroundImage = `url(${cloudinaryResponse.secure_url})`;
+                    companyAvatar.style.backgroundSize = 'cover';
+                    companyAvatar.style.backgroundPosition = 'center';
+                    companyAvatar.innerHTML = '';
+                }
+
+                // Only update backend immediately if this is an existing profile
+                checkAndUpdateLogoInBackend(cloudinaryResponse.secure_url);
             },
             error: function(xhr, status, error) {
+                console.error('Company logo upload error:', error);
                 showNotification('Failed to upload company logo. Please try again.', 'error');
+            }
+        });
+    }
+
+    // FIXED: New function to check if we should immediately update the logo in backend
+    function checkAndUpdateLogoInBackend(logoUrl) {
+        const token = sessionStorage.getItem('authToken');
+
+        // Check if employer profile exists by trying to get it
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/employer/profile',
+            type: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            success: function(response) {
+                // Profile exists, update logo immediately
+                if (response && response.data && response.data.employerId) {
+                    updateCompanyLogoInBackend(logoUrl);
+                }
+                // If no employerId, it means no employer profile exists yet
+                // Logo will be saved when the full profile is created
+            },
+            error: function(xhr, status, error) {
+                // If 404, profile doesn't exist yet - that's okay
+                // Logo will be saved when profile is created
+                if (xhr.status !== 404) {
+                    console.error('Error checking employer profile:', error);
+                }
             }
         });
     }
@@ -546,9 +670,6 @@
                 profileAvatar.style.backgroundImage = `url(${profilePicUrl})`;
                 profileAvatar.style.backgroundSize = 'cover';
                 profileAvatar.style.backgroundPosition = 'center';
-                profileAvatar.style.width = '120px';
-                profileAvatar.style.height = '120px';
-                profileAvatar.style.borderRadius = '50%';
                 profileAvatar.innerHTML = '';
             },
             error: function(xhr, status, error) {
@@ -557,6 +678,7 @@
                     errorMessage = xhr.responseJSON.message;
                 }
                 showNotification(errorMessage, 'error');
+                console.error('Profile picture update error:', xhr.responseText);
             }
         });
     }
@@ -565,7 +687,7 @@
         const token = sessionStorage.getItem('authToken');
 
         $.ajax({
-            url: 'http://localhost:8080/api/v1/user/profile/company-logo',
+            url: 'http://localhost:8080/api/v1/employer/profile/logo',
             type: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -576,12 +698,7 @@
             }),
             success: function(response) {
                 showNotification('Company logo updated successfully!', 'success');
-
-                const companyAvatar = document.getElementById('companyAvatar');
-                companyAvatar.style.backgroundImage = `url(${logoUrl})`;
-                companyAvatar.style.backgroundSize = 'cover';
-                companyAvatar.style.backgroundPosition = 'center';
-                companyAvatar.innerHTML = '';
+                console.log('Company logo updated in backend successfully');
             },
             error: function(xhr, status, error) {
                 let errorMessage = 'Failed to update company logo.';
@@ -589,6 +706,7 @@
                     errorMessage = xhr.responseJSON.message;
                 }
                 showNotification(errorMessage, 'error');
+                console.error('Company logo backend update error:', xhr.responseText);
             }
         });
     }
@@ -624,20 +742,17 @@
             return;
         }
 
-        const updateData = {
-            firstName: firstName,
-            lastName: lastName,
-            phone: phone,
-            companyName: companyName,
-            industry: industry,
-            website: website,
-            description: description
-        };
-
         const saveButton = document.getElementById('saveChangesBtn');
         const originalText = saveButton.innerHTML;
         saveButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
         saveButton.disabled = true;
+
+        // Update user profile first
+        const userData = {
+            firstName: firstName,
+            lastName: lastName,
+            phone: phone
+        };
 
         $.ajax({
             url: 'http://localhost:8080/api/v1/user/profile',
@@ -646,36 +761,106 @@
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            data: JSON.stringify(updateData),
-            success: function(response) {
-                showNotification('Profile updated successfully!', 'success');
+            data: JSON.stringify(userData),
+            success: function(userResponse) {
+                console.log('User profile updated successfully');
 
+                // Update the profile display name with the new user data
                 const nameElement = document.getElementById('profileName');
                 if (nameElement) {
-                    const displayName = companyName || `${firstName} ${lastName}`;
-                    nameElement.textContent = displayName;
+                    const fullName = `${firstName} ${lastName}`.trim();
+                    nameElement.textContent = fullName || 'User';
                 }
+
+                // Now update employer profile
+                const employerData = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    phone: phone,
+                    companyName: companyName,
+                    industry: industry,
+                    website: website,
+                    description: description
+                };
+
+                updateEmployerProfile(token, employerData, saveButton, originalText);
             },
             error: function(xhr, status, error) {
-                let errorMessage = 'Failed to update profile.';
+                handleUpdateError(xhr, saveButton, originalText);
+            }
+        });
+    }
 
-                if (xhr.status === 401) {
-                    errorMessage = 'Session expired. Please log in again.';
-                    setTimeout(() => {
-                        sessionStorage.clear();
-                        window.location.href = 'main.html';
-                    }, 2000);
-                } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage = xhr.responseJSON.message;
-                }
+    // FIXED: Helper function to get current logo URL from display
+    function getCurrentLogoUrl() {
+        const companyAvatar = document.getElementById('companyAvatar');
+        if (companyAvatar && companyAvatar.style.backgroundImage) {
+            // Extract URL from background-image style
+            const bgImage = companyAvatar.style.backgroundImage;
+            const urlMatch = bgImage.match(/url\(["']?(.*?)["']?\)/);
+            return urlMatch ? urlMatch[1] : null;
+        }
+        return null;
+    }
 
-                showNotification(errorMessage, 'error');
+    // FIXED: Modified updateEmployerProfile function to include logo
+    function updateEmployerProfile(token, employerData, saveButton, originalText) {
+        // Include the uploaded logo URL in the employer data
+        const employerProfileData = {
+            companyName: employerData.companyName,
+            industryName: employerData.industry,
+            websiteUrl: employerData.website,
+            description: employerData.description,
+            // Include the logo URL if one was uploaded
+            companyLogo: uploadedCompanyLogoUrl || getCurrentLogoUrl()
+        };
+
+        console.log('Sending employer profile data:', employerProfileData);
+
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/employer/profile',
+            type: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(employerProfileData),
+            success: function(response) {
+                showNotification('Profile updated successfully!', 'success');
+                console.log('Employer profile updated successfully:', response);
+
+                // Clear the temporary logo URL since it's now saved
+                uploadedCompanyLogoUrl = null;
+
+                // Profile updated successfully - display name remains as user's full name
+            },
+            error: function(xhr, status, error) {
+                console.error('Employer profile update error:', xhr.responseText);
+                handleUpdateError(xhr, saveButton, originalText);
             },
             complete: function() {
                 saveButton.innerHTML = originalText;
                 saveButton.disabled = false;
             }
         });
+    }
+
+    function handleUpdateError(xhr, saveButton, originalText) {
+        let errorMessage = 'Failed to update profile.';
+
+        if (xhr.status === 401) {
+            errorMessage = 'Session expired. Please log in again.';
+            setTimeout(() => {
+                sessionStorage.clear();
+                window.location.href = 'main.html';
+            }, 2000);
+        } else if (xhr.responseJSON && xhr.responseJSON.message) {
+            errorMessage = xhr.responseJSON.message;
+        }
+
+        showNotification(errorMessage, 'error');
+        saveButton.innerHTML = originalText;
+        saveButton.disabled = false;
     }
 
     function changePassword() {
@@ -753,14 +938,14 @@
         const iconClass = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle';
 
         const toast = $(`
-            <div class="alert alert-${alertClass} position-fixed notification-toast" style="top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-${iconClass} me-2"></i>
-                    <span>${message}</span>
-                    <button type="button" class="btn-close ms-auto" onclick="$(this).closest('.notification-toast').remove()"></button>
-                </div>
+        <div class="alert alert-${alertClass} position-fixed notification-toast" style="top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-${iconClass} me-2"></i>
+                <span>${message}</span>
+                <button type="button" class="btn-close ms-auto" onclick="$(this).closest('.notification-toast').remove()"></button>
             </div>
-        `);
+        </div>
+    `);
 
         $('body').append(toast);
 
