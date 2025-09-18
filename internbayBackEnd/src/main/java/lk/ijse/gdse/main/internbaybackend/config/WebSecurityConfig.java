@@ -4,6 +4,7 @@ package lk.ijse.gdse.main.internbaybackend.config;
 import lk.ijse.gdse.main.internbaybackend.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -69,12 +70,33 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        // Public authentication endpoints
                         .requestMatchers(
                                 "/api/v1/auth/**",
                                 "/api/v1/user/register",
-                                "/api/v1/user/login",
-                                "/api/v1/category/getAll"
+                                "/api/v1/user/login"
                         ).permitAll()
+
+                        // Public category endpoints
+                        .requestMatchers("/api/v1/category/getAll").permitAll()
+
+                        // Public job search and view endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/v1/jobs/search").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/jobs/{jobId}").permitAll()
+
+                        // Protected job management endpoints (require authentication)
+                        .requestMatchers(HttpMethod.POST, "/api/v1/jobs").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/jobs/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/jobs/**").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/jobs/**").authenticated()
+                        .requestMatchers("/api/v1/jobs/employer/**").authenticated()
+
+                        // Protected profile and application endpoints
+                        .requestMatchers("/api/v1/employer/**").authenticated()
+                        .requestMatchers("/api/v1/candidate/**").authenticated()
+                        .requestMatchers("/api/v1/applications/**").authenticated()
+
+                        // All other requests require authentication
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

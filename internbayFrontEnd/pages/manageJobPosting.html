@@ -218,6 +218,89 @@
             box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.1);
         }
 
+        /* New styles for detailed view modal */
+        .job-detail-modal .modal-content {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .job-detail-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem;
+        }
+
+        .job-summary-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .job-summary-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .job-summary-item i {
+            width: 20px;
+            margin-right: 1rem;
+            color: var(--primary-color);
+            margin-top: 2px;
+        }
+
+        .requirements-list {
+            padding-left: 1rem;
+        }
+
+        .requirements-list li {
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        .editable-list {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem;
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background: #f8fafc;
+            border-radius: 4px;
+        }
+
+        .list-item input {
+            border: none;
+            background: transparent;
+            flex-grow: 1;
+            outline: none;
+        }
+
+        .add-item-btn {
+            background: #f8fafc;
+            border: 1px dashed var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .add-item-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
         @media (max-width: 768px) {
             .job-actions {
                 flex-direction: column;
@@ -392,9 +475,115 @@
     </div>
 </div>
 
+<!-- Job Details Modal -->
+<div class="modal fade job-detail-modal" id="jobDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="job-detail-header">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h3 class="mb-2" id="modalJobTitle">Job Title</h3>
+                        <p class="mb-0 opacity-75">Posted by: <span id="modalCompany">Company Name</span></p>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <div class="col-lg-8 p-4">
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Job Description</h6>
+                            <div id="modalJobDescription">
+                                <!-- Job description will be inserted here -->
+                            </div>
+                        </div>
+
+                        <div class="mb-4" id="responsibilitiesSection">
+                            <h6 class="fw-bold mb-3">Responsibilities</h6>
+                            <ul class="requirements-list" id="modalResponsibilities">
+                                <!-- Job responsibilities will be inserted here -->
+                            </ul>
+                        </div>
+
+                        <div class="mb-4" id="requirementsSection">
+                            <h6 class="fw-bold mb-3">Requirements</h6>
+                            <ul class="requirements-list" id="modalRequirements">
+                                <!-- Job requirements will be inserted here -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 bg-light p-4">
+                        <div class="job-summary-card">
+                            <h6 class="fw-bold mb-3">Job Summary</h6>
+
+                            <div class="job-summary-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <strong>Location</strong><br>
+                                    <span class="text-muted" id="modalLocation">Location</span>
+                                </div>
+                            </div>
+
+                            <div class="job-summary-item">
+                                <i class="fas fa-briefcase"></i>
+                                <div>
+                                    <strong>Job Type</strong><br>
+                                    <span class="text-muted" id="modalJobType">Job Type</span>
+                                </div>
+                            </div>
+
+                            <div class="job-summary-item">
+                                <i class="fas fa-dollar-sign"></i>
+                                <div>
+                                    <strong>Salary</strong><br>
+                                    <span class="text-muted" id="modalSalary">Salary</span>
+                                </div>
+                            </div>
+
+                            <div class="job-summary-item">
+                                <i class="fas fa-building"></i>
+                                <div>
+                                    <strong>Company</strong><br>
+                                    <span class="text-muted" id="modalCompanyName">Company</span>
+                                </div>
+                            </div>
+
+                            <div class="job-summary-item mb-4">
+                                <i class="fas fa-calendar"></i>
+                                <div>
+                                    <strong>Date Posted</strong><br>
+                                    <span class="text-muted" id="modalDatePosted">Date</span>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary w-100 py-2 mb-3" onclick="editJobFromModal()" id="editFromModalButton">
+                                <i class="fas fa-edit me-2"></i>Edit Job
+                            </button>
+
+                            <button type="button" class="btn btn-outline-info w-100 mb-2" onclick="viewApplicationsFromModal()" id="viewAppsButton">
+                                <i class="fas fa-users me-2"></i>View Applications
+                            </button>
+
+                            <button type="button" class="btn btn-outline-secondary w-100 mb-2" onclick="toggleJobStatusFromModal()" id="toggleStatusButton">
+                                <i class="fas fa-pause me-2"></i>Pause Job
+                            </button>
+
+                            <button type="button" class="btn btn-outline-danger w-100" onclick="deleteJobFromModal()" id="deleteFromModalButton">
+                                <i class="fas fa-trash me-2"></i>Delete Job
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Edit Job Modal -->
 <div class="modal fade" id="editJobModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Edit Job Posting</h5>
@@ -435,6 +624,27 @@
                     <div class="mb-3">
                         <label for="editJobDescription" class="form-label">Job Description</label>
                         <textarea class="form-control" id="editJobDescription" rows="5" required></textarea>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Responsibilities</label>
+                            <div class="editable-list" id="editResponsibilitiesList">
+                                <!-- Responsibilities will be populated here -->
+                            </div>
+                            <div class="add-item-btn" onclick="addResponsibility()">
+                                <i class="fas fa-plus me-1"></i>Add Responsibility
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Requirements</label>
+                            <div class="editable-list" id="editRequirementsList">
+                                <!-- Requirements will be populated here -->
+                            </div>
+                            <div class="add-item-btn" onclick="addRequirement()">
+                                <i class="fas fa-plus me-1"></i>Add Requirement
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -509,6 +719,7 @@
     let isLoading = false;
     let employerProfile = null;
     let jobToDelete = null;
+    let selectedJob = null; // For detailed view modal
 
     // Initialize page
     document.addEventListener('DOMContentLoaded', function() {
@@ -719,6 +930,7 @@
                         </div>
 
                         <div class="job-meta">
+                            <span><i class="fas fa-building me-1"></i>${job.companyName || 'Company'}</span>
                             <span><i class="fas fa-map-marker-alt me-1"></i>${job.location}</span>
                             <span><i class="fas fa-clock me-1"></i>${formatJobType(job.jobType)}</span>
                             <span><i class="fas fa-dollar-sign me-1"></i>${salary}</span>
@@ -730,8 +942,8 @@
                 </div>
 
                 <div class="job-actions">
-                    <button class="btn btn-outline-primary btn-sm" onclick="viewJobDetails(${job.jobId})">
-                        <i class="fas fa-eye me-1"></i>View
+                    <button class="btn btn-primary btn-sm" onclick="showJobDetails(${job.jobId})">
+                        <i class="fas fa-eye me-1"></i>View Details
                     </button>
                     <button class="btn btn-outline-info btn-sm" onclick="viewApplications(${job.jobId}, '${job.title}')">
                         <i class="fas fa-users me-1"></i>Applications (${applicationCount})
@@ -748,6 +960,119 @@
                 </div>
             </div>
         `;
+    }
+
+    // Show job details in modal
+    async function showJobDetails(jobId) {
+        selectedJob = currentJobs.find(job => job.jobId === jobId);
+        if (!selectedJob) return;
+
+        try {
+            const token = sessionStorage.getItem('authToken');
+            const response = await fetch(`http://localhost:8080/api/v1/jobs/${jobId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                const job = data.data;
+                selectedJob = job;
+                populateJobModal(job);
+                new bootstrap.Modal(document.getElementById('jobDetailsModal')).show();
+            } else {
+                showNotification('Error loading job details', 'error');
+            }
+        } catch (error) {
+            console.error('Error loading job details:', error);
+            showNotification('Error loading job details', 'error');
+        }
+    }
+
+    // Populate job modal
+    function populateJobModal(job) {
+        document.getElementById('modalJobTitle').textContent = job.title;
+        document.getElementById('modalCompany').textContent = job.companyName || 'Company';
+        document.getElementById('modalLocation').textContent = job.location;
+        document.getElementById('modalJobType').textContent = formatJobType(job.jobType);
+        document.getElementById('modalSalary').textContent = job.salaryPerHour ? `${job.salaryPerHour}/hr` : 'Negotiable';
+        document.getElementById('modalCompanyName').textContent = job.companyName || 'Company';
+        document.getElementById('modalDatePosted').textContent = formatDate(job.datePosted);
+        document.getElementById('modalJobDescription').innerHTML = job.jobOverview ? job.jobOverview.replace(/\n/g, '<br>') : 'No description available';
+
+        // Populate responsibilities
+        const responsibilitiesContainer = document.getElementById('modalResponsibilities');
+        const responsibilitiesSection = document.getElementById('responsibilitiesSection');
+
+        if (job.responsibilities && job.responsibilities.length > 0) {
+            responsibilitiesContainer.innerHTML = '';
+            job.responsibilities.forEach(responsibility => {
+                const li = document.createElement('li');
+                li.textContent = responsibility;
+                responsibilitiesContainer.appendChild(li);
+            });
+            responsibilitiesSection.style.display = 'block';
+        } else {
+            responsibilitiesSection.style.display = 'none';
+        }
+
+        // Populate requirements
+        const requirementsContainer = document.getElementById('modalRequirements');
+        const requirementsSection = document.getElementById('requirementsSection');
+
+        if (job.requirements && job.requirements.length > 0) {
+            requirementsContainer.innerHTML = '';
+            job.requirements.forEach(requirement => {
+                const li = document.createElement('li');
+                li.textContent = requirement;
+                requirementsContainer.appendChild(li);
+            });
+            requirementsSection.style.display = 'block';
+        } else {
+            requirementsSection.style.display = 'none';
+        }
+
+        // Update button counts
+        const applicationCount = job.applicationCount || 0;
+        document.getElementById('viewAppsButton').innerHTML = `<i class="fas fa-users me-2"></i>View Applications (${applicationCount})`;
+    }
+
+    // Modal action functions
+    function editJobFromModal() {
+        if (selectedJob) {
+            bootstrap.Modal.getInstance(document.getElementById('jobDetailsModal')).hide();
+            setTimeout(() => {
+                editJob(selectedJob.jobId);
+            }, 300);
+        }
+    }
+
+    function viewApplicationsFromModal() {
+        if (selectedJob) {
+            bootstrap.Modal.getInstance(document.getElementById('jobDetailsModal')).hide();
+            setTimeout(() => {
+                viewApplications(selectedJob.jobId, selectedJob.title);
+            }, 300);
+        }
+    }
+
+    function toggleJobStatusFromModal() {
+        if (selectedJob) {
+            toggleJobStatus(selectedJob.jobId);
+        }
+    }
+
+    function deleteJobFromModal() {
+        if (selectedJob) {
+            bootstrap.Modal.getInstance(document.getElementById('jobDetailsModal')).hide();
+            setTimeout(() => {
+                deleteJob(selectedJob.jobId, selectedJob.title);
+            }, 300);
+        }
     }
 
     // Show loading state
@@ -794,11 +1119,6 @@
     // Filter jobs
     function filterJobs() {
         displayJobs();
-    }
-
-    // View job details
-    function viewJobDetails(jobId) {
-        window.open(`jobDetails.html?id=${jobId}`, '_blank');
     }
 
     // View applications
@@ -897,20 +1217,109 @@
         applicationsList.innerHTML = html;
     }
 
-    // Edit job
+    // Edit job functions
     async function editJob(jobId) {
         const job = currentJobs.find(j => j.jobId === jobId);
-        if (!job) return;
+        if (!job) {
+            // Fetch job details if not found in current list
+            try {
+                const token = sessionStorage.getItem('authToken');
+                const response = await fetch(`http://localhost:8080/api/v1/jobs/${jobId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-        // Populate edit form
-        document.getElementById('editJobId').value = jobId;
+                if (response.ok) {
+                    const data = await response.json();
+                    populateEditForm(data.data);
+                } else {
+                    showNotification('Error loading job details', 'error');
+                    return;
+                }
+            } catch (error) {
+                console.error('Error loading job details:', error);
+                showNotification('Error loading job details', 'error');
+                return;
+            }
+        } else {
+            populateEditForm(job);
+        }
+
+        new bootstrap.Modal(document.getElementById('editJobModal')).show();
+    }
+
+    // Populate edit form
+    function populateEditForm(job) {
+        document.getElementById('editJobId').value = job.jobId;
         document.getElementById('editJobTitle').value = job.title;
         document.getElementById('editJobType').value = job.jobType;
         document.getElementById('editLocation').value = job.location;
         document.getElementById('editSalary').value = job.salaryPerHour;
         document.getElementById('editJobDescription').value = job.jobOverview;
 
-        new bootstrap.Modal(document.getElementById('editJobModal')).show();
+        // Populate responsibilities
+        const responsibilitiesList = document.getElementById('editResponsibilitiesList');
+        responsibilitiesList.innerHTML = '';
+        if (job.responsibilities && job.responsibilities.length > 0) {
+            job.responsibilities.forEach(responsibility => {
+                addEditableItem(responsibilitiesList, responsibility, 'responsibility');
+            });
+        }
+
+        // Populate requirements
+        const requirementsList = document.getElementById('editRequirementsList');
+        requirementsList.innerHTML = '';
+        if (job.requirements && job.requirements.length > 0) {
+            job.requirements.forEach(requirement => {
+                addEditableItem(requirementsList, requirement, 'requirement');
+            });
+        }
+    }
+
+    // Add editable item to list
+    function addEditableItem(container, text = '', type = 'item') {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'list-item';
+        itemDiv.innerHTML = `
+            <input type="text" value="${text}" placeholder="Enter ${type}..." class="form-control-plaintext">
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeEditableItem(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        container.appendChild(itemDiv);
+    }
+
+    // Remove editable item
+    function removeEditableItem(button) {
+        button.parentElement.remove();
+    }
+
+    // Add responsibility
+    function addResponsibility() {
+        const container = document.getElementById('editResponsibilitiesList');
+        addEditableItem(container, '', 'responsibility');
+    }
+
+    // Add requirement
+    function addRequirement() {
+        const container = document.getElementById('editRequirementsList');
+        addEditableItem(container, '', 'requirement');
+    }
+
+    // Get list values
+    function getListValues(containerId) {
+        const container = document.getElementById(containerId);
+        const inputs = container.querySelectorAll('input');
+        const values = [];
+        inputs.forEach(input => {
+            if (input.value.trim()) {
+                values.push(input.value.trim());
+            }
+        });
+        return values;
     }
 
     // Update job
@@ -918,12 +1327,17 @@
         const token = sessionStorage.getItem('authToken');
         const jobId = document.getElementById('editJobId').value;
 
+        const responsibilities = getListValues('editResponsibilitiesList');
+        const requirements = getListValues('editRequirementsList');
+
         const jobData = {
             title: document.getElementById('editJobTitle').value.trim(),
             location: document.getElementById('editLocation').value.trim(),
             jobType: document.getElementById('editJobType').value,
             salaryPerHour: parseFloat(document.getElementById('editSalary').value),
-            jobOverview: document.getElementById('editJobDescription').value.trim()
+            jobOverview: document.getElementById('editJobDescription').value.trim(),
+            responsibilities: responsibilities,
+            requirements: requirements
         };
 
         try {

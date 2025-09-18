@@ -86,7 +86,7 @@ public class JobController {
         }
     }
 
-    // Search jobs with filters and pagination
+    // Search jobs with filters and pagination - PUBLIC ACCESS
     @GetMapping("/search")
     public ResponseEntity<ResponsDto> searchJobs(
             @RequestParam(defaultValue = "0") int page,
@@ -101,19 +101,34 @@ public class JobController {
             @RequestParam(required = false) BigDecimal maxSalary) {
 
         try {
-            Sort sort = sortDir.equalsIgnoreCase("desc") ?
-                    Sort.by(sortBy).descending() :
-                    Sort.by(sortBy).ascending();
+            // Handle different sort parameter formats
+            String actualSortBy = sortBy;
+            String actualSortDir = sortDir;
+
+            if (sortBy.contains(",")) {
+                String[] sortParams = sortBy.split(",");
+                actualSortBy = sortParams[0];
+                actualSortDir = sortParams.length > 1 ? sortParams[1] : "desc";
+            }
+
+            Sort sort = actualSortDir.equalsIgnoreCase("desc") ?
+                    Sort.by(actualSortBy).descending() :
+                    Sort.by(actualSortBy).ascending();
 
             Pageable pageable = PageRequest.of(page, size, sort);
 
             // Parse job types
             List<JobType> jobTypeList = null;
             if (jobTypes != null && !jobTypes.isEmpty()) {
-                jobTypeList = List.of(jobTypes.split(","))
-                        .stream()
-                        .map(JobType::valueOf)
-                        .toList();
+                try {
+                    jobTypeList = List.of(jobTypes.split(","))
+                            .stream()
+                            .map(type -> JobType.valueOf(type.trim().toUpperCase()))
+                            .toList();
+                } catch (IllegalArgumentException e) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(new ResponsDto(StatusList.Bad_Request, "Invalid job type provided", null));
+                }
             }
 
             Page<JobResponseDTO> jobs = jobService.searchJobs(

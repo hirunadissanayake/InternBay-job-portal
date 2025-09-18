@@ -610,7 +610,7 @@
         }
     }
 
-    // Load jobs with filters
+    // Load jobs with filters - FIXED VERSION
     async function loadJobs(page = 1) {
         if (isLoading) return;
 
@@ -633,10 +633,39 @@
             if (filters.minSalary) params.append('minSalary', filters.minSalary);
             if (filters.maxSalary) params.append('maxSalary', filters.maxSalary);
 
-            const response = await fetch(`http://localhost:8080/api/v1/jobs/search?${params}`);
+            // Prepare headers
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            // Add authentication header if available
+            const token = sessionStorage.getItem('authToken');
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch(`http://localhost:8080/api/v1/jobs/search?${params}`, {
+                method: 'GET',
+                headers: headers
+            });
+
+            // Check if response is ok before parsing JSON
+            if (!response.ok) {
+                // Try to get error message from response
+                let errorMessage = `HTTP ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    // If JSON parsing fails, use status text
+                    errorMessage = response.statusText || errorMessage;
+                }
+                throw new Error(errorMessage);
+            }
+
             const data = await response.json();
 
-            if (response.ok) {
+            if (data && data.data && data.data.content) {
                 currentJobs = data.data.content;
                 currentPage = data.data.number + 1; // Convert to 1-based
                 totalPages = data.data.totalPages;
@@ -645,11 +674,11 @@
                 updateJobCount(data.data.totalElements);
                 updatePagination();
             } else {
-                showError('Error loading jobs: ' + data.message);
+                throw new Error('Invalid response format');
             }
         } catch (error) {
             console.error('Error loading jobs:', error);
-            showError('Error loading jobs. Please try again.');
+            showError('Error loading jobs: ' + error.message);
         } finally {
             isLoading = false;
         }
@@ -672,7 +701,7 @@
         };
     }
 
-    // Get sort parameter for backend
+    // Get sort parameter for backend - FIXED VERSION
     function getSortParameter() {
         switch (currentSort) {
             case 'newest':
@@ -1105,7 +1134,7 @@
         const diffTime = Math.abs(now - date);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 1) return 'Posted yesterday';
+        if (diffDays === 1) return 'Posted Today';
         if (diffDays < 7) return `Posted ${diffDays} days ago`;
         if (diffDays < 30) return `Posted ${Math.ceil(diffDays / 7)} weeks ago`;
         return `Posted ${Math.ceil(diffDays / 30)} months ago`;
