@@ -16,6 +16,7 @@ import java.util.List;
 public class JobCreateDTO {
     private String title;
     private String location;
+    private String companyName;
     private JobType jobType;
     private BigDecimal salaryPerHour;
     private String jobOverview;

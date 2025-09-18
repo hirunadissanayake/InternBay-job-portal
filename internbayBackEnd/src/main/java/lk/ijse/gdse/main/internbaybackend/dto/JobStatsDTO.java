@@ -1,0 +1,18 @@
+// JobStatsDTO.java
+package lk.ijse.gdse.main.internbaybackend.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class JobStatsDTO {
+    private int totalJobs;
+    private int activeJobs;
+    private int totalApplications;
+    private int pendingReviews;
+}

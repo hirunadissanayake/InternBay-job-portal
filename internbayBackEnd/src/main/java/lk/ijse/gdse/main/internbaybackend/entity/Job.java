@@ -46,7 +46,7 @@ public class Job {
     private String location;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "job_type", nullable = false)
+    @Column(name = "job_type", nullable = false, length = 15)
     private JobType jobType;
 
     @Column(name = "salary_per_hour", precision = 10, scale = 2)

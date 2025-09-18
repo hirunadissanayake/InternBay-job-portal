@@ -6,7 +6,273 @@
     <title>Find Internships - InternBay</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/findJob.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary-color: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #fafafa;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-brand i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem 0;
+        }
+
+        .sidebar-filter {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+
+        .filter-section h6 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .form-check {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .job-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+        }
+
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            background: var(--secondary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .job-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .job-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+        }
+
+        .badge-custom {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .results-header {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .filter-tag {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .filter-tag .btn-close {
+            margin-left: 0.5rem;
+            font-size: 0.7rem;
+            filter: invert(1);
+        }
+
+        .clear-all-btn {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .clear-all-btn:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .job-detail-modal .modal-content {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .job-detail-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem;
+        }
+
+        .job-summary-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .job-summary-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .job-summary-item i {
+            width: 20px;
+            margin-right: 1rem;
+            color: var(--primary-color);
+            margin-top: 2px;
+        }
+
+        .requirements-list {
+            padding-left: 1rem;
+        }
+
+        .requirements-list li {
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .no-jobs {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .pagination {
+            --bs-pagination-active-bg: var(--primary-color);
+            --bs-pagination-active-border-color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .job-meta {
+                gap: 0.5rem;
+            }
+
+            .sidebar-filter {
+                position: static;
+                margin-bottom: 2rem;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-toggle::after {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 <!-- Navigation -->
@@ -23,7 +289,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="findJob.html">Find Internships</a>
+                    <a class="nav-link active" href="findJob.html">Find Internships</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="aboutUs.html">About Us</a>
@@ -58,7 +324,7 @@
             </div>
             <div class="col-lg-4 text-end">
                 <div class="text-white">
-                    <span class="h4">2,500+</span>
+                    <span class="h4" id="jobCount">Loading...</span>
                     <small class="d-block opacity-75">Available Positions</small>
                 </div>
             </div>
@@ -79,42 +345,60 @@
 
                 <div class="filter-section">
                     <h6>Job Title</h6>
-                    <input type="text" class="form-control mb-3" id="jobTitle" placeholder="e.g. job title">
+                    <input type="text" class="form-control mb-3" id="jobTitleFilter" placeholder="e.g. job title">
+                </div>
+
+                <div class="filter-section">
+                    <h6>Location</h6>
+                    <input type="text" class="form-control mb-3" id="locationFilter" placeholder="e.g. location">
                 </div>
 
                 <div class="filter-section">
                     <h6>Category</h6>
-                    <select class="form-select mb-3" id="category">
-                        <option value="">Loading categories...</option>
+                    <select class="form-select mb-3" id="categoryFilter">
+                        <option value="">All Categories</option>
                     </select>
                 </div>
 
-                <!-- Salary Range -->
                 <div class="filter-section">
-                    <h6>Salary Range</h6>
+                    <h6>Job Type</h6>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="sal1" name="salary" value="15-20">
-                        <label class="form-check-label" for="sal1">$15 - $20 /hr</label>
+                        <input class="form-check-input" type="checkbox" id="fulltime" value="FULLTIME">
+                        <label class="form-check-label" for="fulltime">Full Time</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="sal2" name="salary" value="20-25">
-                        <label class="form-check-label" for="sal2">$20 - $25 /hr</label>
+                        <input class="form-check-input" type="checkbox" id="parttime" value="PARTTIME">
+                        <label class="form-check-label" for="parttime">Part Time</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="sal3" name="salary" value="25-30">
-                        <label class="form-check-label" for="sal3">$25 - $30 /hr</label>
+                        <input class="form-check-input" type="checkbox" id="internship" value="INTERNSHIP">
+                        <label class="form-check-label" for="internship">Internship</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="sal4" name="salary" value="30+">
-                        <label class="form-check-label" for="sal4">$30+ /hr</label>
+                        <input class="form-check-input" type="checkbox" id="contract" value="CONTRACT">
+                        <label class="form-check-label" for="contract">Contract</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="remote" value="REMOTE">
+                        <label class="form-check-label" for="remote">Remote</label>
                     </div>
                 </div>
 
-                <!-- Search Button -->
+                <div class="filter-section">
+                    <h6>Salary Range</h6>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <input type="number" class="form-control" id="minSalary" placeholder="Min" min="0">
+                        </div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" id="maxSalary" placeholder="Max" min="0">
+                        </div>
+                    </div>
+                </div>
+
                 <button class="btn btn-primary search-btn" onclick="searchJobs()">
                     <i class="fas fa-search me-2"></i>Search Jobs
                 </button>
-
             </div>
         </div>
 
@@ -124,337 +408,40 @@
             <div class="results-header">
                 <div class="row align-items-center">
                     <div class="col-md-6">
-                        <h5 class="mb-1">2,487 Internships Found</h5>
+                        <h5 class="mb-1" id="resultsCount">Loading jobs...</h5>
                         <div id="activeFilters" class="d-flex flex-wrap align-items-center">
                             <!-- Active filter tags will be inserted here -->
                         </div>
                     </div>
                     <div class="col-md-6 text-md-end">
                         <div class="dropdown">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" id="sortButton">
                                 <i class="fas fa-sort me-1"></i>Sort by: Newest First
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#" onclick="sortJobs('newest')">Newest First</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="sortJobs('salary')">Highest Salary</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="sortJobs('relevance')">Most Relevant</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="sortJobs('company')">Company A-Z</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="sortJobs('salary_desc')">Highest Salary</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="sortJobs('salary_asc')">Lowest Salary</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="sortJobs('title')">Title A-Z</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Job Cards -->
+            <!-- Job Cards Container -->
             <div id="jobsList">
-                <!-- Job Card 1 -->
-                <div class="job-card fade-in" data-category="software" data-type="fulltime" data-salary="25" onclick="showJobDetails('full-stack-dev')">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-building text-primary"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <h5 class="job-title">Full-Stack Development Intern</h5>
-                                    <div class="job-meta mb-3">
-                                        <span><i class="fas fa-building me-1"></i>TechCorp</span>
-                                        <span><i class="fas fa-map-marker-alt me-1"></i>Remote</span>
-                                        <span><i class="fas fa-clock me-1"></i>Full Time</span>
-                                        <span><i class="fas fa-dollar-sign me-1"></i>$25/hr</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-muted mb-2 small">Join our dynamic development team and work on cutting-edge web applications using modern technologies like React, Node.js, and Python.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="badge-custom me-1">React</span>
-                                    <span class="badge-custom me-1">Node.js</span>
-                                    <span class="badge-custom">Python</span>
-                                </div>
-                                <small class="text-muted">Posted 2 days ago</small>
-                            </div>
-                        </div>
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-
-                <!-- Job Card 2 -->
-                <div class="job-card fade-in" data-category="data" data-type="parttime" data-salary="22" onclick="showJobDetails('data-science')">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-chart-line text-success"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <h5 class="job-title">Data Science Intern</h5>
-                                    <div class="job-meta mb-3">
-                                        <span><i class="fas fa-building me-1"></i>DataFlow Inc</span>
-                                        <span><i class="fas fa-map-marker-alt me-1"></i>New York</span>
-                                        <span><i class="fas fa-clock me-1"></i>Part Time</span>
-                                        <span><i class="fas fa-dollar-sign me-1"></i>$22/hr</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-muted mb-2 small">Analyze large datasets and create insights using Python, SQL, and machine learning techniques. Perfect for students studying statistics or computer science.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="badge-custom me-1">Python</span>
-                                    <span class="badge-custom me-1">SQL</span>
-                                    <span class="badge-custom">Tableau</span>
-                                </div>
-                                <small class="text-muted">Posted 3 days ago</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Job Card 3 -->
-                <div class="job-card fade-in" data-category="design" data-type="fulltime" data-salary="20" onclick="showJobDetails('ui-ux-design')">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-palette text-warning"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <h5 class="job-title">UI/UX Design Intern</h5>
-                                    <div class="job-meta mb-3">
-                                        <span><i class="fas fa-building me-1"></i>DesignStudio</span>
-                                        <span><i class="fas fa-map-marker-alt me-1"></i>San Francisco</span>
-                                        <span><i class="fas fa-clock me-1"></i>Full Time</span>
-                                        <span><i class="fas fa-dollar-sign me-1"></i>$20/hr</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-muted mb-2 small">Create beautiful and intuitive user interfaces for web and mobile applications. Work with industry-standard design tools and collaborate with development teams.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="badge-custom me-1">Figma</span>
-                                    <span class="badge-custom me-1">Adobe XD</span>
-                                    <span class="badge-custom">Sketch</span>
-                                </div>
-                                <small class="text-muted">Posted 1 week ago</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Additional job cards follow the same pattern... -->
-                <!-- Job Card 4 -->
-                <div class="job-card fade-in" data-category="finance" data-type="internship" data-salary="18" onclick="showJobDetails('finance-analyst')">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-dollar-sign text-info"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <h5 class="job-title">Finance Analyst Intern</h5>
-                                    <div class="job-meta mb-3">
-                                        <span><i class="fas fa-building me-1"></i>FinanceHub</span>
-                                        <span><i class="fas fa-map-marker-alt me-1"></i>Chicago</span>
-                                        <span><i class="fas fa-clock me-1"></i>Internship</span>
-                                        <span><i class="fas fa-dollar-sign me-1"></i>$18/hr</span>
-                                    </div>
-                                </div>
-                                <!--                                <div class="job-actions">-->
-                                <!--                                    <button class="btn btn-save" onclick="event.stopPropagation(); saveJob(this)">-->
-                                <!--                                        <i class="fas fa-bookmark me-1"></i>Save-->
-                                <!--                                    </button>-->
-                                <!--                                    <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); applyJob(this)">Apply Now</button>-->
-                                <!--                                </div>-->
-                            </div>
-                            <p class="text-muted mb-2 small">Assist in financial analysis, budgeting, and reporting. Gain hands-on experience with financial modeling and investment analysis in a fast-paced environment.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="badge-custom me-1">Excel</span>
-                                    <span class="badge-custom me-1">Bloomberg</span>
-                                    <span class="badge-custom">Financial Modeling</span>
-                                </div>
-                                <small class="text-muted">Posted 1 week ago</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Job Card 5 -->
-                <div class="job-card fade-in" data-category="software" data-type="internship" data-salary="23" onclick="showJobDetails('frontend-dev')">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-laptop-code text-primary"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <h5 class="job-title">Frontend Development Intern</h5>
-                                    <div class="job-meta mb-3">
-                                        <span><i class="fas fa-building me-1"></i>WebTech Solutions</span>
-                                        <span><i class="fas fa-map-marker-alt me-1"></i>Austin</span>
-                                        <span><i class="fas fa-clock me-1"></i>Internship</span>
-                                        <span><i class="fas fa-dollar-sign me-1"></i>$23/hr</span>
-                                    </div>
-                                </div>
-                                <!--                                <div class="job-actions">-->
-                                <!--                                    <button class="btn btn-save" onclick="event.stopPropagation(); saveJob(this)">-->
-                                <!--                                        <i class="fas fa-bookmark me-1"></i>Save-->
-                                <!--                                    </button>-->
-                                <!--                                    <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); applyJob(this)">Apply Now</button>-->
-                                <!--                                </div>-->
-                            </div>
-                            <p class="text-muted mb-2 small">Build responsive and interactive web applications using modern frontend technologies. Work with experienced developers on real client projects.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="badge-custom me-1">Vue.js</span>
-                                    <span class="badge-custom me-1">CSS3</span>
-                                    <span class="badge-custom">TypeScript</span>
-                                </div>
-                                <small class="text-muted">Posted 4 days ago</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Job Card 6 -->
-                <div class="job-card fade-in" data-category="software" data-type="internship" data-salary="21" onclick="showJobDetails('backend-dev')">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-server text-secondary"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <h5 class="job-title">Backend Development Intern</h5>
-                                    <div class="job-meta mb-3">
-                                        <span><i class="fas fa-building me-1"></i>CloudSys Inc</span>
-                                        <span><i class="fas fa-map-marker-alt me-1"></i>Seattle</span>
-                                        <span><i class="fas fa-clock me-1"></i>Internship</span>
-                                        <span><i class="fas fa-dollar-sign me-1"></i>$21/hr</span>
-                                    </div>
-                                </div>
-                                <!--                                <div class="job-actions">-->
-                                <!--                                    <button class="btn btn-save" onclick="event.stopPropagation(); saveJob(this)">-->
-                                <!--                                        <i class="fas fa-bookmark me-1"></i>Save-->
-                                <!--                                    </button>-->
-                                <!--                                    <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); applyJob(this)">Apply Now</button>-->
-                                <!--                                </div>-->
-                            </div>
-                            <p class="text-muted mb-2 small">Work on server-side applications and APIs using Java, Spring Boot, and cloud technologies. Learn about microservices architecture and database design.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="badge-custom me-1">Java</span>
-                                    <span class="badge-custom me-1">Spring Boot</span>
-                                    <span class="badge-custom">AWS</span>
-                                </div>
-                                <small class="text-muted">Posted 5 days ago</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Job Card 7 -->
-                <div class="job-card fade-in" data-category="marketing" data-type="parttime" data-salary="16" onclick="showJobDetails('digital-marketing')">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-megaphone text-danger"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <h5 class="job-title">Digital Marketing Intern</h5>
-                                    <div class="job-meta mb-3">
-                                        <span><i class="fas fa-building me-1"></i>BrandBoost Agency</span>
-                                        <span><i class="fas fa-map-marker-alt me-1"></i>Los Angeles</span>
-                                        <span><i class="fas fa-clock me-1"></i>Part Time</span>
-                                        <span><i class="fas fa-dollar-sign me-1"></i>$16/hr</span>
-                                    </div>
-                                </div>
-                                <!--                                <div class="job-actions">-->
-                                <!--                                    <button class="btn btn-save" onclick="event.stopPropagation(); saveJob(this)">-->
-                                <!--                                        <i class="fas fa-bookmark me-1"></i>Save-->
-                                <!--                                    </button>-->
-                                <!--                                    <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); applyJob(this)">Apply Now</button>-->
-                                <!--                                </div>-->
-                            </div>
-                            <p class="text-muted mb-2 small">Create engaging social media content, manage campaigns, and analyze performance metrics. Perfect for marketing or communications students.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="badge-custom me-1">Social Media</span>
-                                    <span class="badge-custom me-1">Google Analytics</span>
-                                    <span class="badge-custom">Content Creation</span>
-                                </div>
-                                <small class="text-muted">Posted 6 days ago</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Job Card 8 -->
-                <div class="job-card fade-in" data-category="data" data-type="fulltime" data-salary="26" onclick="showJobDetails('business-analyst')">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-chart-bar text-info"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <h5 class="job-title">Business Analyst Intern</h5>
-                                    <div class="job-meta mb-3">
-                                        <span><i class="fas fa-building me-1"></i>Analytics Pro</span>
-                                        <span><i class="fas fa-map-marker-alt me-1"></i>Boston</span>
-                                        <span><i class="fas fa-clock me-1"></i>Full Time</span>
-                                        <span><i class="fas fa-dollar-sign me-1"></i>$26/hr</span>
-                                    </div>
-                                </div>
-                                <!--                                <div class="job-actions">-->
-                                <!--                                    <button class="btn btn-save" onclick="event.stopPropagation(); saveJob(this)">-->
-                                <!--                                        <i class="fas fa-bookmark me-1"></i>Save-->
-                                <!--                                    </button>-->
-                                <!--                                    <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); applyJob(this)">Apply Now</button>-->
-                                <!--                                </div>-->
-                            </div>
-                            <p class="text-muted mb-2 small">Analyze business processes, gather requirements, and create detailed reports. Work closely with stakeholders to improve operational efficiency.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="badge-custom me-1">Excel</span>
-                                    <span class="badge-custom me-1">Power BI</span>
-                                    <span class="badge-custom">Process Mapping</span>
-                                </div>
-                                <small class="text-muted">Posted 1 week ago</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Load More Button -->
-            <div class="text-center my-4">
-                <button class="btn btn-outline-primary" onclick="loadMoreJobs()">
-                    <i class="fas fa-sync me-1"></i>Load More Jobs
-                </button>
             </div>
 
             <!-- Pagination -->
-            <nav aria-label="Job listings pagination">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link" href="#">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" onclick="changePage(2)">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" onclick="changePage(3)">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" onclick="changePage(4)">4</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" onclick="changePage(2)">Next</a>
-                    </li>
+            <nav aria-label="Job listings pagination" id="paginationContainer" style="display: none;">
+                <ul class="pagination justify-content-center" id="pagination">
+                    <!-- Pagination will be generated here -->
                 </ul>
             </nav>
         </div>
@@ -480,21 +467,21 @@
                     <div class="col-lg-8 p-4">
                         <div class="mb-4">
                             <h6 class="fw-bold mb-3">Job Description</h6>
-                            <div id="jobDescription">
+                            <div id="modalJobDescription">
                                 <!-- Job description will be inserted here -->
                             </div>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-4" id="responsibilitiesSection">
                             <h6 class="fw-bold mb-3">Responsibilities</h6>
-                            <ul class="requirements-list" id="jobResponsibilities">
+                            <ul class="requirements-list" id="modalResponsibilities">
                                 <!-- Job responsibilities will be inserted here -->
                             </ul>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-4" id="requirementsSection">
                             <h6 class="fw-bold mb-3">Requirements</h6>
-                            <ul class="requirements-list" id="jobRequirements">
+                            <ul class="requirements-list" id="modalRequirements">
                                 <!-- Job requirements will be inserted here -->
                             </ul>
                         </div>
@@ -528,6 +515,14 @@
                                 </div>
                             </div>
 
+                            <div class="job-summary-item">
+                                <i class="fas fa-building"></i>
+                                <div>
+                                    <strong>Company</strong><br>
+                                    <span class="text-muted" id="modalCompanyName">Company</span>
+                                </div>
+                            </div>
+
                             <div class="job-summary-item mb-4">
                                 <i class="fas fa-calendar"></i>
                                 <div>
@@ -536,11 +531,11 @@
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-primary w-100 py-2 mb-3" onclick="applyForJob()">
+                            <button type="button" class="btn btn-primary w-100 py-2 mb-3" onclick="applyForJob()" id="applyButton">
                                 <i class="fas fa-paper-plane me-2"></i>Apply Now
                             </button>
 
-                            <button type="button" class="btn btn-outline-primary w-100" onclick="saveJobFromModal()">
+                            <button type="button" class="btn btn-outline-primary w-100" onclick="saveJobFromModal()" id="saveButton">
                                 <i class="fas fa-bookmark me-2"></i>Save Job
                             </button>
                         </div>
@@ -553,555 +548,713 @@
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // Job data for modal display
-    const jobData = {
-        'full-stack-dev': {
-            title: 'Full-Stack Development Intern',
-            company: 'TechCorp',
-            location: 'Remote',
-            jobType: 'Full Time',
-            salary: '$25/hr',
-            datePosted: '2 days ago',
-            description: '<p><strong>Position:</strong> Full-Stack Development Intern</p><p><strong>Company:</strong> TechCorp</p><p><strong>Overview:</strong> Join our dynamic development team and work on cutting-edge web applications using modern technologies. This is a perfect opportunity for students to gain hands-on experience in full-stack development.</p>',
-            responsibilities: [
-                'Develop and maintain web applications using React, Node.js, and Python',
-                'Participate in code reviews and team meetings',
-                'Collaborate with designers and senior developers',
-                'Write clean, efficient, and well-documented code',
-                'Learn and implement best practices in web development'
-            ],
-            requirements: [
-                'Basic knowledge of JavaScript, HTML, and CSS',
-                'Familiarity with React or similar frontend frameworks',
-                'Understanding of backend development concepts',
-                'Strong problem-solving skills',
-                'Currently enrolled in Computer Science or related field'
-            ]
-        },
-        'data-science': {
-            title: 'Data Science Intern',
-            company: 'DataFlow Inc',
-            location: 'New York',
-            jobType: 'Part Time',
-            salary: '$22/hr',
-            datePosted: '3 days ago',
-            description: '<p><strong>Position:</strong> Data Science Intern</p><p><strong>Company:</strong> DataFlow Inc</p><p><strong>Overview:</strong> Analyze large datasets and create insights using Python, SQL, and machine learning techniques. Perfect for students studying statistics or computer science.</p>',
-            responsibilities: [
-                'Clean and preprocess large datasets',
-                'Perform statistical analysis and create visualizations',
-                'Develop machine learning models',
-                'Present findings to stakeholders',
-                'Collaborate with data engineering team'
-            ],
-            requirements: [
-                'Strong knowledge of Python and SQL',
-                'Experience with data analysis libraries (pandas, numpy)',
-                'Basic understanding of machine learning concepts',
-                'Excellent analytical and communication skills',
-                'Currently enrolled in Data Science, Statistics, or related field'
-            ]
-        },
-        'ui-ux-design': {
-            title: 'UI/UX Design Intern',
-            company: 'DesignStudio',
-            location: 'San Francisco',
-            jobType: 'Full Time',
-            salary: '$20/hr',
-            datePosted: '1 week ago',
-            description: '<p><strong>Position:</strong> UI/UX Design Intern</p><p><strong>Company:</strong> DesignStudio</p><p><strong>Overview:</strong> Create beautiful and intuitive user interfaces for web and mobile applications. Work with industry-standard design tools and collaborate with development teams.</p>',
-            responsibilities: [
-                'Design user interfaces for web and mobile applications',
-                'Create wireframes and prototypes',
-                'Conduct user research and usability testing',
-                'Collaborate with developers and product managers',
-                'Maintain design consistency across platforms'
-            ],
-            requirements: [
-                'Proficiency in Figma, Adobe XD, or Sketch',
-                'Understanding of user-centered design principles',
-                'Basic knowledge of HTML/CSS',
-                'Strong portfolio demonstrating design skills',
-                'Currently enrolled in Design or related field'
-            ]
-        }
-    };
-
-    // Additional job data for modal display
-jobData['finance-analyst'] = {
-    title: 'Finance Analyst Intern',
-    company: 'FinanceHub',
-    location: 'Chicago',
-    jobType: 'Internship',
-    salary: '$18/hr',
-    datePosted: '1 week ago',
-    description: '<p><strong>Position:</strong> Finance Analyst Intern</p><p><strong>Company:</strong> FinanceHub</p><p><strong>Overview:</strong> Assist in financial analysis, budgeting, and reporting. Gain hands-on experience with financial modeling and investment analysis in a fast-paced environment.</p>',
-    responsibilities: [
-        'Assist with financial reporting and analysis',
-        'Support budgeting and forecasting processes',
-        'Conduct investment research and financial modeling',
-        'Collaborate with senior finance analysts',
-        'Prepare presentations and reports for management'
-    ],
-    requirements: [
-        'Knowledge of Excel and financial modeling',
-        'Familiarity with Bloomberg Terminal or similar tools',
-        'Strong analytical and problem-solving skills',
-        'Good attention to detail',
-        'Currently enrolled in Finance, Accounting, or related field'
-    ]
-};
-
-jobData['frontend-dev'] = {
-    title: 'Frontend Development Intern',
-    company: 'WebTech Solutions',
-    location: 'Austin',
-    jobType: 'Internship',
-    salary: '$23/hr',
-    datePosted: '4 days ago',
-    description: '<p><strong>Position:</strong> Frontend Development Intern</p><p><strong>Company:</strong> WebTech Solutions</p><p><strong>Overview:</strong> Build responsive and interactive web applications using modern frontend technologies. Work with experienced developers on real client projects.</p>',
-    responsibilities: [
-        'Develop user-friendly web pages using Vue.js and TypeScript',
-        'Implement responsive design and cross-browser compatibility',
-        'Work closely with backend developers to integrate APIs',
-        'Participate in code reviews and team meetings',
-        'Test and debug frontend applications'
-    ],
-    requirements: [
-        'Basic knowledge of HTML, CSS, and JavaScript',
-        'Familiarity with Vue.js or similar frameworks',
-        'Understanding of responsive design principles',
-        'Problem-solving and teamwork skills',
-        'Currently enrolled in Computer Science or related field'
-    ]
-};
-
-jobData['backend-dev'] = {
-    title: 'Backend Development Intern',
-    company: 'CloudSys Inc',
-    location: 'Seattle',
-    jobType: 'Internship',
-    salary: '$21/hr',
-    datePosted: '5 days ago',
-    description: '<p><strong>Position:</strong> Backend Development Intern</p><p><strong>Company:</strong> CloudSys Inc</p><p><strong>Overview:</strong> Work on server-side applications and APIs using Java, Spring Boot, and cloud technologies. Learn about microservices architecture and database design.</p>',
-    responsibilities: [
-        'Develop and maintain backend APIs using Java and Spring Boot',
-        'Work with databases and cloud services',
-        'Participate in code reviews and debugging sessions',
-        'Collaborate with frontend developers for integration',
-        'Learn and implement best practices in backend development'
-    ],
-    requirements: [
-        'Basic knowledge of Java and Spring Boot',
-        'Familiarity with relational databases and SQL',
-        'Understanding of RESTful API development',
-        'Good problem-solving and debugging skills',
-        'Currently enrolled in Computer Science or related field'
-    ]
-};
-
-jobData['digital-marketing'] = {
-    title: 'Digital Marketing Intern',
-    company: 'BrandBoost Agency',
-    location: 'Los Angeles',
-    jobType: 'Part Time',
-    salary: '$16/hr',
-    datePosted: '6 days ago',
-    description: '<p><strong>Position:</strong> Digital Marketing Intern</p><p><strong>Company:</strong> BrandBoost Agency</p><p><strong>Overview:</strong> Create engaging social media content, manage campaigns, and analyze performance metrics. Perfect for marketing or communications students.</p>',
-    responsibilities: [
-        'Create content for social media platforms',
-        'Assist in planning and executing marketing campaigns',
-        'Monitor and analyze campaign performance',
-        'Collaborate with design and content teams',
-        'Report insights and recommendations to management'
-    ],
-    requirements: [
-        'Familiarity with social media platforms and trends',
-        'Basic knowledge of Google Analytics and SEO',
-        'Strong communication and writing skills',
-        'Creativity and attention to detail',
-        'Currently enrolled in Marketing, Communications, or related field'
-    ]
-};
-
-jobData['business-analyst'] = {
-    title: 'Business Analyst Intern',
-    company: 'Analytics Pro',
-    location: 'Boston',
-    jobType: 'Full Time',
-    salary: '$26/hr',
-    datePosted: '1 week ago',
-    description: '<p><strong>Position:</strong> Business Analyst Intern</p><p><strong>Company:</strong> Analytics Pro</p><p><strong>Overview:</strong> Analyze business processes, gather requirements, and create detailed reports. Work closely with stakeholders to improve operational efficiency.</p>',
-    responsibilities: [
-        'Analyze business processes and workflows',
-        'Gather and document requirements from stakeholders',
-        'Prepare detailed reports and presentations',
-        'Collaborate with cross-functional teams',
-        'Support process improvement initiatives'
-    ],
-    requirements: [
-        'Proficiency in Excel and Power BI',
-        'Understanding of process mapping and analysis',
-        'Strong analytical and communication skills',
-        'Attention to detail and organizational skills',
-        'Currently enrolled in Business, Data Analytics, or related field'
-    ]
-};
-
+    let currentJobs = [];
+    let currentPage = 1;
+    let totalPages = 1;
+    let isLoading = false;
+    let currentSort = 'newest';
+    let selectedJobId = null;
 
     // Initialize page
     document.addEventListener('DOMContentLoaded', function() {
-        initFadeInAnimations();
-        updateActiveFilters();
+        checkUserAuthStatus();
+        setActiveNavLink();
+        loadCategories();
+        loadJobs();
+        setupEventListeners();
     });
 
-    // Fade-in animation on scroll
-    function initFadeInAnimations() {
-        const fadeElements = document.querySelectorAll('.fade-in');
-
-        const fadeInObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        fadeElements.forEach(element => {
-            fadeInObserver.observe(element);
-        });
-    }
-
-    // Show job details in modal
-    function showJobDetails(jobId) {
-        const job = jobData[jobId];
-
-        if (!job) {
-            showNotification('Job details not found', 'error');
-            return;
-        }
-
-        // Populate modal with job data
-        document.getElementById('modalJobTitle').textContent = job.title;
-        document.getElementById('modalCompany').textContent = job.company;
-        document.getElementById('modalLocation').textContent = job.location;
-        document.getElementById('modalJobType').textContent = job.jobType;
-        document.getElementById('modalSalary').textContent = job.salary;
-        document.getElementById('modalDatePosted').textContent = job.datePosted;
-        document.getElementById('jobDescription').innerHTML = job.description;
-
-        // Populate responsibilities
-        const responsibilitiesList = document.getElementById('jobResponsibilities');
-        responsibilitiesList.innerHTML = '';
-        job.responsibilities.forEach(responsibility => {
-            const li = document.createElement('li');
-            li.textContent = responsibility;
-            responsibilitiesList.appendChild(li);
-        });
-
-        // Populate requirements
-        const requirementsList = document.getElementById('jobRequirements');
-        requirementsList.innerHTML = '';
-        job.requirements.forEach(requirement => {
-            const li = document.createElement('li');
-            li.textContent = requirement;
-            requirementsList.appendChild(li);
-        });
-
-        // Show the modal
-        const modal = new bootstrap.Modal(document.getElementById('jobDetailsModal'));
-        modal.show();
-    }
-
-    // Apply for job function
-    function applyForJob() {
-        showNotification('Redirecting to application form...', 'success');
-        // In a real application, this would redirect to an application form
-        setTimeout(() => {
-            showNotification('Application form would open here', 'info');
-        }, 1500);
-    }
-
-    // Save job from modal
-    function saveJobFromModal() {
-        showNotification('Job saved successfully!', 'success');
-    }
-
-    // Search jobs function
-    function searchJobs() {
-        const jobTitle = document.getElementById('jobTitle').value;
-        const location = document.getElementById('location').value;
-        const category = document.getElementById('category').value;
-
-        showNotification('Searching for jobs...', 'info');
-        // In a real app, this would make an API call
-        setTimeout(() => {
-            showNotification('Found ' + Math.floor(Math.random() * 1000 + 1500) + ' matching jobs!', 'success');
-            updateActiveFilters();
-        }, 1000);
-    }
-
-    // Filter functions
-    function updateActiveFilters() {
-        const activeFiltersContainer = document.getElementById('activeFilters');
-        const checkedFilters = document.querySelectorAll('input[type="checkbox"]:checked');
-
-        activeFiltersContainer.innerHTML = '';
-
-        checkedFilters.forEach(filter => {
-            const filterTag = document.createElement('span');
-            filterTag.className = 'filter-tag';
-            filterTag.innerHTML = `
-                ${filter.nextElementSibling.textContent}
-                <button type="button" class="btn-close" onclick="removeFilter('${filter.id}')"></button>
-            `;
-            activeFiltersContainer.appendChild(filterTag);
-        });
-
-        // Add clear all link if there are active filters
-        if (checkedFilters.length > 0) {
-            const clearAllLink = document.createElement('a');
-            clearAllLink.href = '#';
-            clearAllLink.className = 'clear-all-btn ms-2';
-            clearAllLink.textContent = 'Clear All';
-            clearAllLink.onclick = clearAllFilters;
-            activeFiltersContainer.appendChild(clearAllLink);
-        }
-    }
-
-    function removeFilter(filterId) {
-        const filterElement = document.getElementById(filterId);
-        if (filterElement) {
-            filterElement.checked = false;
-            updateActiveFilters();
-            applyFilters();
-        }
-    }
-
-    function clearAllFilters() {
-        const allFilters = document.querySelectorAll('input[type="checkbox"]');
-        allFilters.forEach(filter => {
-            filter.checked = false;
-        });
-
-        // Clear text inputs
-        document.getElementById('jobTitle').value = '';
-        document.getElementById('location').value = '';
-        document.getElementById('category').selectedIndex = 0;
-
-        updateActiveFilters();
-        applyFilters();
-        showNotification('All filters cleared', 'info');
-    }
-
-    function applyFilters() {
-        // In a real app, this would filter the job listings
-        showNotification('Filters applied', 'success');
-    }
-
-    // Add event listeners to all filter checkboxes
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            updateActiveFilters();
-            applyFilters();
-        });
-    });
-
-    // Sort jobs function
-    function sortJobs(sortBy) {
-        showNotification(`Sorting by: ${sortBy}`, 'info');
-        // In a real app, this would re-order the job listings
-    }
-
-    // Other utility functions
-    function loadMoreJobs() {
-        showNotification('Loading more jobs...', 'info');
-        // In a real app, this would load additional job listings
-    }
-
-    function changePage(pageNumber) {
-        showNotification(`Loading page ${pageNumber}...`, 'info');
-        // In a real app, this would load the specified page
-    }
-
-    // Utility function for notifications
-    function showNotification(message, type = 'info') {
-        // Remove existing notifications
-        const existingToasts = document.querySelectorAll('.toast-notification');
-        existingToasts.forEach(toast => toast.remove());
-
-        const toast = document.createElement('div');
-        toast.className = `alert alert-${type} position-fixed toast-notification`;
-        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-        toast.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
-                <span>${message}</span>
-                <button type="button" class="btn-close" onclick="this.closest('.toast-notification').remove()"></button>
-            </div>
-        `;
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.remove();
+    // Setup event listeners
+    function setupEventListeners() {
+        // Search on Enter key for text inputs
+        document.getElementById('jobTitleFilter').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchJobs();
             }
-        }, 3000);
+        });
+
+        document.getElementById('locationFilter').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchJobs();
+            }
+        });
+
+        // Update active filters when checkboxes change
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateActiveFilters);
+        });
+
+        // Update active filters when salary inputs change
+        document.getElementById('minSalary').addEventListener('input', updateActiveFilters);
+        document.getElementById('maxSalary').addEventListener('input', updateActiveFilters);
     }
 
-    // Search on Enter key
-    document.getElementById('jobTitle').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            searchJobs();
-        }
-    });
-
-    // Fetch categories from your backend
+    // Load categories
     async function loadCategories() {
         try {
             const response = await fetch('http://localhost:8080/api/v1/category/getAll');
             const data = await response.json();
 
-            const categorySelect = document.getElementById('category');
+            const categorySelect = document.getElementById('categoryFilter');
             categorySelect.innerHTML = '<option value="">All Categories</option>';
 
-            // Changed from data.data to just data.data since your ResponsDto puts the list in the 'data' field
-            data.data.forEach(category => {
-                categorySelect.innerHTML += `<option value="${category.categoryId}">${category.name}</option>`;
-            });
+            if (data.data && Array.isArray(data.data)) {
+                data.data.forEach(category => {
+                    categorySelect.innerHTML += `<option value="${category.categoryId}">${category.name}</option>`;
+                });
+            }
         } catch (error) {
             console.error('Error loading categories:', error);
         }
     }
 
-    // Call when page loads
-    document.addEventListener('DOMContentLoaded', loadCategories);
+    // Load jobs with filters
+    async function loadJobs(page = 1) {
+        if (isLoading) return;
 
-</script>
-<script src="..js/navbar.js"></script>
-<!-- Add this script section to EVERY HTML page before closing </body> tag -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    // Navbar management system - Include this on every page
-    document.addEventListener('DOMContentLoaded', function() {
-        checkUserAuthStatus();
-        setActiveNavLink();
-    });
+        isLoading = true;
+        showLoadingState();
 
-    // Check if user is already logged in on page load
+        try {
+            const filters = getFilters();
+            const params = new URLSearchParams({
+                page: page - 1, // Backend uses 0-based indexing
+                size: 10,
+                sort: getSortParameter()
+            });
+
+            // Add filters to params
+            if (filters.title) params.append('title', filters.title);
+            if (filters.location) params.append('location', filters.location);
+            if (filters.categoryId) params.append('categoryId', filters.categoryId);
+            if (filters.jobTypes.length > 0) params.append('jobTypes', filters.jobTypes.join(','));
+            if (filters.minSalary) params.append('minSalary', filters.minSalary);
+            if (filters.maxSalary) params.append('maxSalary', filters.maxSalary);
+
+            const response = await fetch(`http://localhost:8080/api/v1/jobs/search?${params}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                currentJobs = data.data.content;
+                currentPage = data.data.number + 1; // Convert to 1-based
+                totalPages = data.data.totalPages;
+
+                displayJobs();
+                updateJobCount(data.data.totalElements);
+                updatePagination();
+            } else {
+                showError('Error loading jobs: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error loading jobs:', error);
+            showError('Error loading jobs. Please try again.');
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    // Get current filters
+    function getFilters() {
+        const jobTypes = [];
+        document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+            jobTypes.push(checkbox.value);
+        });
+
+        return {
+            title: document.getElementById('jobTitleFilter').value.trim(),
+            location: document.getElementById('locationFilter').value.trim(),
+            categoryId: document.getElementById('categoryFilter').value,
+            jobTypes: jobTypes,
+            minSalary: document.getElementById('minSalary').value,
+            maxSalary: document.getElementById('maxSalary').value
+        };
+    }
+
+    // Get sort parameter for backend
+    function getSortParameter() {
+        switch (currentSort) {
+            case 'newest':
+                return 'datePosted,desc';
+            case 'salary_desc':
+                return 'salaryPerHour,desc';
+            case 'salary_asc':
+                return 'salaryPerHour,asc';
+            case 'title':
+                return 'title,asc';
+            default:
+                return 'datePosted,desc';
+        }
+    }
+
+    // Display jobs
+    function displayJobs() {
+        const jobsList = document.getElementById('jobsList');
+
+        if (currentJobs.length === 0) {
+            jobsList.innerHTML = `
+                <div class="no-jobs">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4>No Jobs Found</h4>
+                    <p>Try adjusting your search filters or check back later for new opportunities.</p>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        currentJobs.forEach(job => {
+            html += createJobCard(job);
+        });
+
+        jobsList.innerHTML = html;
+
+        // Add fade-in animation
+        setTimeout(() => {
+            document.querySelectorAll('.fade-in').forEach(el => {
+                el.classList.add('visible');
+            });
+        }, 100);
+    }
+
+    // Create job card HTML
+    function createJobCard(job) {
+        const formattedDate = formatDate(job.datePosted);
+        const salary = job.salaryPerHour ? `$${job.salaryPerHour}/hr` : 'Negotiable';
+
+        return `
+            <div class="job-card fade-in" onclick="showJobDetails(${job.jobId})">
+                <div class="d-flex">
+                    <div class="company-logo">
+                        ${job.companyLogo ?
+            `<img src="${job.companyLogo}" alt="${job.companyName}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">` :
+            `<i class="fas fa-building text-primary"></i>`
+        }
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h5 class="job-title">${job.title}</h5>
+                                <div class="job-meta mb-3">
+                                    <span><i class="fas fa-building me-1"></i>${job.companyName || 'Company'}</span>
+                                    <span><i class="fas fa-map-marker-alt me-1"></i>${job.location}</span>
+                                    <span><i class="fas fa-clock me-1"></i>${formatJobType(job.jobType)}</span>
+                                    <span><i class="fas fa-dollar-sign me-1"></i>${salary}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-muted mb-2 small">${truncateText(job.jobOverview, 150)}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge-custom me-1">${job.categoryName}</span>
+                                <span class="badge-custom">${formatJobType(job.jobType)}</span>
+                            </div>
+                            <small class="text-muted">${formattedDate}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Show loading state
+    function showLoadingState() {
+        document.getElementById('jobsList').innerHTML = `
+            <div class="loading-spinner">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        `;
+    }
+
+    // Show error state
+    function showError(message) {
+        document.getElementById('jobsList').innerHTML = `
+            <div class="no-jobs">
+                <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                <h4>Error Loading Jobs</h4>
+                <p>${message}</p>
+                <button class="btn btn-primary" onclick="loadJobs()">Try Again</button>
+            </div>
+        `;
+    }
+
+    // Update job count
+    function updateJobCount(total) {
+        document.getElementById('jobCount').textContent = `${total.toLocaleString()}+`;
+        document.getElementById('resultsCount').textContent = `${total.toLocaleString()} Internships Found`;
+    }
+
+    // Update pagination
+    function updatePagination() {
+        const paginationContainer = document.getElementById('paginationContainer');
+        const pagination = document.getElementById('pagination');
+
+        if (totalPages <= 1) {
+            paginationContainer.style.display = 'none';
+            return;
+        }
+
+        paginationContainer.style.display = 'block';
+        let html = '';
+
+        // Previous button
+        html += `
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="changePage(${currentPage - 1})" tabindex="-1">Previous</a>
+            </li>
+        `;
+
+        // Page numbers
+        const startPage = Math.max(1, currentPage - 2);
+        const endPage = Math.min(totalPages, currentPage + 2);
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `
+                <li class="page-item ${currentPage === i ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+                </li>
+            `;
+        }
+
+        // Next button
+        html += `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a>
+            </li>
+        `;
+
+        pagination.innerHTML = html;
+    }
+
+    // Change page
+    function changePage(page) {
+        if (page < 1 || page > totalPages || page === currentPage || isLoading) {
+            return;
+        }
+        loadJobs(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Search jobs
+    function searchJobs() {
+        currentPage = 1;
+        loadJobs(1);
+        updateActiveFilters();
+    }
+
+    // Sort jobs
+    function sortJobs(sortBy) {
+        currentSort = sortBy;
+        currentPage = 1;
+
+        // Update sort button text
+        const sortTexts = {
+            'newest': 'Newest First',
+            'salary_desc': 'Highest Salary',
+            'salary_asc': 'Lowest Salary',
+            'title': 'Title A-Z'
+        };
+
+        document.getElementById('sortButton').innerHTML = `<i class="fas fa-sort me-1"></i>Sort by: ${sortTexts[sortBy]}`;
+
+        loadJobs(1);
+    }
+
+    // Update active filters display
+    function updateActiveFilters() {
+        const activeFiltersContainer = document.getElementById('activeFilters');
+        const filters = getFilters();
+        let html = '';
+
+        // Title filter
+        if (filters.title) {
+            html += createFilterTag('Title', filters.title, () => {
+                document.getElementById('jobTitleFilter').value = '';
+                searchJobs();
+            });
+        }
+
+        // Location filter
+        if (filters.location) {
+            html += createFilterTag('Location', filters.location, () => {
+                document.getElementById('locationFilter').value = '';
+                searchJobs();
+            });
+        }
+
+        // Category filter
+        if (filters.categoryId) {
+            const categorySelect = document.getElementById('categoryFilter');
+            const categoryText = categorySelect.options[categorySelect.selectedIndex].text;
+            html += createFilterTag('Category', categoryText, () => {
+                document.getElementById('categoryFilter').value = '';
+                searchJobs();
+            });
+        }
+
+        // Job type filters
+        filters.jobTypes.forEach(jobType => {
+            html += createFilterTag('Type', formatJobType(jobType), () => {
+                document.getElementById(jobType.toLowerCase()).checked = false;
+                searchJobs();
+            });
+        });
+
+        // Salary filters
+        if (filters.minSalary || filters.maxSalary) {
+            let salaryText = '';
+            if (filters.minSalary && filters.maxSalary) {
+                salaryText = `${filters.minSalary} - ${filters.maxSalary}`;
+            } else if (filters.minSalary) {
+                salaryText = `${filters.minSalary}+`;
+            } else if (filters.maxSalary) {
+                salaryText = `Up to ${filters.maxSalary}`;
+            }
+
+            if (salaryText) {
+                html += createFilterTag('Salary', salaryText, () => {
+                    document.getElementById('minSalary').value = '';
+                    document.getElementById('maxSalary').value = '';
+                    searchJobs();
+                });
+            }
+        }
+
+        // Clear all button
+        if (html) {
+            html += `<a href="#" class="clear-all-btn ms-2" onclick="clearAllFilters()">Clear All</a>`;
+        }
+
+        activeFiltersContainer.innerHTML = html;
+    }
+
+    // Create filter tag
+    function createFilterTag(label, value, onRemove) {
+        return `
+            <span class="filter-tag">
+                ${label}: ${value}
+                <button type="button" class="btn-close" onclick="event.preventDefault(); (${onRemove.toString()})()"></button>
+            </span>
+        `;
+    }
+
+    // Clear all filters
+    function clearAllFilters() {
+        document.getElementById('jobTitleFilter').value = '';
+        document.getElementById('locationFilter').value = '';
+        document.getElementById('categoryFilter').value = '';
+        document.getElementById('minSalary').value = '';
+        document.getElementById('maxSalary').value = '';
+
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        searchJobs();
+    }
+
+    // Show job details in modal
+    async function showJobDetails(jobId) {
+        selectedJobId = jobId;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/jobs/${jobId}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                const job = data.data;
+                populateJobModal(job);
+                new bootstrap.Modal(document.getElementById('jobDetailsModal')).show();
+            } else {
+                showNotification('Error loading job details', 'error');
+            }
+        } catch (error) {
+            console.error('Error loading job details:', error);
+            showNotification('Error loading job details', 'error');
+        }
+    }
+
+    // Populate job modal
+    function populateJobModal(job) {
+        document.getElementById('modalJobTitle').textContent = job.title;
+        document.getElementById('modalCompany').textContent = job.companyName || 'Company';
+        document.getElementById('modalLocation').textContent = job.location;
+        document.getElementById('modalJobType').textContent = formatJobType(job.jobType);
+        document.getElementById('modalSalary').textContent = job.salaryPerHour ? `${job.salaryPerHour}/hr` : 'Negotiable';
+        document.getElementById('modalCompanyName').textContent = job.companyName || 'Company';
+        document.getElementById('modalDatePosted').textContent = formatDate(job.datePosted);
+        document.getElementById('modalJobDescription').innerHTML = job.jobOverview ? job.jobOverview.replace(/\n/g, '<br>') : 'No description available';
+
+        // Populate responsibilities
+        const responsibilitiesContainer = document.getElementById('modalResponsibilities');
+        const responsibilitiesSection = document.getElementById('responsibilitiesSection');
+
+        if (job.responsibilities && job.responsibilities.length > 0) {
+            responsibilitiesContainer.innerHTML = '';
+            job.responsibilities.forEach(responsibility => {
+                const li = document.createElement('li');
+                li.textContent = responsibility;
+                responsibilitiesContainer.appendChild(li);
+            });
+            responsibilitiesSection.style.display = 'block';
+        } else {
+            responsibilitiesSection.style.display = 'none';
+        }
+
+        // Populate requirements
+        const requirementsContainer = document.getElementById('modalRequirements');
+        const requirementsSection = document.getElementById('requirementsSection');
+
+        if (job.requirements && job.requirements.length > 0) {
+            requirementsContainer.innerHTML = '';
+            job.requirements.forEach(requirement => {
+                const li = document.createElement('li');
+                li.textContent = requirement;
+                requirementsContainer.appendChild(li);
+            });
+            requirementsSection.style.display = 'block';
+        } else {
+            requirementsSection.style.display = 'none';
+        }
+
+        // Update apply button based on auth status
+        updateApplyButton();
+    }
+
+    // Update apply button based on user authentication
+    function updateApplyButton() {
+        const token = sessionStorage.getItem('authToken');
+        const userRole = sessionStorage.getItem('userRole');
+        const applyButton = document.getElementById('applyButton');
+        const saveButton = document.getElementById('saveButton');
+
+        if (!token) {
+            applyButton.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Sign In to Apply';
+            applyButton.onclick = () => {
+                bootstrap.Modal.getInstance(document.getElementById('jobDetailsModal')).hide();
+                setTimeout(() => {
+                    if (document.getElementById('loginModal')) {
+                        new bootstrap.Modal(document.getElementById('loginModal')).show();
+                    } else {
+                        window.location.href = 'main.html';
+                    }
+                }, 300);
+            };
+        } else if (userRole !== 'CANDIDATE') {
+            applyButton.innerHTML = '<i class="fas fa-user-times me-2"></i>Candidates Only';
+            applyButton.disabled = true;
+        } else {
+            applyButton.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Apply Now';
+            applyButton.disabled = false;
+            applyButton.onclick = applyForJob;
+        }
+    }
+
+    // Apply for job
+    async function applyForJob() {
+        const token = sessionStorage.getItem('authToken');
+        if (!token || !selectedJobId) return;
+
+        const applyButton = document.getElementById('applyButton');
+        const originalText = applyButton.innerHTML;
+
+        applyButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Applying...';
+        applyButton.disabled = true;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/applications`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    jobId: selectedJobId
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showNotification('Application submitted successfully!', 'success');
+                applyButton.innerHTML = '<i class="fas fa-check me-2"></i>Applied';
+                applyButton.disabled = true;
+            } else {
+                throw new Error(data.message || 'Failed to submit application');
+            }
+        } catch (error) {
+            console.error('Error applying for job:', error);
+            showNotification(error.message, 'error');
+            applyButton.innerHTML = originalText;
+            applyButton.disabled = false;
+        }
+    }
+
+    // Save job from modal
+    function saveJobFromModal() {
+        showNotification('Save job feature coming soon!', 'info');
+    }
+
+    // Utility functions
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) return 'Posted yesterday';
+        if (diffDays < 7) return `Posted ${diffDays} days ago`;
+        if (diffDays < 30) return `Posted ${Math.ceil(diffDays / 7)} weeks ago`;
+        return `Posted ${Math.ceil(diffDays / 30)} months ago`;
+    }
+
+    function formatJobType(jobType) {
+        const types = {
+            'FULLTIME': 'Full Time',
+            'PARTTIME': 'Part Time',
+            'INTERNSHIP': 'Internship',
+            'CONTRACT': 'Contract',
+            'REMOTE': 'Remote'
+        };
+        return types[jobType] || jobType;
+    }
+
+    function truncateText(text, maxLength) {
+        if (!text) return '';
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    }
+
+    function showNotification(message, type = 'info') {
+        $('.notification-toast').remove();
+
+        const alertClass = type === 'error' ? 'danger' : type;
+        const iconClass = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
+
+        const toast = $(`
+            <div class="alert alert-${alertClass} position-fixed notification-toast" style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${iconClass} me-2"></i>
+                    <span>${message}</span>
+                    <button type="button" class="btn-close ms-auto" onclick="$(this).closest('.notification-toast').remove()"></button>
+                </div>
+            </div>
+        `);
+
+        $('body').append(toast);
+
+        setTimeout(() => {
+            toast.fadeOut(() => toast.remove());
+        }, 5000);
+    }
+
+    // Navbar management
     function checkUserAuthStatus() {
         const token = sessionStorage.getItem('authToken');
         const email = sessionStorage.getItem('userEmail');
         const role = sessionStorage.getItem('userRole');
 
         if (token && email && role) {
-            // User is logged in, update navbar
             updateNavbarForLoggedInUser(role, email);
         }
     }
 
-    // Update navbar based on user role
     function updateNavbarForLoggedInUser(userRole, userEmail) {
         const navbar = document.querySelector('.navbar .container');
-
         if (!navbar) return;
 
-        // Get the navbar collapse div
         const navbarCollapse = navbar.querySelector('.navbar-collapse');
-
         if (!navbarCollapse) return;
 
         if (userRole === 'CANDIDATE') {
-            // Update navbar for CANDIDATE
             navbarCollapse.innerHTML = `
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="findJob.html">Find Internships</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="myApplications.html">My Applications</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="aboutUs.html">About Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contactUs.html">Contact Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="resumeChecker.html">Resume Checker</a>
-                </li>
-            </ul>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-primary" onclick="showNotifications()">
-                    <i class="fas fa-bell me-1"></i>Notifications
-                </button>
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user me-1"></i>Profile
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="findJob.html">Find Internships</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="myApplications.html">My Applications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="aboutUs.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contactUs.html">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="resumeChecker.html">Resume Checker</a>
+                    </li>
+                </ul>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" onclick="showNotifications()">
+                        <i class="fas fa-bell me-1"></i>Notifications
                     </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="candidateProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
-                    </ul>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>Profile
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="candidateProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
         } else if (userRole === 'EMPLOYEE') {
-            // Update navbar for EMPLOYEE
             navbarCollapse.innerHTML = `
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="findJob.html">Find Internships</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="jobDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Post Job
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="jobDropdown">
-                        <li><a class="dropdown-item" href="jobPosting.html">
-                            <i class="fas fa-plus me-2"></i>Post Job
-                        </a></li>
-                        <li><a class="dropdown-item" href="manageJobPosting.html">
-                            <i class="fas fa-cog me-2"></i>Manage Jobs
-                        </a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="aboutUs.html">About Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contactUs.html">Contact Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="resumeChecker.html">Resume Checker</a>
-                </li>
-            </ul>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-primary" onclick="showNotifications()">
-                    <i class="fas fa-bell me-1"></i>Notifications
-                </button>
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user me-1"></i>Profile
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="findJob.html">Find Internships</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="jobDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Post Job
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="jobDropdown">
+                            <li><a class="dropdown-item" href="jobPosting.html">
+                                <i class="fas fa-plus me-2"></i>Post Job
+                            </a></li>
+                            <li><a class="dropdown-item" href="manageJobPosting.html">
+                                <i class="fas fa-cog me-2"></i>Manage Jobs
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="aboutUs.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contactUs.html">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="resumeChecker.html">Resume Checker</a>
+                    </li>
+                </ul>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" onclick="showNotifications()">
+                        <i class="fas fa-bell me-1"></i>Notifications
                     </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="employerProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
-                    </ul>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>Profile
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="employerProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
         }
 
-        // Re-initialize dropdown functionality
         initializeDropdowns();
-
-        // Set active nav link after updating navbar
         setActiveNavLink();
     }
 
-    // Initialize Bootstrap dropdowns
     function initializeDropdowns() {
         const dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
         const dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
@@ -1109,7 +1262,6 @@ jobData['business-analyst'] = {
         });
     }
 
-    // Set active nav link based on current page
     function setActiveNavLink() {
         const currentPage = window.location.pathname.split('/').pop() || 'main.html';
         const navLinks = document.querySelectorAll('.nav-link');
@@ -1124,65 +1276,26 @@ jobData['business-analyst'] = {
         });
     }
 
-    // Logout function
     function performLogout() {
-        // Clear stored data
         sessionStorage.removeItem('authToken');
         sessionStorage.removeItem('userEmail');
         sessionStorage.removeItem('userRole');
 
-        // Show notification
         showNotification('Logged out successfully!', 'success');
 
-        // Redirect to main page
         setTimeout(() => {
             window.location.href = 'main.html';
         }, 1000);
     }
 
-    // Additional functions for navbar actions
     function showNotifications() {
         showNotification('Notifications feature coming soon!', 'info');
     }
 
-    function showEmployerDashboard() {
-        showNotification('Redirecting to dashboard...', 'info');
-        setTimeout(() => {
-            window.location.href = 'employerDashboard.html';
-        }, 1000);
-    }
-
-    // Utility functions
-    function showNotification(message, type = 'info') {
-        // Remove existing notifications
-        $('.notification-toast').remove();
-
-        const alertClass = type === 'error' ? 'danger' : type;
-        const iconClass = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
-
-        const toast = $(`
-        <div class="alert alert-${alertClass} position-fixed notification-toast" style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
-            <div class="d-flex align-items-center">
-                <i class="fas fa-${iconClass} me-2"></i>
-                <span>${message}</span>
-                <button type="button" class="btn-close ms-auto" onclick="$(this).closest('.notification-toast').remove()"></button>
-            </div>
-        </div>
-    `);
-
-        $('body').append(toast);
-
-        setTimeout(() => {
-            toast.fadeOut(() => toast.remove());
-        }, 5000);
-    }
-
-    // Modal functions (only include on main page)
     function showLoginModal() {
         if (document.getElementById('loginModal')) {
             new bootstrap.Modal(document.getElementById('loginModal')).show();
         } else {
-            // Redirect to main page if modal doesn't exist
             window.location.href = 'main.html';
         }
     }
@@ -1191,7 +1304,6 @@ jobData['business-analyst'] = {
         if (document.getElementById('registerModal')) {
             new bootstrap.Modal(document.getElementById('registerModal')).show();
         } else {
-            // Redirect to main page if modal doesn't exist
             window.location.href = 'main.html';
         }
     }
