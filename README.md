@@ -18,22 +18,22 @@ It connects **students, employers, and administrators** in one platform, making 
 
 ### 🔑 Authentication & Authorization  
 - Secure **JWT-based login system**  
-- Role-based access (**Admin**, **Employer**, **Student**)  
+- Role-based access (**Admin**, **Employer**, **Candidate**)  
 - Session-less API security  
 
-### 🧑‍🎓 Student Panel  
+### 🧑‍🎓 Candidate 
 - 📝 Register & manage student profile  
 - 📂 Browse internships & jobs  
 - 📤 Apply to opportunities  
 - 📋 View application history & status updates  
 
-### 🏢 Employer Panel  
+### 🏢 Employer  
 - 📝 Create & manage job postings  
 - 📂 Filter applicants for each posting  
 - ✅ Approve / reject student applications  
 - 🧠 Manage employer profiles  
 
-### 🛠️ Admin Panel  
+### 🛠️ Admin   
 - 👀 Manage all users (students, employers)  
 - 🗄️ Manage job categories & postings  
 - 🔒 Monitor system security and usage  
