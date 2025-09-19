@@ -124,6 +124,14 @@ mvn spring-boot:run
 ![ResumeChecker](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-resumeChecker-html-2025-09-19-23_06_45.png)  
 
 
+### Employer Profile
+![Employer Profile](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-employerProfile-html-2025-09-20-01_21_01.png)
+
+
+### Candidate profile
+![Candidate profile](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-candidateProfile-html-2025-09-20-01_19_22.png)
+
+
 ### Post Job (Employer only)
 ![Post Job](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-jobPosting-html-2025-09-20-00_22_07.png)  
 
