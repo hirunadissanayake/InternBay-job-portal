@@ -90,10 +90,15 @@ mvn spring-boot:run
 
 
 ### Post Job (Employer only)
-![Post Job]()  
+![Post Job](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-jobPosting-html-2025-09-20-00_22_07.png)  
 
 
 ### Manage Job (Employer only)
-![Manage Job]()  
+![Manage Job](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-manageJobPosting-html-2025-09-20-00_22_35.png)  
 
 
+### Apply Job (Candidate only)
+![Apply Job]()
+
+### Job Detais Card 
+![Job Details]()
