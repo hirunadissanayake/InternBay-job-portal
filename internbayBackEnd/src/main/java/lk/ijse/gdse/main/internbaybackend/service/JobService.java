@@ -22,4 +22,5 @@ public interface JobService {
     int deleteJob(String employerEmail, Long jobId);
     int toggleJobStatus(String employerEmail, Long jobId);
     JobStatsDTO getEmployerJobStats(String employerEmail, Long employerId);
+    List<JobResponseDTO> getAllJobs();
 }

@@ -326,4 +326,17 @@ public class JobServiceImpl implements JobService {
                 .categoryName(job.getCategory().getName())
                 .build();
     }
+
+    @Override
+    public List<JobResponseDTO> getAllJobs() {
+        try {
+            List<Job> jobs = jobRepository.findAll();
+            return jobs.stream()
+                    .map(this::convertToResponseDTO)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of(); // Return empty list on error
+        }
+    }
 }

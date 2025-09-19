@@ -26,7 +26,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="findJob.html">Find Internships</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link" href="aboutUs.html">About Us</a>
                 </li>
@@ -90,12 +89,12 @@
                         <label class="form-label">Select from Available Positions</label>
                         <select class="form-select" id="jobSelect">
                             <option value="">— Choose a Job Posting —</option>
-                            <option value="frontend">Frontend Developer Intern</option>
-                            <option value="backend">Backend Developer Intern</option>
-                            <option value="fullstack">Full-Stack Developer Intern</option>
-                            <option value="data">Data Analyst Intern</option>
-                            <option value="marketing">Marketing Intern</option>
+                            <!-- Options will be loaded from backend -->
                         </select>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i>
+                            Loading job positions from database...
+                        </div>
                     </div>
                 </div>
             </div>
@@ -204,12 +203,160 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     let uploadedFile = null;
+    let allJobs = []; // Store jobs from backend
 
-    // Job descriptions database
-    const jobDescriptions = {
-        frontend: `Frontend Developer Intern
+    // API Configuration
+    const API_BASE_URL = 'http://localhost:8080/api/v1'; // Adjust your backend URL
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+        loadJobsFromBackend();
+        setupEventListeners();
+    });
+
+    // Setup event listeners
+    function setupEventListeners() {
+        document.getElementById('resumeFile').addEventListener('change', handleFileSelect);
+        document.getElementById('jobSelect').addEventListener('change', handleJobSelect);
+        document.getElementById('jobDescription').addEventListener('input', validateForm);
+
+        // Drag and drop functionality
+        setupDragAndDrop();
+    }
+
+    // Load jobs from backend API
+    async function loadJobsFromBackend() {
+        try {
+            showLoadingMessage('Loading job positions...');
+
+            const response = await fetch(`${API_BASE_URL}/jobs/all`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.code === 200 && data.data) {
+                allJobs = data.data;
+                populateJobDropdown(allJobs);
+                hideLoadingMessage('Jobs loaded successfully!');
+            } else {
+                throw new Error(data.message || 'Failed to fetch jobs');
+            }
+        } catch (error) {
+            console.error('Error loading jobs:', error);
+            populateJobDropdownWithFallback();
+            showErrorMessage('Could not load jobs from server. Using default options.');
+        }
+    }
+
+    // Populate dropdown with jobs from backend
+    function populateJobDropdown(jobs) {
+        const jobSelect = document.getElementById('jobSelect');
+
+        // Clear existing options except the first one
+        while (jobSelect.children.length > 1) {
+            jobSelect.removeChild(jobSelect.lastChild);
+        }
+
+        // Add jobs from backend
+        jobs.forEach(job => {
+            const option = document.createElement('option');
+            option.value = job.jobId;
+            option.textContent = `${job.title} - ${job.companyName}`;
+            option.setAttribute('data-job', JSON.stringify(job));
+            jobSelect.appendChild(option);
+        });
+
+        // Update help text
+        const formText = jobSelect.parentElement.querySelector('.form-text');
+        formText.innerHTML = `<i class="fas fa-check-circle text-success"></i> Loaded ${jobs.length} job positions from database`;
+    }
+
+    // Fallback to hardcoded jobs if backend fails
+    function populateJobDropdownWithFallback() {
+        const fallbackJobs = {
+            'frontend': 'Frontend Developer Intern',
+            'backend': 'Backend Developer Intern',
+            'fullstack': 'Full-Stack Developer Intern',
+            'data': 'Data Analyst Intern',
+            'marketing': 'Marketing Intern'
+        };
+
+        const jobSelect = document.getElementById('jobSelect');
+
+        // Clear existing options except the first one
+        while (jobSelect.children.length > 1) {
+            jobSelect.removeChild(jobSelect.lastChild);
+        }
+
+        // Add fallback options
+        Object.entries(fallbackJobs).forEach(([key, title]) => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = title;
+            jobSelect.appendChild(option);
+        });
+    }
+
+    // Handle job selection from dropdown
+    function handleJobSelect() {
+        const jobSelect = document.getElementById('jobSelect');
+        const selectedValue = jobSelect.value;
+
+        if (selectedValue) {
+            const selectedOption = jobSelect.querySelector(`option[value="${selectedValue}"]`);
+            const jobData = selectedOption.getAttribute('data-job');
+
+            if (jobData) {
+                // Job from backend
+                const job = JSON.parse(jobData);
+                populateJobDescription(job);
+            } else {
+                // Fallback job
+                populateJobDescriptionFromFallback(selectedValue);
+            }
+        } else {
+            document.getElementById('jobDescription').value = '';
+        }
+
+        validateForm();
+    }
+
+    // Populate job description from backend job data
+    function populateJobDescription(job) {
+        const jobDescription = `${job.title}
+Company: ${job.companyName}
+Location: ${job.location}
+Job Type: ${job.jobType}
+Salary: $${job.salaryPerHour}/hour
+
+Job Overview:
+${job.jobOverview}
+
+Responsibilities:
+${job.responsibilities ? job.responsibilities.map(r => `- ${r}`).join('\n') : 'Not specified'}
+
+Requirements:
+${job.requirements ? job.requirements.map(r => `- ${r}`).join('\n') : 'Not specified'}`;
+
+        document.getElementById('jobDescription').value = jobDescription;
+    }
+
+    // Fallback job descriptions
+    function populateJobDescriptionFromFallback(jobKey) {
+        const jobDescriptions = {
+            frontend: `Frontend Developer Intern
         We are looking for a passionate Frontend Developer Intern to join our team.
 
         Responsibilities:
@@ -225,7 +372,7 @@
         - Understanding of version control (Git)
         - Strong problem-solving skills`,
 
-        backend: `Backend Developer Intern
+            backend: `Backend Developer Intern
         Join our backend team to build scalable server-side applications.
 
         Responsibilities:
@@ -241,7 +388,7 @@
         - Familiarity with cloud services (AWS/GCP)
         - Experience with testing frameworks`,
 
-        fullstack: `Full-Stack Developer Intern
+            fullstack: `Full-Stack Developer Intern
         Work on both frontend and backend development in a collaborative environment.
 
         Responsibilities:
@@ -257,7 +404,7 @@
         - Understanding of DevOps basics
         - Strong communication skills`,
 
-        data: `Data Analyst Intern
+            data: `Data Analyst Intern
         Analyze data to help drive business decisions and insights.
 
         Responsibilities:
@@ -273,7 +420,7 @@
         - Statistical analysis skills
         - Excel proficiency`,
 
-        marketing: `Marketing Intern
+            marketing: `Marketing Intern
         Support marketing initiatives and campaigns across digital channels.
 
         Responsibilities:
@@ -288,34 +435,35 @@
         - Content creation skills
         - Analytics tools knowledge
         - Creative thinking abilities`
-    };
+        };
 
-    // File upload handling
-    document.getElementById('resumeFile').addEventListener('change', handleFileSelect);
-    document.getElementById('jobSelect').addEventListener('change', handleJobSelect);
-    document.getElementById('jobDescription').addEventListener('input', validateForm);
+        document.getElementById('jobDescription').value = jobDescriptions[jobKey] || '';
+    }
 
-    // Drag and drop functionality
-    const uploadArea = document.querySelector('.upload-area');
+    // Drag and drop setup
+    function setupDragAndDrop() {
+        const uploadArea = document.querySelector('.upload-area');
 
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('dragover');
-    });
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
 
-    uploadArea.addEventListener('dragleave', () => {
-        uploadArea.classList.remove('dragover');
-    });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
 
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            handleFile(files[0]);
-        }
-    });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+    }
 
+    // File handling functions
     function handleFileSelect(e) {
         const file = e.target.files[0];
         if (file) {
@@ -325,12 +473,12 @@
 
     function handleFile(file) {
         if (file.type !== 'application/pdf') {
-            alert('Please upload a PDF file only.');
+            showErrorMessage('Please upload a PDF file only.');
             return;
         }
 
         if (file.size > 5 * 1024 * 1024) { // 5MB
-            alert('File size should be less than 5MB.');
+            showErrorMessage('File size should be less than 5MB.');
             return;
         }
 
@@ -347,14 +495,6 @@
         validateForm();
     }
 
-    function handleJobSelect() {
-        const selectValue = document.getElementById('jobSelect').value;
-        if (selectValue) {
-            document.getElementById('jobDescription').value = jobDescriptions[selectValue];
-        }
-        validateForm();
-    }
-
     function validateForm() {
         const jobDesc = document.getElementById('jobDescription').value.trim();
         const hasFile = uploadedFile !== null;
@@ -362,6 +502,23 @@
         document.getElementById('analyzeBtn').disabled = !jobDesc || !hasFile;
     }
 
+    // Utility functions for messages
+    function showLoadingMessage(message) {
+        const formText = document.querySelector('#jobSelect').parentElement.querySelector('.form-text');
+        formText.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
+    }
+
+    function hideLoadingMessage(message) {
+        const formText = document.querySelector('#jobSelect').parentElement.querySelector('.form-text');
+        formText.innerHTML = `<i class="fas fa-check-circle text-success"></i> ${message}`;
+    }
+
+    function showErrorMessage(message) {
+        const formText = document.querySelector('#jobSelect').parentElement.querySelector('.form-text');
+        formText.innerHTML = `<i class="fas fa-exclamation-triangle text-warning"></i> ${message}`;
+    }
+
+    // Resume analysis functions (keeping existing functionality)
     async function analyzeResume() {
         const jobDescription = document.getElementById('jobDescription').value.trim();
 
@@ -552,8 +709,10 @@
         document.getElementById('resultsSection').style.display = 'block';
     }
 </script>
+
+<!-- Include existing navigation and utility scripts -->
 <script src="../js/main.js"></script>
-<script src="..js/navbar.js"></script>
+<script src="../js/navbar.js"></script>
 <!-- Add this script section to EVERY HTML page before closing </body> tag -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

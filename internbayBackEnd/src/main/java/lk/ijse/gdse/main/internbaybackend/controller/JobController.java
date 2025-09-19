@@ -277,4 +277,16 @@ public class JobController {
                     .body(new ResponsDto(StatusList.Internal_Server_Error, e.getMessage(), null));
         }
     }
+    @GetMapping("/all")
+    public ResponseEntity<ResponsDto> getAllJobs() {
+        try {
+            List<JobResponseDTO> jobs = jobService.getAllJobs();
+            return ResponseEntity.ok(new ResponsDto(StatusList.OK, "All jobs retrieved successfully", jobs));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponsDto(StatusList.Internal_Server_Error, e.getMessage(), null));
+        }
+    }
 }
+
