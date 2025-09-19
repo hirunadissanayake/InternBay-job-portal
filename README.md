@@ -69,31 +69,31 @@ mvn spring-boot:run
 
 ## 📸 UI Screenshots
 
-###Main Page
+### Main Page
 ![Main Page](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-main-html-2025-09-19-23_01_45.png)  
 
 
-###Find Internship
+### Find Internship
 ![Find Internship](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-findJob-html-2025-09-19-23_03_40.png)  
 
 
-###About Us
+### About Us
 ![About Us](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-aboutUs-html-2025-09-19-23_04_11.png)  
 
 
-###Contact Us
+### Contact Us
 ![Contact Us](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-contactUs-html-2025-09-19-23_06_29.png)  
 
 
-###ResumeChecker
+### ResumeChecker
 ![ResumeChecker](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-resumeChecker-html-2025-09-19-23_06_45.png)  
 
 
-###Post Job (Employer only)
+### Post Job (Employer only)
 ![Post Job]()  
 
 
-###Manage Job (Employer only)
+### Manage Job (Employer only)
 ![Manage Job]()  
 
 
