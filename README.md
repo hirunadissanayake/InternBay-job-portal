@@ -42,6 +42,41 @@ It connects **students, employers, and administrators** in one platform, making 
 
 ## 📂 Project Structure  
 
+```internbay-job-portal/
+├── .idea/
+├── assets/
+├── docs/
+├── internbayBackEnd/
+│ ├── src/
+│ │ ├── main/
+│ │ │ ├── java/
+│ │ │ │ └── lk/ijse/gdse/main/internbaybackend/
+│ │ │ │ ├── config/
+│ │ │ │ ├── controller/
+│ │ │ │ ├── dto/
+│ │ │ │ ├── entity/
+│ │ │ │ ├── exceptions/
+│ │ │ │ ├── repository/
+│ │ │ │ ├── service/
+│ │ │ │ ├── util/
+│ │ │ │ └── InternbayBackEndApplication.java
+│ │ │ └── resources/
+│ │ └── test/
+│ ├── target/
+│ ├── internbayBackEnd.iml
+│ └── pom.xml
+│
+├── internbayFrontEnd/
+│ ├── css/
+│ ├── js/
+│ ├── lib/
+│ ├── pages/
+│ └── index.html
+│
+├── LICENSE
+├── README.md
+├── internbay-job-portal.iml
+```
 ## ⚙️ Setup Instructions  
 
 ### 1. Clone Repository
