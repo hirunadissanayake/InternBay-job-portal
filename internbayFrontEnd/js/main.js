@@ -1107,3 +1107,369 @@ document.querySelectorAll('.job-card').forEach(card => {
         showJobDetails();
     });
 });
+
+// Load featured jobs
+async function loadFeaturedJobs() {
+    try {
+        // Get featured jobs (latest jobs with limit)
+        const response = await fetch('http://localhost:8080/api/v1/jobs/search?page=0&size=6&sort=datePosted,desc', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.data && data.data.content) {
+                displayFeaturedJobs(data.data.content);
+            } else {
+                throw new Error('Invalid jobs data format');
+            }
+        } else {
+            throw new Error('Failed to fetch jobs');
+        }
+    } catch (error) {
+        console.error('Error loading featured jobs:', error);
+        displayFallbackJobs();
+    }
+}
+
+// Display featured jobs
+function displayFeaturedJobs(jobs) {
+    const container = document.getElementById('featuredJobsContainer');
+    if (!container) return;
+
+    let html = '';
+    jobs.forEach(job => {
+        html += createJobCard(job);
+    });
+
+    container.innerHTML = html;
+
+    // Re-initialize animations
+    setTimeout(() => {
+        const newElements = container.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        newElements.forEach(el => observer.observe(el));
+    }, 100);
+}
+
+// Create job card HTML
+function createJobCard(job) {
+    const formattedDate = formatDate(job.datePosted);
+    const salary = job.salaryPerHour ? `$${job.salaryPerHour}/hr` : 'Negotiable';
+
+    return `
+        <div class="col-lg-6">
+            <div class="job-card fade-in" onclick="showJobDetails(${job.jobId})">
+                <div class="d-flex">
+                    <div class="company-logo">
+                        ${job.companyLogo ?
+        `<img src="${job.companyLogo}" alt="${job.companyName}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">` :
+        `<i class="fas fa-building text-primary"></i>`
+    }
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="job-title">${job.title}</h5>
+                        <div class="job-meta mb-3">
+                            <span><i class="fas fa-building me-1"></i>${job.companyName || 'Company'}</span>
+                            <span><i class="fas fa-map-marker-alt me-1"></i>${job.location}</span>
+                            <span><i class="fas fa-clock me-1"></i>${formatJobType(job.jobType)}</span>
+                            <span><i class="fas fa-dollar-sign me-1"></i>${salary}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">${formattedDate}</small>
+                            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); applyToJob(${job.jobId})">Apply Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Display fallback jobs if API fails
+function displayFallbackJobs() {
+    const fallbackJobs = [
+        {
+            jobId: 1,
+            title: 'Full-Stack Development Intern',
+            companyName: 'TechCorp',
+            location: 'Remote',
+            jobType: 'FULLTIME',
+            salaryPerHour: 25,
+            datePosted: new Date().toISOString()
+        },
+        {
+            jobId: 2,
+            title: 'Data Science Intern',
+            companyName: 'DataFlow Inc',
+            location: 'New York',
+            jobType: 'PARTTIME',
+            salaryPerHour: 22,
+            datePosted: new Date(Date.now() - 86400000 * 2).toISOString()
+        },
+        {
+            jobId: 3,
+            title: 'UI/UX Design Intern',
+            companyName: 'DesignStudio',
+            location: 'San Francisco',
+            jobType: 'INTERNSHIP',
+            salaryPerHour: 20,
+            datePosted: new Date(Date.now() - 86400000 * 3).toISOString()
+        },
+        {
+            jobId: 4,
+            title: 'Marketing Intern',
+            companyName: 'BrandMakers',
+            location: 'Los Angeles',
+            jobType: 'INTERNSHIP',
+            salaryPerHour: 18,
+            datePosted: new Date(Date.now() - 86400000 * 5).toISOString()
+        },
+        {
+            jobId: 5,
+            title: 'Finance Analyst Intern',
+            companyName: 'FinanceHub',
+            location: 'Chicago',
+            jobType: 'INTERNSHIP',
+            salaryPerHour: 20,
+            datePosted: new Date(Date.now() - 86400000 * 7).toISOString()
+        },
+        {
+            jobId: 6,
+            title: 'Business Development Intern',
+            companyName: 'GrowthCorp',
+            location: 'Boston',
+            jobType: 'PARTTIME',
+            salaryPerHour: 19,
+            datePosted: new Date(Date.now() - 86400000 * 10).toISOString()
+        }
+    ];
+
+    displayFeaturedJobs(fallbackJobs);
+}
+
+// Utility functions for job display
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) return 'Posted Today';
+    if (diffDays < 7) return `Posted ${diffDays} days ago`;
+    if (diffDays < 30) return `Posted ${Math.ceil(diffDays / 7)} weeks ago`;
+    return `Posted ${Math.ceil(diffDays / 30)} months ago`;
+}
+
+function formatJobType(jobType) {
+    const types = {
+        'FULLTIME': 'Full Time',
+        'PARTTIME': 'Part Time',
+        'INTERNSHIP': 'Internship',
+        'CONTRACT': 'Contract',
+        'REMOTE': 'Remote'
+    };
+    return types[jobType] || jobType;
+}
+
+function showJobDetails(jobId) {
+    // Redirect to find job page with specific job selected
+    window.location.href = `findJob.html?job=${jobId}`;
+}
+
+function applyToJob(jobId) {
+    const token = sessionStorage.getItem('authToken');
+    const role = sessionStorage.getItem('userRole');
+
+    if (!token) {
+        showNotification('Please log in to apply for jobs', 'error');
+        showLoginModal();
+        return;
+    }
+
+    if (role !== 'CANDIDATE') {
+        showNotification('Only students can apply for jobs', 'error');
+        return;
+    }
+
+    // Redirect to job details for application
+    window.location.href = `findJob.html?job=${jobId}`;
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadFeaturedJobs();
+});
+
+// Notification system (required by applyToJob function)
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingToasts = document.querySelectorAll('.notification-toast');
+    existingToasts.forEach(toast => toast.remove());
+
+    const alertClass = type === 'error' ? 'danger' : type;
+    const iconClass = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
+
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${alertClass} position-fixed notification-toast`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+
+    toast.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="fas fa-${iconClass} me-2"></i>
+            <span>${message}</span>
+            <button type="button" class="btn-close ms-auto" onclick="this.closest('.notification-toast').remove()"></button>
+        </div>
+    `;
+
+    document.body.appendChild(toast);
+
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.remove();
+        }
+    }, 5000);
+}
+
+// Modal functions (required by applyToJob function)
+function showLoginModal() {
+    const loginModal = document.getElementById('loginModal');
+    if (loginModal) {
+        new bootstrap.Modal(loginModal).show();
+    }
+}
+// Hero Section Related Scripts
+
+// Load job statistics for hero section stats cards
+async function loadJobStats() {
+    try {
+        // Load total jobs count
+        const jobsResponse = await fetch('http://localhost:8080/api/v1/jobs/search?page=0&size=1', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (jobsResponse.ok) {
+            const jobsData = await jobsResponse.json();
+            const totalJobs = jobsData.data.totalElements;
+            updateJobCount(totalJobs);
+        } else {
+            // Fallback if API fails
+            updateJobCount(2500);
+        }
+
+        // Load other stats (these might come from different endpoints or be hardcoded)
+        updateOtherStats();
+    } catch (error) {
+        console.error('Error loading job stats:', error);
+        // Use fallback values
+        updateJobCount(2500);
+        updateOtherStats();
+    }
+}
+
+// Update job count with animation
+function updateJobCount(count) {
+    const element = document.getElementById('totalJobs');
+    if (element) {
+        animateNumber(element, 0, count, 2000, '+');
+    }
+}
+
+// Update other statistics in hero section
+function updateOtherStats() {
+    // These could be loaded from API endpoints or calculated
+    const stats = {
+        totalCompanies: 10,
+        totalPlacements: 50,
+        successRate: 95
+    };
+
+    // Animate company count
+    const companiesEl = document.getElementById('totalCompanies');
+    if (companiesEl) {
+        animateNumber(companiesEl, 0, stats.totalCompanies, 2000, '+');
+    }
+
+    // Animate placements count
+    const placementsEl = document.getElementById('totalPlacements');
+    if (placementsEl) {
+        animateNumber(placementsEl, 0, stats.totalPlacements, 2000, '+');
+    }
+
+    // Animate success rate
+    const successEl = document.getElementById('successRate');
+    if (successEl) {
+        animateNumber(successEl, 0, stats.successRate, 2000, '%');
+    }
+}
+
+// Animate numbers in hero stats cards
+function animateNumber(element, start, end, duration, suffix = '') {
+    const range = end - start;
+    const increment = end > start ? 1 : -1;
+    const stepTime = Math.abs(Math.floor(duration / range));
+    let current = start;
+
+    const timer = setInterval(() => {
+        current += increment;
+        if (suffix === 'K+' && end >= 1000) {
+            element.textContent = (current / 1000).toFixed(0) + 'K+';
+        } else {
+            element.textContent = current.toLocaleString() + suffix;
+        }
+
+        if (current === end) {
+            clearInterval(timer);
+        }
+    }, stepTime);
+}
+
+// Initialize animations (including hero section fade-in animations)
+function initializeAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all fade-in elements (including hero section elements)
+    document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Main initialization function - call this on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize hero section animations
+    initializeAnimations();
+
+    // Load hero section statistics
+    loadJobStats();
+
+    // Other initialization functions...
+    // checkUserAuthStatus();
+    // loadCategories();
+    // loadFeaturedJobs();
+    // setupEventListeners();
+});

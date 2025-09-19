@@ -74,25 +74,25 @@
                 <div class="row g-3">
                     <div class="col-6">
                         <div class="stats-card fade-in">
-                            <div class="stats-number">2,500+</div>
+                            <div class="stats-number" id="totalJobs">Loading...</div>
                             <div class="stats-label">Active Internships</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stats-card fade-in">
-                            <div class="stats-number">850+</div>
+                            <div class="stats-number" id="totalCompanies">850+</div>
                             <div class="stats-label">Partner Companies</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stats-card fade-in">
-                            <div class="stats-number">15K+</div>
+                            <div class="stats-number" id="totalPlacements">15K+</div>
                             <div class="stats-label">Student Placements</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stats-card fade-in">
-                            <div class="stats-number">95%</div>
+                            <div class="stats-number" id="successRate">95%</div>
                             <div class="stats-label">Success Rate</div>
                         </div>
                     </div>
@@ -130,7 +130,7 @@
             <div class="col-md-6 col-lg-3">
                 <div class="category-card fade-in">
                     <div class="category-icon">
-                        <i class="fas fa-megaphone"></i>
+                        <i class="fas fa-bullhorn"></i>
                     </div>
                     <h5 class="mb-3">Marketing</h5>
                     <p class="text-muted mb-3">Digital Marketing, Content & Brand Management</p>
@@ -205,140 +205,28 @@
             </div>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4" id="featuredJobsContainer">
+            <!-- Featured jobs will be loaded dynamically -->
             <div class="col-lg-6">
-                <div class="job-card fade-in">
+                <div class="job-card loading-skeleton">
                     <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-building text-primary"></i>
-                        </div>
+                        <div class="company-logo loading-skeleton"></div>
                         <div class="flex-grow-1">
-                            <h5 class="job-title">Full-Stack Development Intern</h5>
-                            <div class="job-meta mb-3">
-                                <span><i class="fas fa-building me-1"></i>TechCorp</span>
-                                <span><i class="fas fa-map-marker-alt me-1"></i>Remote</span>
-                                <span><i class="fas fa-clock me-1"></i>Full Time</span>
-                                <span><i class="fas fa-dollar-sign me-1"></i>$25/hr</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Posted 2 days ago</small>
-                                <button class="btn btn-primary btn-sm">Apply Now</button>
-                            </div>
+                            <div class="skeleton-title loading-skeleton"></div>
+                            <div class="skeleton-text loading-skeleton"></div>
+                            <div class="skeleton-text loading-skeleton" style="width: 70%;"></div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="col-lg-6">
-                <div class="job-card fade-in">
+                <div class="job-card loading-skeleton">
                     <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-chart-line text-success"></i>
-                        </div>
+                        <div class="company-logo loading-skeleton"></div>
                         <div class="flex-grow-1">
-                            <h5 class="job-title">Data Science Intern</h5>
-                            <div class="job-meta mb-3">
-                                <span><i class="fas fa-building me-1"></i>DataFlow Inc</span>
-                                <span><i class="fas fa-map-marker-alt me-1"></i>New York</span>
-                                <span><i class="fas fa-clock me-1"></i>Part Time</span>
-                                <span><i class="fas fa-dollar-sign me-1"></i>$22/hr</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Posted 3 days ago</small>
-                                <button class="btn btn-primary btn-sm">Apply Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="job-card fade-in">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-palette text-warning"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="job-title">UI/UX Design Intern</h5>
-                            <div class="job-meta mb-3">
-                                <span><i class="fas fa-building me-1"></i>DesignStudio</span>
-                                <span><i class="fas fa-map-marker-alt me-1"></i>San Francisco</span>
-                                <span><i class="fas fa-clock me-1"></i>Full Time</span>
-                                <span><i class="fas fa-dollar-sign me-1"></i>$20/hr</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Posted 1 week ago</small>
-                                <button class="btn btn-primary btn-sm">Apply Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="job-card fade-in">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-dollar-sign text-info"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="job-title">Finance Analyst Intern</h5>
-                            <div class="job-meta mb-3">
-                                <span><i class="fas fa-building me-1"></i>FinanceHub</span>
-                                <span><i class="fas fa-map-marker-alt me-1"></i>Chicago</span>
-                                <span><i class="fas fa-clock me-1"></i>Internship</span>
-                                <span><i class="fas fa-dollar-sign me-1"></i>$18/hr</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Posted 1 week ago</small>
-                                <button class="btn btn-primary btn-sm">Apply Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="job-card fade-in">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-dollar-sign text-info"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="job-title">Front-end Development</h5>
-                            <div class="job-meta mb-3">
-                                <span><i class="fas fa-building me-1"></i>FinanceHub</span>
-                                <span><i class="fas fa-map-marker-alt me-1"></i>Chicago</span>
-                                <span><i class="fas fa-clock me-1"></i>Internship</span>
-                                <span><i class="fas fa-dollar-sign me-1"></i>$18/hr</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Posted 1 week ago</small>
-                                <button class="btn btn-primary btn-sm">Apply Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="job-card fade-in">
-                    <div class="d-flex">
-                        <div class="company-logo">
-                            <i class="fas fa-dollar-sign text-info"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="job-title">Back-end Development</h5>
-                            <div class="job-meta mb-3">
-                                <span><i class="fas fa-building me-1"></i>FinanceHub</span>
-                                <span><i class="fas fa-map-marker-alt me-1"></i>Chicago</span>
-                                <span><i class="fas fa-clock me-1"></i>Internship</span>
-                                <span><i class="fas fa-dollar-sign me-1"></i>$18/hr</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Posted 1 week ago</small>
-                                <button class="btn btn-primary btn-sm">Apply Now</button>
-                            </div>
+                            <div class="skeleton-title loading-skeleton"></div>
+                            <div class="skeleton-text loading-skeleton"></div>
+                            <div class="skeleton-text loading-skeleton" style="width: 70%;"></div>
                         </div>
                     </div>
                 </div>
