@@ -46,7 +46,8 @@ It connects **students, employers, and administrators** in one platform, making 
 
 ### 1. Clone Repository
 
-git clone https://github.com/yourusername/internbay.git
+git clone https://github.com/hirunadissanayake/InternBay-job-portal.git
+
 cd internbay
 
 ### 2. Backend Setup (Spring Boot)
