@@ -100,5 +100,5 @@ mvn spring-boot:run
 ### Apply Job (Candidate only)
 ![Apply Job]()
 
-### Job Detais Card 
+### Job Details Card 
 ![Job Details]()
