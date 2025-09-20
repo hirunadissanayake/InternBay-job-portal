@@ -149,7 +149,7 @@ mvn spring-boot:run
 
 
 ### Job Details Card 
-![Job Details](assets/internbay-ui/Screenshot from 2025-09-07 05-42-05.png)
+![Job Details](assets/internbay-ui/Screenshot%20from%202025-09-07%2005-42-05.png)
 
 
 ## 🎥 Demo Video
