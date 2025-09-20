@@ -458,223 +458,415 @@
             iconColor: 'text-warning'
         }*/
 </script>
-<script src="..js/navbar.js"></script>
+<script src="../js/navbar.js"></script>
 <!-- Add this script section to EVERY HTML page before closing </body> tag -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // Navbar management system - Include this on every page
+    // My Applications Page JavaScript
     document.addEventListener('DOMContentLoaded', function() {
         checkUserAuthStatus();
-        setActiveNavLink();
+        loadUserApplications();
     });
 
-    // Check if user is already logged in on page load
+    let currentApplications = [];
+    let currentPage = 0;
+    const pageSize = 10;
+
+    // Check user authentication
     function checkUserAuthStatus() {
         const token = sessionStorage.getItem('authToken');
-        const email = sessionStorage.getItem('userEmail');
         const role = sessionStorage.getItem('userRole');
 
-        if (token && email && role) {
-            // User is logged in, update navbar
-            updateNavbarForLoggedInUser(role, email);
+        if (!token) {
+            showNotification('Please sign in to view your applications', 'error');
+            setTimeout(() => {
+                window.location.href = 'main.html';
+            }, 2000);
+            return;
+        }
+
+        if (role !== 'CANDIDATE') {
+            showNotification('Only candidates can view applications', 'error');
+            setTimeout(() => {
+                window.location.href = 'main.html';
+            }, 2000);
+            return;
         }
     }
 
-    // Update navbar based on user role
-    function updateNavbarForLoggedInUser(userRole, userEmail) {
-        const navbar = document.querySelector('.navbar .container');
+    // Load user applications from backend
+    async function loadUserApplications(page = 0) {
+        const token = sessionStorage.getItem('authToken');
 
-        if (!navbar) return;
+        try {
+            // Show loading state
+            showLoadingState();
 
-        // Get the navbar collapse div
-        const navbarCollapse = navbar.querySelector('.navbar-collapse');
+            const response = await fetch(`http://localhost:8080/api/v1/applications/my-applications?page=${page}&size=${pageSize}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
 
-        if (!navbarCollapse) return;
+            if (response.ok) {
+                const data = await response.json();
 
-        if (userRole === 'CANDIDATE') {
-            // Update navbar for CANDIDATE
-            navbarCollapse.innerHTML = `
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="findJob.html">Find Internships</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="myApplications.html">My Applications</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="aboutUs.html">About Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contactUs.html">Contact Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="resumeChecker.html">Resume Checker</a>
-                </li>
-            </ul>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-primary" onclick="showNotifications()">
-                    <i class="fas fa-bell me-1"></i>Notifications
-                </button>
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user me-1"></i>Profile
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="candidateProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
-                    </ul>
-                </div>
-            </div>
-        `;
-        } else if (userRole === 'EMPLOYEE') {
-            // Update navbar for EMPLOYEE
-            navbarCollapse.innerHTML = `
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="findJob.html">Find Internships</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="jobDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Post Job
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="jobDropdown">
-                        <li><a class="dropdown-item" href="jobPosting.html">
-                            <i class="fas fa-plus me-2"></i>Post Job
-                        </a></li>
-                        <li><a class="dropdown-item" href="manageJobPosting.html">
-                            <i class="fas fa-cog me-2"></i>Manage Jobs
-                        </a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="aboutUs.html">About Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contactUs.html">Contact Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="resumeChecker.html">Resume Checker</a>
-                </li>
-            </ul>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-primary" onclick="showNotifications()">
-                    <i class="fas fa-bell me-1"></i>Notifications
-                </button>
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user me-1"></i>Profile
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="employerProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
-                    </ul>
-                </div>
-            </div>
-        `;
-        }
+                if (data.data && data.data.content) {
+                    currentApplications = data.data.content;
 
-        // Re-initialize dropdown functionality
-        initializeDropdowns();
-
-        // Set active nav link after updating navbar
-        setActiveNavLink();
-    }
-
-    // Initialize Bootstrap dropdowns
-    function initializeDropdowns() {
-        const dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
-        const dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
-            return new bootstrap.Dropdown(dropdownToggleEl);
-        });
-    }
-
-    // Set active nav link based on current page
-    function setActiveNavLink() {
-        const currentPage = window.location.pathname.split('/').pop() || 'main.html';
-        const navLinks = document.querySelectorAll('.nav-link');
-
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href && href.includes(currentPage)) {
-                link.classList.add('active');
+                    if (currentApplications.length === 0 && page === 0) {
+                        showEmptyState();
+                    } else {
+                        displayApplications(currentApplications);
+                        setupPagination(data.data);
+                    }
+                } else {
+                    showEmptyState();
+                }
             } else {
-                link.classList.remove('active');
+                throw new Error('Failed to load applications');
+            }
+        } catch (error) {
+            console.error('Error loading applications:', error);
+            showNotification('Failed to load your applications. Please try again.', 'error');
+            showEmptyState();
+        }
+    }
+
+    // Show loading state
+    function showLoadingState() {
+        const container = document.querySelector('.container');
+        const loadingHtml = `
+        <div id="loadingState" class="text-center py-5">
+            <div class="spinner-border text-primary mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <h4>Loading your applications...</h4>
+            <p class="text-muted">Please wait while we fetch your application history</p>
+        </div>
+    `;
+
+        // Hide other states
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('applicationsList').style.display = 'none';
+
+        // Show loading
+        const existingLoading = document.getElementById('loadingState');
+        if (existingLoading) {
+            existingLoading.remove();
+        }
+
+        container.insertAdjacentHTML('beforeend', loadingHtml);
+    }
+
+    // Show empty state
+    function showEmptyState() {
+        document.getElementById('loadingState')?.remove();
+        document.getElementById('applicationsList').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'block';
+    }
+
+    // Display applications
+    function displayApplications(applications) {
+        document.getElementById('loadingState')?.remove();
+        document.getElementById('emptyState').style.display = 'none';
+
+        const applicationsList = document.getElementById('applicationsList');
+        applicationsList.style.display = 'block';
+
+        // Clear existing applications but keep pagination
+        const existingCards = applicationsList.querySelectorAll('.application-card');
+        existingCards.forEach(card => card.remove());
+
+        // Add new applications
+        applications.forEach(app => {
+            const applicationCard = createApplicationCard(app);
+            // Insert before pagination
+            const pagination = applicationsList.querySelector('nav');
+            if (pagination) {
+                applicationsList.insertBefore(applicationCard, pagination);
+            } else {
+                applicationsList.appendChild(applicationCard);
             }
         });
     }
 
-    // Logout function
-    function performLogout() {
-        // Clear stored data
-        sessionStorage.removeItem('authToken');
-        sessionStorage.removeItem('userEmail');
-        sessionStorage.removeItem('userRole');
+    // Create application card HTML
+    function createApplicationCard(application) {
+        const card = document.createElement('div');
+        card.className = 'application-card fade-in visible';
 
-        // Show notification
-        showNotification('Logged out successfully!', 'success');
+        // Format date
+        const appliedDate = formatDate(application.appliedDate);
 
-        // Redirect to main page
-        setTimeout(() => {
-            window.location.href = 'main.html';
-        }, 1000);
-    }
+        // Get status info
+        const statusInfo = getStatusInfo(application.status);
 
-    // Additional functions for navbar actions
-    function showNotifications() {
-        showNotification('Notifications feature coming soon!', 'info');
-    }
+        // Get job type display
+        const jobTypeDisplay = formatJobType(application.jobType || 'Not specified');
 
-    function showEmployerDashboard() {
-        showNotification('Redirecting to dashboard...', 'info');
-        setTimeout(() => {
-            window.location.href = 'employerDashboard.html';
-        }, 1000);
-    }
-
-    // Utility functions
-    function showNotification(message, type = 'info') {
-        // Remove existing notifications
-        $('.notification-toast').remove();
-
-        const alertClass = type === 'error' ? 'danger' : type;
-        const iconClass = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
-
-        const toast = $(`
-        <div class="alert alert-${alertClass} position-fixed notification-toast" style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
-            <div class="d-flex align-items-center">
-                <i class="fas fa-${iconClass} me-2"></i>
-                <span>${message}</span>
-                <button type="button" class="btn-close ms-auto" onclick="$(this).closest('.notification-toast').remove()"></button>
+        card.innerHTML = `
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="d-flex">
+                    <div class="company-logo">
+                        <i class="fas fa-building text-primary"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h3 class="job-title">${application.jobTitle || 'Job Title'}</h3>
+                        <div class="job-meta">
+                            <span><i class="fas fa-building me-1"></i>${application.companyName || 'Company'}</span>
+                            <span><i class="fas fa-map-marker-alt me-1"></i>${application.jobLocation || 'Location not specified'}</span>
+                            <span><i class="fas fa-clock me-1"></i>${jobTypeDisplay}</span>
+                            <span><i class="fas fa-dollar-sign me-1"></i>${formatSalary(application.salary)}</span>
+                            <span><i class="fas fa-calendar me-1"></i>Applied ${appliedDate}</span>
+                        </div>
+                        <span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="action-buttons">
+                    <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails(${application.jobId})">
+                        <i class="fas fa-eye me-1"></i>View Job
+                    </button>
+                    ${application.resumeUrl ?
+            `<button class="btn btn-outline-primary btn-sm" onclick="viewCV('${application.resumeUrl}', '${application.jobTitle}')">
+                            <i class="fas fa-file-pdf me-1"></i>View CV
+                        </button>` :
+            '<span class="text-muted small">No CV attached</span>'
+        }
+                    ${application.status === 'SUBMITTED' ?
+            `<button class="btn btn-outline-danger btn-sm" onclick="withdrawApplication(${application.applicationId})">
+                            <i class="fas fa-times me-1"></i>Withdraw
+                        </button>` : ''
+        }
+                </div>
             </div>
         </div>
-    `);
+    `;
 
-        $('body').append(toast);
+        return card;
+    }
+
+    // Get status information
+    function getStatusInfo(status) {
+        const statusMap = {
+            'SUBMITTED': { class: 'status-submitted', text: 'Submitted' },
+            'REVIEWED': { class: 'status-reviewing', text: 'Under Review' },
+            'SHORTLISTED': { class: 'status-shortlisted', text: 'Shortlisted' },
+            'ACCEPTED': { class: 'status-accepted', text: 'Accepted' },
+            'REJECTED': { class: 'status-rejected', text: 'Not Selected' },
+            'WITHDRAWN': { class: 'status-withdrawn', text: 'Withdrawn' }
+        };
+
+        return statusMap[status] || { class: 'status-submitted', text: status };
+    }
+
+    // Format job type
+    function formatJobType(jobType) {
+        const typeMap = {
+            'FULLTIME': 'Full Time',
+            'PARTTIME': 'Part Time',
+            'INTERNSHIP': 'Internship',
+            'CONTRACT': 'Contract',
+            'REMOTE': 'Remote'
+        };
+
+        return typeMap[jobType] || jobType;
+    }
+
+    // Format salary
+    function formatSalary(salary) {
+        if (!salary) return 'Salary not specified';
+        return typeof salary === 'number' ? `$${salary}/hr` : salary;
+    }
+
+    // Format date
+    function formatDate(dateString) {
+        if (!dateString) return 'Unknown';
+
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) return '1 day ago';
+        if (diffDays < 7) return `${diffDays} days ago`;
+        if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
+        if (diffDays < 365) return `${Math.ceil(diffDays / 30)} months ago`;
+
+        return date.toLocaleDateString();
+    }
+
+    // Setup pagination
+    function setupPagination(pageData) {
+        const pagination = document.querySelector('.pagination');
+        if (!pagination || !pageData) return;
+
+        pagination.innerHTML = '';
+
+        // Previous button
+        const prevButton = document.createElement('li');
+        prevButton.className = `page-item ${pageData.first ? 'disabled' : ''}`;
+        prevButton.innerHTML = `
+        <a class="page-link" href="#" onclick="changePage(${pageData.number - 1})" tabindex="${pageData.first ? '-1' : '0'}">
+            Previous
+        </a>
+    `;
+        pagination.appendChild(prevButton);
+
+        // Page numbers
+        const startPage = Math.max(0, pageData.number - 2);
+        const endPage = Math.min(pageData.totalPages - 1, pageData.number + 2);
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement('li');
+            pageButton.className = `page-item ${i === pageData.number ? 'active' : ''}`;
+            pageButton.innerHTML = `
+            <a class="page-link" href="#" onclick="changePage(${i})">${i + 1}</a>
+        `;
+            pagination.appendChild(pageButton);
+        }
+
+        // Next button
+        const nextButton = document.createElement('li');
+        nextButton.className = `page-item ${pageData.last ? 'disabled' : ''}`;
+        nextButton.innerHTML = `
+        <a class="page-link" href="#" onclick="changePage(${pageData.number + 1})" tabindex="${pageData.last ? '-1' : '0'}">
+            Next
+        </a>
+    `;
+        pagination.appendChild(nextButton);
+    }
+
+    // Change page
+    function changePage(page) {
+        currentPage = page;
+        loadUserApplications(page);
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // View job details
+    async function viewJobDetails(jobId) {
+        try {
+            const token = sessionStorage.getItem('authToken');
+            const response = await fetch(`http://localhost:8080/api/v1/jobs/${jobId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const job = data.data;
+
+                // Populate modal with job details
+                document.getElementById('jobModalTitle').textContent = job.title;
+                document.getElementById('jobModalCompany').textContent = job.companyName || 'Company';
+                document.getElementById('jobSalary').textContent = job.salaryPerHour ? `$${job.salaryPerHour} per hour` : 'Salary not specified';
+                document.getElementById('jobLocation').textContent = job.location || 'Location not specified';
+                document.getElementById('jobType').textContent = formatJobType(job.jobType);
+
+                // Show job overview/description
+                document.getElementById('jobEducation').textContent = job.requirements?.join(', ') || 'Requirements not specified';
+                document.getElementById('jobExperience').textContent = job.jobOverview || 'Job overview not available';
+                document.getElementById('jobSkills').textContent = job.skills || 'Skills not specified';
+                document.getElementById('jobAvailabilities').textContent = job.schedule || 'Schedule not specified';
+
+                // Show modal
+                new bootstrap.Modal(document.getElementById('jobDetailsModal')).show();
+            } else {
+                throw new Error('Failed to load job details');
+            }
+        } catch (error) {
+            console.error('Error loading job details:', error);
+            showNotification('Failed to load job details', 'error');
+        }
+    }
+
+    // View CV
+    function viewCV(resumeUrl, jobTitle) {
+        if (!resumeUrl) {
+            showNotification('No CV attached to this application', 'info');
+            return;
+        }
+
+        document.getElementById('cvJobTitle').textContent = jobTitle || 'Job Application';
+
+        // Create iframe or link to view PDF
+        const cvViewer = document.getElementById('cvViewer');
+        cvViewer.innerHTML = `
+        <div class="w-100 h-100">
+            <iframe src="${resumeUrl}" class="w-100 h-100" style="min-height: 500px;" frameborder="0">
+                <p>Unable to display PDF. <a href="${resumeUrl}" target="_blank">Click here to view</a></p>
+            </iframe>
+        </div>
+    `;
+
+        new bootstrap.Modal(document.getElementById('cvViewerModal')).show();
+    }
+
+    // Withdraw application
+    async function withdrawApplication(applicationId) {
+        if (!confirm('Are you sure you want to withdraw this application? This action cannot be undone.')) {
+            return;
+        }
+
+        try {
+            const token = sessionStorage.getItem('authToken');
+            const response = await fetch(`http://localhost:8080/api/v1/applications/${applicationId}/withdraw`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                showNotification('Application withdrawn successfully', 'success');
+                // Reload applications
+                loadUserApplications(currentPage);
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to withdraw application');
+            }
+        } catch (error) {
+            console.error('Error withdrawing application:', error);
+            showNotification(error.message, 'error');
+        }
+    }
+
+    // Utility function for notifications
+    function showNotification(message, type = 'info') {
+        // Remove existing notifications
+        const existingToasts = document.querySelectorAll('.toast-notification');
+        existingToasts.forEach(toast => toast.remove());
+
+        const alertClass = type === 'error' ? 'danger' : type;
+        const iconClass = type === 'success' ? 'check-circle' :
+            type === 'error' ? 'exclamation-circle' : 'info-circle';
+
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${alertClass} position-fixed toast-notification`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        toast.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="fas fa-${iconClass} me-2"></i>
+            <span>${message}</span>
+            <button type="button" class="btn-close ms-auto" onclick="this.closest('.toast-notification').remove()"></button>
+        </div>
+    `;
+        document.body.appendChild(toast);
 
         setTimeout(() => {
-            toast.fadeOut(() => toast.remove());
+            if (toast.parentElement) {
+                toast.remove();
+            }
         }, 5000);
-    }
-
-    // Modal functions (only include on main page)
-    function showLoginModal() {
-        if (document.getElementById('loginModal')) {
-            new bootstrap.Modal(document.getElementById('loginModal')).show();
-        } else {
-            // Redirect to main page if modal doesn't exist
-            window.location.href = 'main.html';
-        }
-    }
-
-    function showRegisterModal() {
-        if (document.getElementById('registerModal')) {
-            new bootstrap.Modal(document.getElementById('registerModal')).show();
-        } else {
-            // Redirect to main page if modal doesn't exist
-            window.location.href = 'main.html';
-        }
     }
 </script>
 </body>

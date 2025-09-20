@@ -256,4 +256,11 @@ body {
         text-align: center !important;
         margin-top: 1rem;
     }
+
+    .status-submitted { background-color: #6c757d; color: white; }
+    .status-reviewing { background-color: #ffc107; color: black; }
+    .status-shortlisted { background-color: #0dcaf0; color: black; }
+    .status-accepted { background-color: #198754; color: white; }
+    .status-rejected { background-color: #dc3545; color: white; }
+    .status-withdrawn { background-color: #6f42c1; color: white; }
 }
