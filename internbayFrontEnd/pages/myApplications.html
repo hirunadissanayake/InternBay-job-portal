@@ -823,6 +823,166 @@
             }
         }, 5000);
     }
+
+    // Navbar management functions (add these to myApplications.html)
+    function checkUserAuthStatus() {
+        const token = sessionStorage.getItem('authToken');
+        const role = sessionStorage.getItem('userRole');
+
+        if (!token) {
+            showNotification('Please sign in to view your applications', 'error');
+            setTimeout(() => {
+                window.location.href = 'main.html';
+            }, 2000);
+            return;
+        }
+
+        if (role !== 'CANDIDATE') {
+            showNotification('Only candidates can view applications', 'error');
+            setTimeout(() => {
+                window.location.href = 'main.html';
+            }, 2000);
+            return;
+        }
+
+        // Update navbar for logged-in user
+        updateNavbarForLoggedInUser(role, sessionStorage.getItem('userEmail'));
+    }
+
+    // Update navbar based on user role
+    function updateNavbarForLoggedInUser(userRole, userEmail) {
+        const navbar = document.querySelector('.navbar .container');
+        if (!navbar) return;
+
+        const navbarCollapse = navbar.querySelector('.navbar-collapse');
+        if (!navbarCollapse) return;
+
+        if (userRole === 'CANDIDATE') {
+            navbarCollapse.innerHTML = `
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="findJob.html">Find Internships</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="myApplications.html">My Applications</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="aboutUs.html">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contactUs.html">Contact Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="resumeChecker.html">Resume Checker</a>
+                </li>
+            </ul>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary" onclick="showNotifications()">
+                    <i class="fas fa-bell me-1"></i>Notifications
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-1"></i>Profile
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="candidateProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        `;
+        } else if (userRole === 'EMPLOYEE') {
+            navbarCollapse.innerHTML = `
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="findJob.html">Find Internships</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="jobDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Post Job
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="jobDropdown">
+                        <li><a class="dropdown-item" href="jobPosting.html">
+                            <i class="fas fa-plus me-2"></i>Post Job
+                        </a></li>
+                        <li><a class="dropdown-item" href="manageJobPosting.html">
+                            <i class="fas fa-cog me-2"></i>Manage Jobs
+                        </a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="aboutUs.html">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contactUs.html">Contact Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="resumeChecker.html">Resume Checker</a>
+                </li>
+            </ul>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary" onclick="showNotifications()">
+                    <i class="fas fa-bell me-1"></i>Notifications
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-1"></i>Profile
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="employerProfile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="performLogout()"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        `;
+        }
+
+        initializeDropdowns();
+        setActiveNavLink();
+    }
+
+    // Initialize Bootstrap dropdowns
+    function initializeDropdowns() {
+        const dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+        const dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl);
+        });
+    }
+
+    // Set active nav link based on current page
+    function setActiveNavLink() {
+        const currentPage = window.location.pathname.split('/').pop() || 'main.html';
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && href.includes(currentPage)) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    }
+
+    // Logout function
+    function performLogout() {
+        sessionStorage.removeItem('authToken');
+        sessionStorage.removeItem('userEmail');
+        sessionStorage.removeItem('userRole');
+
+        showNotification('Logged out successfully!', 'success');
+
+        setTimeout(() => {
+            window.location.href = 'main.html';
+        }, 1000);
+    }
+
+    // Additional navbar functions
+    function showNotifications() {
+        showNotification('Notifications feature coming soon!', 'info');
+    }
 </script>
 </body>
 </html>
