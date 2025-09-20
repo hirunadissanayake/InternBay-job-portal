@@ -8,6 +8,7 @@ It connects **students, employers, and administrators** in one platform, making 
 ## 🚀 Technologies Used  
 
 - **Backend:** Spring Boot 3, Spring Security (JWT), Hibernate/JPA, Lombok  
+- **Frontend:** HTML, CSS, JavaScript
 - **Database:** MySQL  
 - **Authentication:** JWT-based authentication & role-based access  
 - **IDE:** IntelliJ IDEA  
