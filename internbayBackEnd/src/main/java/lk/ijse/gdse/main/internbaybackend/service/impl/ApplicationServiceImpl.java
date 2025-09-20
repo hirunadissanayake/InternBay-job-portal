@@ -290,9 +290,17 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationRepository.existsByUserUserIdAndJobJobId(candidateId, jobId);
     }
 
-    // Fixed DTO conversion with better error handling
     private ApplicationResponseDTO convertToResponseDTO(Application application) {
         try {
+            Long candidateId;
+            try {
+                // Handle both String and Long user IDs
+                candidateId = Long.valueOf(application.getUser().getUserId());
+            } catch (NumberFormatException e) {
+                log.error("Error converting user ID to Long: {}", application.getUser().getUserId());
+                candidateId = 0L; // Default value
+            }
+
             return ApplicationResponseDTO.builder()
                     .applicationId(application.getApplicationId())
                     .jobId(application.getJob().getJobId())
@@ -301,40 +309,76 @@ public class ApplicationServiceImpl implements ApplicationService {
                     .jobLocation(application.getJob().getLocation())
                     .jobType(application.getJob().getJobType() != null ? application.getJob().getJobType().name() : "NOT_SPECIFIED")
                     .salary(application.getJob().getSalaryPerHour())
-                    .candidateId(Long.valueOf(application.getUser().getUserId()))
+                    .candidateId(candidateId)
                     .candidateName(getCandidateName(application))
                     .candidateEmail(application.getUser().getEmail())
                     .resumeUrl(application.getResumeUrl())
                     .status(application.getStatus().name())
                     .appliedDate(application.getAppliedAt())
+                    .updatedAt(application.getUpdatedAt())
                     .build();
         } catch (Exception e) {
             log.error("Error converting application to DTO: ", e);
+            log.error("Application details: jobId={}, userId={}, status={}",
+                    application.getJob().getJobId(),
+                    application.getUser().getUserId(),
+                    application.getStatus());
             throw new RuntimeException("Error converting application to DTO: " + e.getMessage(), e);
         }
     }
 
     private String getCompanyName(Application application) {
         try {
-            if (application.getJob().getEmployerProfile() != null &&
+            if (application.getJob() != null &&
+                    application.getJob().getEmployerProfile() != null &&
                     application.getJob().getEmployerProfile().getCompanyName() != null) {
                 return application.getJob().getEmployerProfile().getCompanyName();
             }
+
+            // Fallback: try to get company name from user if available
+            if (application.getJob() != null &&
+                    application.getJob().getEmployerProfile() != null &&
+                    application.getJob().getEmployerProfile().getUser() != null) {
+                User employer = application.getJob().getEmployerProfile().getUser();
+                String companyName = (employer.getFirstName() != null ? employer.getFirstName() + " " : "") +
+                        (employer.getLastName() != null ? employer.getLastName() : "");
+                if (!companyName.trim().isEmpty()) {
+                    return companyName.trim();
+                }
+            }
+
             return "Company Name Not Available";
         } catch (Exception e) {
-            log.warn("Error getting company name: ", e);
+            log.warn("Error getting company name for application {}: ", application.getApplicationId(), e);
             return "Company Name Not Available";
         }
     }
 
+    // Enhanced getCandidateName method
     private String getCandidateName(Application application) {
         try {
             User user = application.getUser();
-            String firstName = user.getFirstName() != null ? user.getFirstName() : "";
-            String lastName = user.getLastName() != null ? user.getLastName() : "";
-            return (firstName + " " + lastName).trim();
+            if (user == null) {
+                return "Name Not Available";
+            }
+
+            String firstName = user.getFirstName() != null ? user.getFirstName().trim() : "";
+            String lastName = user.getLastName() != null ? user.getLastName().trim() : "";
+
+            String fullName = (firstName + " " + lastName).trim();
+
+            if (fullName.isEmpty()) {
+                // Fallback to email prefix
+                String email = user.getEmail();
+                if (email != null && email.contains("@")) {
+                    return email.substring(0, email.indexOf("@"));
+                }
+                return "Name Not Available";
+            }
+
+            return fullName;
         } catch (Exception e) {
-            log.warn("Error getting candidate name: ", e);
+            log.warn("Error getting candidate name for application {}: ", application.getApplicationId(), e);
             return "Name Not Available";
         }
     }

@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/myApplications.css">
-
 </head>
 <body>
 <!-- Navigation -->
@@ -95,142 +94,6 @@
 
         <!-- Applications List (Hidden by default, shows when user has applications) -->
         <div id="applicationsList" style="display: none;">
-            <!-- Application Card 1 -->
-            <div class="application-card fade-in visible">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <div class="d-flex">
-                            <div class="company-logo">
-                                <i class="fas fa-building text-primary"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h3 class="job-title">MERN Stack Developer</h3>
-                                <div class="job-meta">
-                                    <span><i class="fas fa-building me-1"></i>JobSphere1</span>
-                                    <span><i class="fas fa-map-marker-alt me-1"></i>Kitchener</span>
-                                    <span><i class="fas fa-clock me-1"></i>Full Time</span>
-                                    <span><i class="fas fa-dollar-sign me-1"></i>$35/hr</span>
-                                    <span><i class="fas fa-calendar me-1"></i>Applied 2 hours ago</span>
-                                </div>
-                                <span class="status-badge status-submitted">Submitted</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="action-buttons">
-                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('mern-developer')">
-                                <i class="fas fa-eye me-1"></i>View Job
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('mern-developer')">
-                                <i class="fas fa-file-pdf me-1"></i>View CV
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Application Card 2 -->
-            <div class="application-card fade-in visible">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <div class="d-flex">
-                            <div class="company-logo">
-                                <i class="fas fa-chart-line text-success"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h3 class="job-title">Data Science Intern</h3>
-                                <div class="job-meta">
-                                    <span><i class="fas fa-building me-1"></i>DataFlow Inc</span>
-                                    <span><i class="fas fa-map-marker-alt me-1"></i>Toronto</span>
-                                    <span><i class="fas fa-clock me-1"></i>Part Time</span>
-                                    <span><i class="fas fa-dollar-sign me-1"></i>$28/hr</span>
-                                    <span><i class="fas fa-calendar me-1"></i>Applied 1 day ago</span>
-                                </div>
-                                <span class="status-badge status-reviewing">Under Review</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="action-buttons">
-                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('data-science')">
-                                <i class="fas fa-eye me-1"></i>View Job
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('data-science')">
-                                <i class="fas fa-file-pdf me-1"></i>View CV
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Application Card 3 -->
-            <div class="application-card fade-in visible">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <div class="d-flex">
-                            <div class="company-logo">
-                                <i class="fas fa-palette text-warning"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h3 class="job-title">UI/UX Design Intern</h3>
-                                <div class="job-meta">
-                                    <span><i class="fas fa-building me-1"></i>DesignStudio</span>
-                                    <span><i class="fas fa-map-marker-alt me-1"></i>Vancouver</span>
-                                    <span><i class="fas fa-clock me-1"></i>Full Time</span>
-                                    <span><i class="fas fa-dollar-sign me-1"></i>$25/hr</span>
-                                    <span><i class="fas fa-calendar me-1"></i>Applied 3 days ago</span>
-                                </div>
-                                <span class="status-badge status-accepted">Accepted</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="action-buttons">
-                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('ui-ux-design')">
-                                <i class="fas fa-eye me-1"></i>View Job
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('ui-ux-design')">
-                                <i class="fas fa-file-pdf me-1"></i>View CV
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Application Card 4 -->
-            <div class="application-card fade-in visible">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <div class="d-flex">
-                            <div class="company-logo">
-                                <i class="fas fa-dollar-sign text-info"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h3 class="job-title">Finance Analyst Intern</h3>
-                                <div class="job-meta">
-                                    <span><i class="fas fa-building me-1"></i>FinanceHub</span>
-                                    <span><i class="fas fa-map-marker-alt me-1"></i>Montreal</span>
-                                    <span><i class="fas fa-clock me-1"></i>Internship</span>
-                                    <span><i class="fas fa-dollar-sign me-1"></i>$22/hr</span>
-                                    <span><i class="fas fa-calendar me-1"></i>Applied 1 week ago</span>
-                                </div>
-                                <span class="status-badge status-rejected">Not Selected</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="action-buttons">
-                            <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails('finance-analyst')">
-                                <i class="fas fa-eye me-1"></i>View Job
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="viewCV('finance-analyst')">
-                                <i class="fas fa-file-pdf me-1"></i>View CV
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Pagination -->
             <nav aria-label="Applications pagination" class="mt-4">
                 <ul class="pagination justify-content-center">
@@ -256,62 +119,96 @@
 </section>
 
 <!-- Job Details Modal -->
-<div class="modal fade" id="jobDetailsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade job-detail-modal" id="jobDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-primary text-white">
-                <div>
-                    <h5 class="modal-title mb-0" id="jobModalTitle">MERN Stack Developer</h5>
-                    <small class="opacity-75" id="jobModalCompany">JobSphere1</small>
-                </div>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4">
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fas fa-dollar-sign text-primary me-2"></i>
-                            <span id="jobSalary">$35 per hour</span>
-                        </div>
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                            <span id="jobLocation">Kitchener</span>
-                        </div>
+            <div class="job-detail-header" style="background: linear-gradient(135deg, #4f46e5, #3730a3); color: white; padding: 2rem;">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h3 class="mb-2" id="jobModalTitle">Job Title</h3>
+                        <p class="mb-0 opacity-75">Posted by: <span id="jobModalCompany">Company Name</span></p>
                     </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fas fa-clock text-primary me-2"></i>
-                            <span id="jobType">Full Time</span>
-                        </div>
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fas fa-user text-primary me-2"></i>
-                            <span class="status-badge status-submitted">Submitted</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Education:</h6>
-                    <p id="jobEducation">Bachelor's degree in Computer Science or related field</p>
-                </div>
-
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Experience:</h6>
-                    <p id="jobExperience">2+ years of experience in MERN stack development</p>
-                </div>
-
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Skills:</h6>
-                    <p id="jobSkills">MongoDB, Express.js, React.js, Node.js, JavaScript, HTML, CSS</p>
-                </div>
-
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Availabilities:</h6>
-                    <p id="jobAvailabilities">Monday - Friday, 9:00 AM - 5:00 PM</p>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
             </div>
-            <div class="modal-footer border-0 p-4">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <div class="col-lg-8 p-4">
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Job Description</h6>
+                            <div id="modalJobDescription">
+                                <!-- Job description will be inserted here -->
+                            </div>
+                        </div>
+
+                        <div class="mb-4" id="responsibilitiesSection">
+                            <h6 class="fw-bold mb-3">Responsibilities</h6>
+                            <ul class="requirements-list" id="modalResponsibilities" style="padding-left: 1rem;">
+                                <!-- Job responsibilities will be inserted here -->
+                            </ul>
+                        </div>
+
+                        <div class="mb-4" id="requirementsSection">
+                            <h6 class="fw-bold mb-3">Requirements</h6>
+                            <ul class="requirements-list" id="modalRequirements" style="padding-left: 1rem;">
+                                <!-- Job requirements will be inserted here -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 bg-light p-4">
+                        <div class="job-summary-card" style="background: white; border-radius: 8px; padding: 1.5rem; border: 1px solid #e2e8f0;">
+                            <h6 class="fw-bold mb-3">Job Summary</h6>
+
+                            <div class="job-summary-item" style="display: flex; align-items: flex-start; margin-bottom: 1.5rem;">
+                                <i class="fas fa-map-marker-alt" style="width: 20px; margin-right: 1rem; color: #4f46e5; margin-top: 2px;"></i>
+                                <div>
+                                    <strong>Location</strong><br>
+                                    <span class="text-muted" id="modalLocation">Location</span>
+                                </div>
+                            </div>
+
+                            <div class="job-summary-item" style="display: flex; align-items: flex-start; margin-bottom: 1.5rem;">
+                                <i class="fas fa-briefcase" style="width: 20px; margin-right: 1rem; color: #4f46e5; margin-top: 2px;"></i>
+                                <div>
+                                    <strong>Job Type</strong><br>
+                                    <span class="text-muted" id="modalJobType">Job Type</span>
+                                </div>
+                            </div>
+
+                            <div class="job-summary-item" style="display: flex; align-items: flex-start; margin-bottom: 1.5rem;">
+                                <i class="fas fa-dollar-sign" style="width: 20px; margin-right: 1rem; color: #4f46e5; margin-top: 2px;"></i>
+                                <div>
+                                    <strong>Salary</strong><br>
+                                    <span class="text-muted" id="modalSalary">Salary</span>
+                                </div>
+                            </div>
+
+                            <div class="job-summary-item" style="display: flex; align-items: flex-start; margin-bottom: 1.5rem;">
+                                <i class="fas fa-building" style="width: 20px; margin-right: 1rem; color: #4f46e5; margin-top: 2px;"></i>
+                                <div>
+                                    <strong>Company</strong><br>
+                                    <span class="text-muted" id="modalCompanyName">Company</span>
+                                </div>
+                            </div>
+
+                            <div class="job-summary-item mb-4" style="display: flex; align-items: flex-start; margin-bottom: 1.5rem;">
+                                <i class="fas fa-calendar" style="width: 20px; margin-right: 1rem; color: #4f46e5; margin-top: 2px;"></i>
+                                <div>
+                                    <strong>Date Posted</strong><br>
+                                    <span class="text-muted" id="modalDatePosted">Date</span>
+                                </div>
+                            </div>
+
+                            <!-- Application Status for myApplications -->
+                            <div class="mb-3 p-3" style="background: #f8fafc; border-radius: 8px; text-align: center;">
+                                <strong>Application Status</strong><br>
+                                <span class="badge" style="background: #4f46e5; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;" id="applicationStatus">Applied</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -322,7 +219,7 @@
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">CV for <span id="cvJobTitle">MERN Stack Developer</span></h5>
+                <h5 class="modal-title">CV for <span id="cvJobTitle">Job Application</span></h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-0" style="height: 70vh;">
@@ -414,55 +311,7 @@
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Sample applications data - in a real application, this would come from your backend
-    //let userApplications = [
-         //Uncomment the applications below to simulate a user with applications
-        /*
-        {
-            id: 'mern-developer',
-            title: 'MERN Stack Developer',
-            company: 'JobSphere1',
-            location: 'Kitchener',
-            type: 'Full Time',
-            salary: '$35/hr',
-            appliedDate: '2 hours ago',
-            status: 'submitted',
-            statusText: 'Submitted',
-            icon: 'fas fa-building',
-            iconColor: 'text-primary'
-        },
-        {
-            id: 'data-science',
-            title: 'Data Science Intern',
-            company: 'DataFlow Inc',
-            location: 'Toronto',
-            type: 'Part Time',
-            salary: '$28/hr',
-            appliedDate: '1 day ago',
-            status: 'reviewing',
-            statusText: 'Under Review',
-            icon: 'fas fa-chart-line',
-            iconColor: 'text-success'
-        },
-        {
-            id: 'ui-ux-design',
-            title: 'UI/UX Design Intern',
-            company: 'DesignStudio',
-            location: 'Vancouver',
-            type: 'Full Time',
-            salary: '$25/hr',
-            appliedDate: '3 days ago',
-            status: 'accepted',
-            statusText: 'Accepted',
-            icon: 'fas fa-palette',
-            iconColor: 'text-warning'
-        }*/
-</script>
-<script src="../js/navbar.js"></script>
-<!-- Add this script section to EVERY HTML page before closing </body> tag -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    // My Applications Page JavaScript
+    // My Applications Page JavaScript - Updated Version
     document.addEventListener('DOMContentLoaded', function() {
         checkUserAuthStatus();
         loadUserApplications();
@@ -502,30 +351,53 @@
             // Show loading state
             showLoadingState();
 
+            console.log('Loading applications for page:', page);
+
             const response = await fetch(`http://localhost:8080/api/v1/applications/my-applications?page=${page}&size=${pageSize}`, {
+                method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });
 
+            console.log('Response status:', response.status);
+
             if (response.ok) {
                 const data = await response.json();
+                console.log('Applications data received:', data);
 
-                if (data.data && data.data.content) {
-                    currentApplications = data.data.content;
+                // Check if data exists and has content
+                if (data && data.data) {
+                    // Handle both paginated and non-paginated responses
+                    const applications = data.data.content || data.data;
+                    const isPagedResponse = data.data.content !== undefined;
+
+                    console.log('Applications array:', applications);
+                    console.log('Is paged response:', isPagedResponse);
+
+                    currentApplications = Array.isArray(applications) ? applications : [];
 
                     if (currentApplications.length === 0 && page === 0) {
+                        console.log('No applications found, showing empty state');
                         showEmptyState();
                     } else {
+                        console.log(`Displaying ${currentApplications.length} applications`);
                         displayApplications(currentApplications);
-                        setupPagination(data.data);
+
+                        // Setup pagination only if it's a paged response
+                        if (isPagedResponse) {
+                            setupPagination(data.data);
+                        }
                     }
                 } else {
+                    console.log('No data in response, showing empty state');
                     showEmptyState();
                 }
             } else {
-                throw new Error('Failed to load applications');
+                const errorText = await response.text();
+                console.error('Error response:', errorText);
+                throw new Error(`Failed to load applications: ${response.status} - ${errorText}`);
             }
         } catch (error) {
             console.error('Error loading applications:', error);
@@ -536,6 +408,19 @@
 
     // Show loading state
     function showLoadingState() {
+        console.log('Showing loading state');
+
+        // Hide other states
+        const emptyState = document.getElementById('emptyState');
+        const applicationsList = document.getElementById('applicationsList');
+
+        if (emptyState) emptyState.style.display = 'none';
+        if (applicationsList) applicationsList.style.display = 'none';
+
+        // Remove existing loading state
+        const existingLoading = document.getElementById('loadingState');
+        if (existingLoading) existingLoading.remove();
+
         const container = document.querySelector('.container');
         const loadingHtml = `
         <div id="loadingState" class="text-center py-5">
@@ -547,41 +432,43 @@
         </div>
     `;
 
-        // Hide other states
-        document.getElementById('emptyState').style.display = 'none';
-        document.getElementById('applicationsList').style.display = 'none';
-
-        // Show loading
-        const existingLoading = document.getElementById('loadingState');
-        if (existingLoading) {
-            existingLoading.remove();
-        }
-
         container.insertAdjacentHTML('beforeend', loadingHtml);
     }
 
     // Show empty state
     function showEmptyState() {
-        document.getElementById('loadingState')?.remove();
-        document.getElementById('applicationsList').style.display = 'none';
-        document.getElementById('emptyState').style.display = 'block';
+        console.log('Showing empty state');
+
+        const loadingState = document.getElementById('loadingState');
+        const applicationsList = document.getElementById('applicationsList');
+        const emptyState = document.getElementById('emptyState');
+
+        if (loadingState) loadingState.remove();
+        if (applicationsList) applicationsList.style.display = 'none';
+        if (emptyState) emptyState.style.display = 'block';
     }
 
     // Display applications
     function displayApplications(applications) {
-        document.getElementById('loadingState')?.remove();
-        document.getElementById('emptyState').style.display = 'none';
+        console.log('Displaying applications:', applications);
 
+        const loadingState = document.getElementById('loadingState');
+        const emptyState = document.getElementById('emptyState');
         const applicationsList = document.getElementById('applicationsList');
-        applicationsList.style.display = 'block';
 
-        // Clear existing applications but keep pagination
+        if (loadingState) loadingState.remove();
+        if (emptyState) emptyState.style.display = 'none';
+        if (applicationsList) applicationsList.style.display = 'block';
+
+        // Clear existing application cards but keep pagination
         const existingCards = applicationsList.querySelectorAll('.application-card');
         existingCards.forEach(card => card.remove());
 
         // Add new applications
-        applications.forEach(app => {
+        applications.forEach((app, index) => {
+            console.log(`Creating card for application ${index + 1}:`, app);
             const applicationCard = createApplicationCard(app);
+
             // Insert before pagination
             const pagination = applicationsList.querySelector('nav');
             if (pagination) {
@@ -592,8 +479,10 @@
         });
     }
 
-    // Create application card HTML
+    // Create application card HTML - UPDATED VERSION WITHOUT WITHDRAW BUTTON
     function createApplicationCard(application) {
+        console.log('Creating application card for:', application);
+
         const card = document.createElement('div');
         card.className = 'application-card fade-in visible';
 
@@ -606,6 +495,22 @@
         // Get job type display
         const jobTypeDisplay = formatJobType(application.jobType || 'Not specified');
 
+        // Safely get company name
+        const companyName = application.companyName || 'Company';
+        const jobLocation = application.jobLocation || 'Location not specified';
+        const jobTitle = application.jobTitle || 'Job Title';
+        const salary = formatSalary(application.salary);
+
+        console.log('Card data:', {
+            jobTitle,
+            companyName,
+            jobLocation,
+            jobTypeDisplay,
+            salary,
+            appliedDate,
+            status: statusInfo
+        });
+
         card.innerHTML = `
         <div class="row align-items-center">
             <div class="col-lg-8">
@@ -614,12 +519,12 @@
                         <i class="fas fa-building text-primary"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <h3 class="job-title">${application.jobTitle || 'Job Title'}</h3>
+                        <h3 class="job-title">${jobTitle}</h3>
                         <div class="job-meta">
-                            <span><i class="fas fa-building me-1"></i>${application.companyName || 'Company'}</span>
-                            <span><i class="fas fa-map-marker-alt me-1"></i>${application.jobLocation || 'Location not specified'}</span>
+                            <span><i class="fas fa-building me-1"></i>${companyName}</span>
+                            <span><i class="fas fa-map-marker-alt me-1"></i>${jobLocation}</span>
                             <span><i class="fas fa-clock me-1"></i>${jobTypeDisplay}</span>
-                            <span><i class="fas fa-dollar-sign me-1"></i>${formatSalary(application.salary)}</span>
+                            <span><i class="fas fa-dollar-sign me-1"></i>${salary}</span>
                             <span><i class="fas fa-calendar me-1"></i>Applied ${appliedDate}</span>
                         </div>
                         <span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>
@@ -628,19 +533,14 @@
             </div>
             <div class="col-lg-4">
                 <div class="action-buttons">
-                    <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails(${application.jobId})">
+                    <button class="btn btn-outline-info btn-sm" onclick="viewJobDetails(${application.jobId}, '${application.status}')">
                         <i class="fas fa-eye me-1"></i>View Job
                     </button>
                     ${application.resumeUrl ?
-            `<button class="btn btn-outline-primary btn-sm" onclick="viewCV('${application.resumeUrl}', '${application.jobTitle}')">
+            `<button class="btn btn-outline-primary btn-sm" onclick="viewCV('${application.resumeUrl}', '${jobTitle}')">
                             <i class="fas fa-file-pdf me-1"></i>View CV
                         </button>` :
             '<span class="text-muted small">No CV attached</span>'
-        }
-                    ${application.status === 'SUBMITTED' ?
-            `<button class="btn btn-outline-danger btn-sm" onclick="withdrawApplication(${application.applicationId})">
-                            <i class="fas fa-times me-1"></i>Withdraw
-                        </button>` : ''
         }
                 </div>
             </div>
@@ -661,7 +561,7 @@
             'WITHDRAWN': { class: 'status-withdrawn', text: 'Withdrawn' }
         };
 
-        return statusMap[status] || { class: 'status-submitted', text: status };
+        return statusMap[status] || { class: 'status-submitted', text: status || 'Unknown' };
     }
 
     // Format job type
@@ -680,24 +580,30 @@
     // Format salary
     function formatSalary(salary) {
         if (!salary) return 'Salary not specified';
-        return typeof salary === 'number' ? `$${salary}/hr` : salary;
+        return typeof salary === 'number' ? `$${salary}/hr` : salary.toString();
     }
 
     // Format date
     function formatDate(dateString) {
         if (!dateString) return 'Unknown';
 
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        try {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 1) return '1 day ago';
-        if (diffDays < 7) return `${diffDays} days ago`;
-        if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
-        if (diffDays < 365) return `${Math.ceil(diffDays / 30)} months ago`;
+            if (diffDays === 0) return 'Today';
+            if (diffDays === 1) return '1 day ago';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
+            if (diffDays < 365) return `${Math.ceil(diffDays / 30)} months ago`;
 
-        return date.toLocaleDateString();
+            return date.toLocaleDateString();
+        } catch (error) {
+            console.error('Error formatting date:', error);
+            return 'Unknown date';
+        }
     }
 
     // Setup pagination
@@ -745,14 +651,14 @@
     function changePage(page) {
         currentPage = page;
         loadUserApplications(page);
-
-        // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // View job details
-    async function viewJobDetails(jobId) {
+    // Enhanced View job details function (from findJob.html) with application status
+    async function viewJobDetails(jobId, applicationStatus = null) {
         try {
+            console.log('Viewing job details for job ID:', jobId);
+
             const token = sessionStorage.getItem('authToken');
             const response = await fetch(`http://localhost:8080/api/v1/jobs/${jobId}`, {
                 headers: {
@@ -763,21 +669,7 @@
             if (response.ok) {
                 const data = await response.json();
                 const job = data.data;
-
-                // Populate modal with job details
-                document.getElementById('jobModalTitle').textContent = job.title;
-                document.getElementById('jobModalCompany').textContent = job.companyName || 'Company';
-                document.getElementById('jobSalary').textContent = job.salaryPerHour ? `$${job.salaryPerHour} per hour` : 'Salary not specified';
-                document.getElementById('jobLocation').textContent = job.location || 'Location not specified';
-                document.getElementById('jobType').textContent = formatJobType(job.jobType);
-
-                // Show job overview/description
-                document.getElementById('jobEducation').textContent = job.requirements?.join(', ') || 'Requirements not specified';
-                document.getElementById('jobExperience').textContent = job.jobOverview || 'Job overview not available';
-                document.getElementById('jobSkills').textContent = job.skills || 'Skills not specified';
-                document.getElementById('jobAvailabilities').textContent = job.schedule || 'Schedule not specified';
-
-                // Show modal
+                populateJobModal(job, applicationStatus);
                 new bootstrap.Modal(document.getElementById('jobDetailsModal')).show();
             } else {
                 throw new Error('Failed to load job details');
@@ -788,6 +680,96 @@
         }
     }
 
+    // Populate job modal with enhanced information (from findJob.html)
+    function populateJobModal(job, applicationStatus = null) {
+        document.getElementById('jobModalTitle').textContent = job.title;
+        document.getElementById('jobModalCompany').textContent = job.companyName || 'Company';
+        document.getElementById('modalLocation').textContent = job.location;
+        document.getElementById('modalJobType').textContent = formatJobType(job.jobType);
+        document.getElementById('modalSalary').textContent = job.salaryPerHour ? `$${job.salaryPerHour}/hr` : 'Negotiable';
+        document.getElementById('modalCompanyName').textContent = job.companyName || 'Company';
+        document.getElementById('modalDatePosted').textContent = formatDatePosted(job.datePosted);
+        document.getElementById('modalJobDescription').innerHTML = job.jobOverview ? job.jobOverview.replace(/\n/g, '<br>') : 'No description available';
+
+        // Populate responsibilities
+        const responsibilitiesContainer = document.getElementById('modalResponsibilities');
+        const responsibilitiesSection = document.getElementById('responsibilitiesSection');
+
+        if (job.responsibilities && job.responsibilities.length > 0) {
+            responsibilitiesContainer.innerHTML = '';
+            job.responsibilities.forEach(responsibility => {
+                const li = document.createElement('li');
+                li.textContent = responsibility;
+                li.style.marginBottom = '0.5rem';
+                li.style.color = '#64748b';
+                responsibilitiesContainer.appendChild(li);
+            });
+            responsibilitiesSection.style.display = 'block';
+        } else {
+            responsibilitiesSection.style.display = 'none';
+        }
+
+        // Populate requirements
+        const requirementsContainer = document.getElementById('modalRequirements');
+        const requirementsSection = document.getElementById('requirementsSection');
+
+        if (job.requirements && job.requirements.length > 0) {
+            requirementsContainer.innerHTML = '';
+            job.requirements.forEach(requirement => {
+                const li = document.createElement('li');
+                li.textContent = requirement;
+                li.style.marginBottom = '0.5rem';
+                li.style.color = '#64748b';
+                requirementsContainer.appendChild(li);
+            });
+            requirementsSection.style.display = 'block';
+        } else {
+            requirementsSection.style.display = 'none';
+        }
+
+        // Update application status if provided
+        if (applicationStatus) {
+            const statusInfo = getStatusInfo(applicationStatus);
+            const applicationStatusElement = document.getElementById('applicationStatus');
+            if (applicationStatusElement) {
+                applicationStatusElement.textContent = statusInfo.text;
+                applicationStatusElement.style.background = getStatusColor(applicationStatus);
+                applicationStatusElement.style.color = 'white';
+                applicationStatusElement.style.padding = '0.5rem 1rem';
+                applicationStatusElement.style.borderRadius = '20px';
+                applicationStatusElement.style.fontSize = '0.9rem';
+            }
+        }
+    }
+
+    // Get status color for badges
+    function getStatusColor(status) {
+        const colorMap = {
+            'SUBMITTED': '#0277bd',
+            'REVIEWED': '#ef6c00',
+            'SHORTLISTED': '#7b1fa2',
+            'ACCEPTED': '#2e7d32',
+            'REJECTED': '#c62828',
+            'WITHDRAWN': '#616161'
+        };
+        return colorMap[status] || '#4f46e5';
+    }
+
+    // Format date for job posting
+    function formatDatePosted(dateString) {
+        if (!dateString) return 'Date not specified';
+
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) return 'Posted Today';
+        if (diffDays < 7) return `Posted ${diffDays} days ago`;
+        if (diffDays < 30) return `Posted ${Math.ceil(diffDays / 7)} weeks ago`;
+        return `Posted ${Math.ceil(diffDays / 30)} months ago`;
+    }
+
     // View CV
     function viewCV(resumeUrl, jobTitle) {
         if (!resumeUrl) {
@@ -795,9 +777,10 @@
             return;
         }
 
+        console.log('Viewing CV:', resumeUrl);
+
         document.getElementById('cvJobTitle').textContent = jobTitle || 'Job Application';
 
-        // Create iframe or link to view PDF
         const cvViewer = document.getElementById('cvViewer');
         cvViewer.innerHTML = `
         <div class="w-100 h-100">
@@ -810,38 +793,10 @@
         new bootstrap.Modal(document.getElementById('cvViewerModal')).show();
     }
 
-    // Withdraw application
-    async function withdrawApplication(applicationId) {
-        if (!confirm('Are you sure you want to withdraw this application? This action cannot be undone.')) {
-            return;
-        }
-
-        try {
-            const token = sessionStorage.getItem('authToken');
-            const response = await fetch(`http://localhost:8080/api/v1/applications/${applicationId}/withdraw`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (response.ok) {
-                showNotification('Application withdrawn successfully', 'success');
-                // Reload applications
-                loadUserApplications(currentPage);
-            } else {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to withdraw application');
-            }
-        } catch (error) {
-            console.error('Error withdrawing application:', error);
-            showNotification(error.message, 'error');
-        }
-    }
-
     // Utility function for notifications
     function showNotification(message, type = 'info') {
+        console.log('Notification:', type, message);
+
         // Remove existing notifications
         const existingToasts = document.querySelectorAll('.toast-notification');
         existingToasts.forEach(toast => toast.remove());

@@ -36,7 +36,7 @@ public class Application {
     private String resumeUrl;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "ENUM('submitted','reviewed','shortlisted','accepted','rejected','withdrawn') DEFAULT 'submitted'")
+    @Column(nullable = false, columnDefinition = "ENUM('SUBMITTED','REVIEWED','SHORTLISTED','ACCEPTED','REJECTED','WITHDRAWN') DEFAULT 'SUBMITTED'")
     private ApplicationStatus status = ApplicationStatus.SUBMITTED;
 
     @Column(name = "applied_at", updatable = false,

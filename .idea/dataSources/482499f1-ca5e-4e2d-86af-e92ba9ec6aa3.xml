@@ -1153,7 +1153,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <Current>1</Current>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-09-20.10:13:43</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-09-20.13:09:48</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="319" parent="1" name="jms">
@@ -1276,10 +1276,9 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <StoredType>varchar(255)|0s</StoredType>
     </column>
     <column id="349" parent="338" name="status">
-      <DefaultExpression>&apos;submitted&apos;</DefaultExpression>
-      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;SUBMITTED&apos;</DefaultExpression>
       <Position>4</Position>
-      <StoredType>enum(&apos;submitted&apos;, &apos;reviewed&apos;, &apos;shortlisted&apos;, &apos;accepted&apos;, &apos;rejected&apos;, &apos;withdrawn&apos;)|0e</StoredType>
+      <StoredType>enum(&apos;SUBMITTED&apos;, &apos;REVIEWED&apos;, &apos;SHORTLISTED&apos;, &apos;ACCEPTED&apos;, &apos;REJECTED&apos;, &apos;WITHDRAWN&apos;)|0e</StoredType>
     </column>
     <column id="350" parent="338" name="updated_at">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
