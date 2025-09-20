@@ -141,11 +141,15 @@ mvn spring-boot:run
 
 
 ### Apply Job (Candidate only)
-![Apply Job]()
+![Apply Job](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-applyJob-html-2025-09-21-01_23_51.png)
+
+
+### My Application (Candidate only)
+![Apply Job](assets/internbay-ui/screencapture-localhost-63342-internbay-job-portal-internbayFrontEnd-pages-myApplications-html-2025-09-21-01_21_55.png)
 
 
 ### Job Details Card 
-![Job Details]()
+![Job Details](assets/internbay-ui/Screenshot from 2025-09-07 05-42-05.png)
 
 
 ## 🎥 Demo Video
