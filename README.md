@@ -143,5 +143,10 @@ mvn spring-boot:run
 ### Apply Job (Candidate only)
 ![Apply Job]()
 
+
 ### Job Details Card 
 ![Job Details]()
+
+
+## 🎥 Demo Video
+[Watch on YouTube]()
