@@ -66,6 +66,10 @@ public class Job {
     @Column(name = "requirement")
     private List<String> requirements;
 
+    @Builder.Default
+    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean isActive = true;
+
     @Column(name = "date_posted", updatable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime datePosted;

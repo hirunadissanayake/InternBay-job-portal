@@ -95,4 +95,19 @@ public class JwtUtil {
     public String getRoleFromToken(String token) {
         return getAllClaimsFromToken(token).get("role", String.class);
     }
+    // Add this method to your existing JwtUtil class:
+    public Long getUserIdFromToken(String token) {
+        Claims claims = getAllClaimsFromToken(token);
+        Object userIdClaim = claims.get("userId");
+
+        if (userIdClaim instanceof Integer) {
+            return ((Integer) userIdClaim).longValue();
+        } else if (userIdClaim instanceof Long) {
+            return (Long) userIdClaim;
+        } else if (userIdClaim instanceof String) {
+            return Long.parseLong((String) userIdClaim);
+        }
+
+        throw new RuntimeException("Invalid userId format in JWT token");
+    }
 }

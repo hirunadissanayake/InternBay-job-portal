@@ -1082,44 +1082,42 @@
         }
     }
 
-    // Apply for job
+
+    // Updated Apply for job function for findJob.html
     async function applyForJob() {
         const token = sessionStorage.getItem('authToken');
-        if (!token || !selectedJobId) return;
+        const userRole = sessionStorage.getItem('userRole');
 
-        const applyButton = document.getElementById('applyButton');
-        const originalText = applyButton.innerHTML;
-
-        applyButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Applying...';
-        applyButton.disabled = true;
-
-        try {
-            const response = await fetch(`http://localhost:8080/api/v1/applications`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    jobId: selectedJobId
-                })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                showNotification('Application submitted successfully!', 'success');
-                applyButton.innerHTML = '<i class="fas fa-check me-2"></i>Applied';
-                applyButton.disabled = true;
-            } else {
-                throw new Error(data.message || 'Failed to submit application');
-            }
-        } catch (error) {
-            console.error('Error applying for job:', error);
-            showNotification(error.message, 'error');
-            applyButton.innerHTML = originalText;
-            applyButton.disabled = false;
+        if (!token) {
+            bootstrap.Modal.getInstance(document.getElementById('jobDetailsModal')).hide();
+            setTimeout(() => {
+                showNotification('Please sign in to apply for jobs', 'error');
+                if (document.getElementById('loginModal')) {
+                    new bootstrap.Modal(document.getElementById('loginModal')).show();
+                } else {
+                    window.location.href = 'main.html';
+                }
+            }, 300);
+            return;
         }
+
+        if (userRole !== 'CANDIDATE') {
+            showNotification('Only candidates can apply for jobs', 'error');
+            return;
+        }
+
+        if (!selectedJobId) {
+            showNotification('No job selected', 'error');
+            return;
+        }
+
+        // Close the modal
+        bootstrap.Modal.getInstance(document.getElementById('jobDetailsModal')).hide();
+
+        // Redirect to application page with job ID
+        setTimeout(() => {
+            window.location.href = `applyJob.html?jobId=${selectedJobId}`;
+        }, 300);
     }
 
     // Save job from modal

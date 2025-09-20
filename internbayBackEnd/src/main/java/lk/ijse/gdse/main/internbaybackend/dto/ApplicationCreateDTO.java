@@ -10,4 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ApplicationCreateDTO {
     private Long jobId;
+    private String resumeUrl;
+
+    // Profile data that will be saved to CandidateProfile
+    private String educationBackground;
+    private String workExperience;
+    private String skills;
 }
